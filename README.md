@@ -30,14 +30,18 @@ This project is a Mahjong Game in C Raylib (still a work in progress). The objec
     - [ ] Handshake to define the map of tiles to cryptographic values
     - [ ] Games logic in action with communication
 
+## Put everything on a website(`website`)
+- [ ] compile to wasm and make work a wasm executable compiled with wasm
+
 # Dependency between part of the project
-- game depends on
-    - visuals
-    - client
-    - logic
+- `website/` depends on `game/`
+- `game/` depends on
+    - `visuals/`
+    - `client/`
+    - `logic/`
 - visuals depends on
-    - logic
+    - `logic/`
 - client depends on
-    - crypto
-- crypto depends on nothing
-- logic depends on nothing
+    - `crypto/`
+- `crypto/` depends on nothing
+- `logic/` depends on nothing
