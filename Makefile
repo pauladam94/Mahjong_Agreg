@@ -68,6 +68,7 @@ clean:
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
 	$(RM) --dir $(BUILD_DIR)
+	$(RM) $(NAME)
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
