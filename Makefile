@@ -1,4 +1,4 @@
-CC = gcc
+CC = clang
 BUILD_DIR ?= ./build
 NAME = mahjong_agreg
 
@@ -11,7 +11,8 @@ CPPFLAGS += -MP -MD
 
 CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR) -lm
 DEBUGFLAGS = -g3 -fsanitize=address
-RELEASEFLAGS = -flto -O3 -DNDEBUG
+# RELEASEFLAGS = -flto -O3 -DNDEBUG
+RELEASEFLAGS = -O3 -DNDEBUG
 
 MODE ?= RELEASE# Default is Release
 
