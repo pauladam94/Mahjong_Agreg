@@ -1,4 +1,5 @@
 #include "tile.h"
+#include "raylib.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -143,7 +144,6 @@ bool is_adjacent(Tile t0, Tile t1) {
     return (n0 == n1 + 1) || (n0 + 1 == n1);
 };
 
-
 // 1m for Man number 1
 // 1s for Su, 1p for Pin
 // then 1z to 7z for winds and dragons
@@ -176,28 +176,54 @@ Tile *tile_from_string(const char *name) {
     return t;
 }
 
-static Image *tiles_image;
+static Texture2D *tiles_textures;
 static bool loaded_has_been_done = false;
 
 void load_all_tiles() {
     loaded_has_been_done = true;
-    tiles_image = malloc(sizeof(*tiles_image) * Z7);
-    tiles_image[M1] = LoadImage("data/B1.png");
-    tiles_image[M2] = LoadImage("data/B2.png");
-    tiles_image[M3] = LoadImage("data/B3.png");
-    tiles_image[M4] = LoadImage("data/B4.png");
-    tiles_image[M5] = LoadImage("data/B5.png");
-    tiles_image[M6] = LoadImage("data/B6.png");
-    tiles_image[M7] = LoadImage("data/B7.png");
-    tiles_image[M8] = LoadImage("data/B8.png");
-    tiles_image[M9] = LoadImage("data/B9.png");
+    tiles_textures = malloc(sizeof(*tiles_textures) * Z7);
+    Image image;
+    image = LoadImage("data/B1.png");
+    tiles_textures[M1] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B2.png");
+    tiles_textures[M2] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B3.png");
+    tiles_textures[M3] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B4.png");
+    tiles_textures[M4] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B5.png");
+    tiles_textures[M5] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B6.png");
+    tiles_textures[M6] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B7.png");
+    tiles_textures[M7] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B8.png");
+    tiles_textures[M8] = LoadTextureFromImage(image);
+    UnloadImage(image);
+    image = LoadImage("data/B9.png");
+    tiles_textures[M9] = LoadTextureFromImage(image);
+    UnloadImage(image);
 }
 
-Image tile_image(const Tile *tile) {
+Texture2D tile_texture(const Tile *tile) {
     if (!loaded_has_been_done) {
         load_all_tiles();
     }
-    return tiles_image[tile->tile];
+    return tiles_textures[tile->tile];
+}
+
+void free_tiles_textures() {
+    for (size_t i = 0; i < Z7; i++) {
+        UnloadTexture(tiles_textures[i]);
+    }
+    free(tiles_textures);
 }
 
 void pp_tile(FILE *file, Tile *t) {

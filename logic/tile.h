@@ -14,7 +14,8 @@ bool is_honor(Tile t);
 bool is_dragon(Tile t);
 bool is_wind(Tile t);
 bool is_family(Tile t);
-Image tile_image(const Tile *t);
+Texture2D tile_texture(const Tile *t);
+void free_tiles_textures();
 void pp_tile(FILE *file, Tile *t);
 
 #endif // TILE_H
