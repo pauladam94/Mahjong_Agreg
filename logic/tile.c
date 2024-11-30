@@ -32,21 +32,21 @@ typedef enum {
     S7,
     S8,
     S9,
-    Z1, // West Wind
-    Z2, // East Wind
-    Z3, // North Wind
-    Z4, // South Wind
+    Z1, // East Wind
+    Z2, // South Wind
+    Z3, // West Wind
+    Z4, // North Wind
     Z5, // White Dragon
-    Z6, // Red Dragon
-    Z7  // Green Dragon
+    Z6, // Green Dragon
+    Z7  // Red Dragon
 } _Tile;
 
 typedef struct Tile {
     _Tile tile;
 } Tile;
 
-int get_number(Tile t) {
-    switch (t.tile) {
+int get_number(Tile *t) {
+    switch (t->tile) {
     case M1:
     case P1:
     case S1:
@@ -94,8 +94,8 @@ int get_number(Tile t) {
     }
 }
 
-bool is_honor(Tile t) {
-    switch (t.tile) {
+bool is_honor(Tile *t) {
+    switch (t->tile) {
     case Z1:
     case Z2:
     case Z3:
@@ -109,8 +109,8 @@ bool is_honor(Tile t) {
     }
 }
 
-bool is_dragon(Tile t) {
-    switch (t.tile) {
+bool is_dragon(Tile *t) {
+    switch (t->tile) {
     case Z5:
     case Z6:
     case Z7:
@@ -120,8 +120,8 @@ bool is_dragon(Tile t) {
     }
 }
 
-bool is_wind(Tile t) {
-    switch (t.tile) {
+bool is_wind(Tile *t) {
+    switch (t->tile) {
     case Z1:
     case Z2:
     case Z3:
@@ -132,9 +132,9 @@ bool is_wind(Tile t) {
     }
 }
 
-bool is_family(Tile t) { return !is_honor(t); }
+bool is_family(Tile *t) { return !is_honor(t); }
 
-bool is_adjacent(Tile t0, Tile t1) {
+bool is_adjacent(Tile *t0, Tile *t1) {
     if (!(is_family(t0) || is_family(t1))) {
         return false;
     }
@@ -142,7 +142,6 @@ bool is_adjacent(Tile t0, Tile t1) {
     int n1 = get_number(t1);
     return (n0 == n1 + 1) || (n0 + 1 == n1);
 };
-
 
 // 1m for Man number 1
 // 1s for Su, 1p for Pin
@@ -306,4 +305,59 @@ void pp_tile(FILE *file, Tile *t) {
         fprintf(file, "7z");
         break;
     }
+}
+
+void free_tile(Tile *tile) { free(tile); }
+bool tiles_equals(Tile *t1, Tile *t2) { return t1->tile == t2->tile; }
+
+Tile *next_dora(const Tile *tile) {
+    printf("tile = %d\n", tile->tile);
+    Tile *new_tile = calloc(sizeof(*new_tile), 1);
+    _Tile res;
+    switch (tile->tile) {
+    case M1:
+    case P1:
+    case S1:
+    case M2:
+    case P2:
+    case S2:
+    case M3:
+    case P3:
+    case S3:
+    case M4:
+    case P4:
+    case S4:
+    case M5:
+    case P5:
+    case S5:
+    case M6:
+    case P6:
+    case S6:
+    case M7:
+    case P7:
+    case S7:
+    case M8:
+    case P8:
+    case S8:
+    case Z1:
+    case Z2:
+    case Z3:
+    case Z5:
+    case Z6:
+        res = tile->tile + 1;
+        break;
+    case M9:
+    case P9:
+    case S9:
+        res = tile->tile - 8;
+        break;
+    case Z4:
+        res = tile->tile - 3;
+        break;
+    case Z7:
+        res = tile->tile - 2;
+        break;
+    }
+    new_tile->tile = res;
+    return new_tile;
 }

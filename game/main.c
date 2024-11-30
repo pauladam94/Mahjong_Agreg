@@ -8,11 +8,8 @@ int main() {
     SetTargetFPS(60);
     Tile *m1 = tile_from_string("4m");
     pp_tile(stdout, m1);
-    pp_tile(stdout, m1);
-    pp_tile(stdout, m1);
     printf("--------------------------\n\n");
     pp_tile(stdout, m1);
-    int i = 0;
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
