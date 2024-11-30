@@ -154,22 +154,24 @@ Tile *tile_from_string(const char *name) {
                 name);
         exit(1);
     }
+    Tile *t = calloc(sizeof(*t), 1);
     _Tile res;
+    printf("IN tile_from_string : %c %c\n", name[0], name[1]);
     switch (name[1]) {
     case 'm':
-        res = M1 + (int)name[0] - 1;
+        res = M1 + ((int)name[0] - '0') - 1;
+        printf("name[1] is m\n");
         break;
     case 'p':
-        res = P1 + (int)name[0] - 1;
+        res = P1 + ((int)name[0] - '0') - 1;
         break;
     case 's':
-        res = S1 + (int)name[0] - 1;
+        res = S1 + ((int)name[0] - '0') - 1;
         break;
     case 'z':
-        res = Z1 + (int)name[0] - 1;
+        res = Z1 + ((int)name[0] - '0') - 1;
         break;
     }
-    Tile *t = malloc(sizeof(*t));
     t->tile = res;
     return t;
 }
@@ -199,6 +201,7 @@ Image tile_image(const Tile *tile) {
 }
 
 void pp_tile(FILE *file, Tile *t) {
+    printf("tile = %d\n", t->tile);
     switch (t->tile) {
     case M1:
         fprintf(file, "1m");
