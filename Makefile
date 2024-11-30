@@ -9,7 +9,7 @@ RAYLIB_DIR ?= ./raylib/src/
 # This allows the preprocessor to also generate the dependencies in the *.d files
 CPPFLAGS += -MP -MD
 
-CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR) -lm
+CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
 DEBUGFLAGS = -g3 -fsanitize=address
 # RELEASEFLAGS = -flto -O3 -DNDEBUG
 RELEASEFLAGS = -O3 -DNDEBUG
