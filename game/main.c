@@ -19,4 +19,5 @@ int main() {
         draw_tile(m1, 100, 100, 90);
         EndDrawing();
     }
+    free_tiles_textures();
 }
