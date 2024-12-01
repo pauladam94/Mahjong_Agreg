@@ -17,10 +17,10 @@ Hand *empty_hand() {
 }
 
 void add_tile(Hand *hand, Tile *tile) {
-    hand->len += 1;
+    hand->len ++;
     if (hand->len > hand->cap) {
         hand->cap = (hand->cap == 0) ? 1 : hand->cap * 2;
-        hand->arr = realloc(hand->arr, hand->cap);
+        hand->arr = realloc(hand->arr, sizeof(hand->arr) * hand->cap);
     }
     hand->arr[hand->len - 1] = tile;
 }
@@ -32,6 +32,7 @@ int hand_size(const Hand *hand) { return hand->len; }
 Hand *hand_from_string(const char *s) {
     Hand *hand = empty_hand();
     char tile_string[3] = {0};
+    tile_string[2] = '\0';
     int len = 0;
     int cap = 0;
     char *buf = NULL;
@@ -43,11 +44,11 @@ Hand *hand_from_string(const char *s) {
             len++;
             if (len > cap) {
                 cap = cap == 0 ? 1 : cap * 2;
-                printf("cap = %d\n", cap);
                 buf = realloc(buf, cap);
             }
             buf[len - 1] = c;
         } else {
+            printf("current char = %c\n", c);
             for (int j = 0; j < len; j++) {
                 tile_string[0] = buf[j];
                 tile_string[1] = c;

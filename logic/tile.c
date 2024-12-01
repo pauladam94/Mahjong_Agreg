@@ -160,7 +160,6 @@ Tile *tile_from_string(const char *name) {
     switch (name[1]) {
     case 'm':
         res = M1 + ((int)name[0] - '0') - 1;
-        printf("name[1] is m\n");
         break;
     case 'p':
         res = P1 + ((int)name[0] - '0') - 1;
@@ -181,35 +180,41 @@ static bool loaded_has_been_done = false;
 
 void load_all_tiles() {
     loaded_has_been_done = true;
-    tiles_textures = malloc(sizeof(*tiles_textures) * Z7);
-    Image image;
-    image = LoadImage("data/B1.png");
-    tiles_textures[M1] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B2.png");
-    tiles_textures[M2] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B3.png");
-    tiles_textures[M3] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B4.png");
-    tiles_textures[M4] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B5.png");
-    tiles_textures[M5] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B6.png");
-    tiles_textures[M6] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B7.png");
-    tiles_textures[M7] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B8.png");
-    tiles_textures[M8] = LoadTextureFromImage(image);
-    UnloadImage(image);
-    image = LoadImage("data/B9.png");
-    tiles_textures[M9] = LoadTextureFromImage(image);
-    UnloadImage(image);
+    tiles_textures = calloc(sizeof(*tiles_textures), Z7 + 1);
+    tiles_textures[M1] = LoadTexture("data/C1.png");
+    tiles_textures[M2] = LoadTexture("data/C2.png");
+    tiles_textures[M3] = LoadTexture("data/C3.png");
+    tiles_textures[M4] = LoadTexture("data/C4.png");
+    tiles_textures[M5] = LoadTexture("data/C5.png");
+    tiles_textures[M6] = LoadTexture("data/C6.png");
+    tiles_textures[M7] = LoadTexture("data/C7.png");
+    tiles_textures[M8] = LoadTexture("data/C8.png");
+    tiles_textures[M9] = LoadTexture("data/C9.png");
+    tiles_textures[P1] = LoadTexture("data/R1.png");
+    tiles_textures[P2] = LoadTexture("data/R2.png");
+    tiles_textures[P3] = LoadTexture("data/R3.png");
+    tiles_textures[P4] = LoadTexture("data/R4.png");
+    tiles_textures[P5] = LoadTexture("data/R5.png");
+    tiles_textures[P6] = LoadTexture("data/R6.png");
+    tiles_textures[P7] = LoadTexture("data/R7.png");
+    tiles_textures[P8] = LoadTexture("data/R8.png");
+    tiles_textures[P9] = LoadTexture("data/R9.png");
+    tiles_textures[S1] = LoadTexture("data/B1.png");
+    tiles_textures[S2] = LoadTexture("data/B2.png");
+    tiles_textures[S3] = LoadTexture("data/B3.png");
+    tiles_textures[S4] = LoadTexture("data/B4.png");
+    tiles_textures[S5] = LoadTexture("data/B5.png");
+    tiles_textures[S6] = LoadTexture("data/B6.png");
+    tiles_textures[S7] = LoadTexture("data/B7.png");
+    tiles_textures[S8] = LoadTexture("data/B8.png");
+    tiles_textures[S9] = LoadTexture("data/B9.png");
+    tiles_textures[Z1] = LoadTexture("data/VE.png");
+    tiles_textures[Z2] = LoadTexture("data/VS.png");
+    tiles_textures[Z3] = LoadTexture("data/VO.png");
+    tiles_textures[Z4] = LoadTexture("data/VN.png");
+    tiles_textures[Z5] = LoadTexture("data/DB.png");
+    tiles_textures[Z6] = LoadTexture("data/DV.png");
+    tiles_textures[Z7] = LoadTexture("data/DR.png");
 }
 
 Texture2D tile_texture(const Tile *tile) {
@@ -227,7 +232,6 @@ void free_tiles_textures() {
 }
 
 void pp_tile(FILE *file, Tile *t) {
-    printf("tile = %d\n", t->tile);
     switch (t->tile) {
     case M1:
         fprintf(file, "1m");
