@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-typedef struct {
+typedef struct Hand {
     int len;
     int cap;
     Tile **arr;
@@ -16,7 +16,7 @@ Hand *empty_hand() {
     return hand;
 }
 
-void add_tile(Hand *hand, Tile *tile) {
+void hand_add_tile(Hand *hand, Tile *tile) {
     hand->len ++;
     if (hand->len > hand->cap) {
         hand->cap = (hand->cap == 0) ? 1 : hand->cap * 2;
@@ -25,7 +25,17 @@ void add_tile(Hand *hand, Tile *tile) {
     hand->arr[hand->len - 1] = tile;
 }
 
-Tile *get_tile(Hand *hand, int pos) { return hand->arr[pos]; }
+Tile *get_tile(const Hand *hand, int pos) { return hand->arr[pos]; }
+
+void hand_remove_tile(Hand* hand, int pos) {
+    if (hand->len == 0) {
+        fprintf(stderr, "Removing Tile in Empty Hand\n");
+        exit(1);
+    }
+    memmove(hand + pos, hand + pos + 1, hand->len - pos - 1);
+    hand->len --;
+    return;
+}
 
 int hand_size(const Hand *hand) { return hand->len; }
 
@@ -53,7 +63,7 @@ Hand *hand_from_string(const char *s) {
                 tile_string[0] = buf[j];
                 tile_string[1] = c;
                 Tile *tile = tile_from_string(tile_string);
-                add_tile(hand, tile);
+                hand_add_tile(hand, tile);
             }
             free(buf);
             buf = NULL;
@@ -64,7 +74,7 @@ Hand *hand_from_string(const char *s) {
     return hand;
 }
 
-void free_hand(Hand *hand);
+void hand_free(const Hand *hand);
 
-bool is_opened(Hand *hand) { return hand->opened; }
-bool is_closed(Hand *hand) { return !hand->opened; }
+bool is_opened(const Hand *hand) { return hand->opened; }
+bool is_closed(const Hand *hand) { return !hand->opened; }

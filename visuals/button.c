@@ -8,16 +8,24 @@ bool button_is_pressed(int posX, int posY, int width, int height) {
     rec.y = posY;
     rec.width = width;
     rec.height = height;
-    if (posX <= x && x <= posX + width && posY <= y && y <= posY + height ) {
+    float thickness = 4.;
+    float roudness = 0.2;
+    if (posX <= x && x <= posX + width && posY <= y && y <= posY + height) {
         if (IsMouseButtonDown(0)) {
-            DrawRectangleRoundedLinesEx(rec, 0.2, 2, 2., GREEN);
+            DrawRectangleRoundedLinesEx(rec, roudness, 2, thickness, GREEN);
             return true;
         } else {
-            DrawRectangleRoundedLinesEx(rec, 0.2, 2, 2., ORANGE);
+            DrawRectangleRoundedLinesEx(rec, roudness, 2, thickness, ORANGE);
             return false;
         }
     } else {
-        DrawRectangleRoundedLinesEx(rec, 0.2, 2, 2., BLACK);
+        DrawRectangleRoundedLinesEx(rec, roudness, 2, thickness, BLACK);
         return false;
     }
+}
+
+bool button_text_is_pressed(int posX, int posY, int width, int height,
+                            const char *text) {
+    DrawText(text, posX + width / 2, posY + height / 2, 20, BLACK);
+    return button_is_pressed(posX, posY, width, height);
 }

@@ -3,17 +3,22 @@ This project is a Mahjong Game in C Raylib (still a work in progress). The objec
 
 # TODO (don't hesitate to contribute)
 ## Logic of the Game (`logic/`)
+- [ ] remove the loaded of textures from `logic/tile.c` this should be in
+visuals only
 - [ ] Write the logic of the game
-    - [ ] Tile Implementation
-    - [ ] Hand Implementation
+    - [x] Tile Implementation
+    - [x] Hand Implementation
     - [ ] All the rules with tests
-    - [ ] complete game
+    - [ ] Complete game
     - [ ] Expert Program (AI) that computes probability
 
 ## Visuals(`visuals/`)
+- [ ] Create an abstraction layer between the GUI and the code that does
+something with it, to be able to test the GUI.
 - [ ] Pretty print a game -> complete game in the terminal
 - [ ] Client Side Rendering (Raylib)
 - [ ] Try to compile with wasm
+
 
 ## Cryptographic(`crypto/`)
 - [ ] basic elgamal (or RSA) cryptographics primitive
