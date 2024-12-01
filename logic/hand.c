@@ -27,32 +27,37 @@ void add_tile(Hand *hand, Tile *tile) {
 
 Tile *get_tile(Hand *hand, int pos) { return hand->arr[pos]; }
 
-int get_hand_size(const Hand *hand) { return hand->len; }
+int hand_size(const Hand *hand) { return hand->len; }
 
 Hand *hand_from_string(const char *s) {
     Hand *hand = empty_hand();
-    char tile_string[2] = {0};
+    char tile_string[3] = {0};
     int len = 0;
     int cap = 0;
-    int *buf = NULL;
+    char *buf = NULL;
 
     for (int i = 0; i < (int)strlen(s); i++) {
         char c = s[i];
-        if (isalpha(c)) {
+        // if we treat a digit
+        if (isdigit(c)) {
             len++;
             if (len > cap) {
                 cap = cap == 0 ? 1 : cap * 2;
+                printf("cap = %d\n", cap);
                 buf = realloc(buf, cap);
             }
-            buf[len - 1] = (int)c - '0';
+            buf[len - 1] = c;
         } else {
             for (int j = 0; j < len; j++) {
+                tile_string[0] = buf[j];
+                tile_string[1] = c;
+                Tile *tile = tile_from_string(tile_string);
+                add_tile(hand, tile);
             }
-            Tile *tile = tile_from_string(tile_string);
             free(buf);
+            buf = NULL;
             len = 0;
             cap = 0;
-            add_tile(hand, tile);
         }
     }
     return hand;
