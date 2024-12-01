@@ -26,6 +26,6 @@ bool button_is_pressed(int posX, int posY, int width, int height) {
 
 bool button_text_is_pressed(int posX, int posY, int width, int height,
                             const char *text) {
-    DrawText(text, posX + width / 2, posY + height / 2, 20, BLACK);
+    DrawText(text, posX + 10, posY + 10, 20, BLACK);
     return button_is_pressed(posX, posY, width, height);
 }

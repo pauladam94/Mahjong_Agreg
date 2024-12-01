@@ -63,7 +63,38 @@ void test3() {
     free_tiles_textures();
 }
 
+void test4() {
+    InitWindow(1920, 1080, "MahJong Agreg");
+    SetTargetFPS(60);
+    Hand *hand = hand_from_string("123m12p112z");
+    bool should_draw = false;
+    while (!WindowShouldClose()) {
+        BeginDrawing();
+        ClearBackground(WHITE);
+        if (button_text_is_pressed(100, 500, 140, 40, "DRAW CARD") &&
+            should_draw) {
+            hand_add_tile(hand, tile_from_string("1m"));
+            should_draw = false;
+        }
+
+        if (should_draw) {
+            DrawText("You should draw a Card", 100, 100, 20, BLACK);
+        } else {
+            DrawText("You should Delete a Card", 100, 100, 20, BLACK);
+        }
+
+        int tile_pressed = hand_tile_pressed(hand, 200, 200, 0);
+        if (tile_pressed != -1 && !should_draw) {
+            printf("tile pressed = %d\n", tile_pressed);
+            hand_remove_tile(hand, tile_pressed);
+            should_draw = true;
+        }
+        EndDrawing();
+    }
+    free_tiles_textures();
+}
+
 int main() {
-    test3();
+    test4();
     return 0;
 }

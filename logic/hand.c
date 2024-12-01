@@ -28,13 +28,16 @@ void hand_add_tile(Hand *hand, Tile *tile) {
 Tile *get_tile(const Hand *hand, int pos) { return hand->arr[pos]; }
 
 void hand_remove_tile(Hand* hand, int pos) {
+    printf("\nIn Hand Remove Tile\n");
+    printf("hand->len :%d\n", hand->len);
+    printf("hand->cap :%d\n", hand->cap);
+    printf("pos :%d\n", pos);
     if (hand->len == 0) {
         fprintf(stderr, "Removing Tile in Empty Hand\n");
         exit(1);
     }
-    memmove(hand + pos, hand + pos + 1, hand->len - pos - 1);
+    memmove(hand->arr + pos, hand->arr + pos + 1, sizeof(hand->arr) * (hand->len - pos - 1));
     hand->len --;
-    return;
 }
 
 int hand_size(const Hand *hand) { return hand->len; }
@@ -58,7 +61,6 @@ Hand *hand_from_string(const char *s) {
             }
             buf[len - 1] = c;
         } else {
-            printf("current char = %c\n", c);
             for (int j = 0; j < len; j++) {
                 tile_string[0] = buf[j];
                 tile_string[1] = c;

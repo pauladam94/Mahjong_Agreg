@@ -156,7 +156,6 @@ Tile *tile_from_string(const char *name) {
     }
     Tile *t = calloc(sizeof(*t), 1);
     _Tile res;
-    printf("IN tile_from_string : %c %c\n", name[0], name[1]);
     switch (name[1]) {
     case 'm':
         res = M1 + ((int)name[0] - '0') - 1;
