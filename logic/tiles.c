@@ -8,10 +8,9 @@ typedef struct Tiles {
     int len;
     int cap;
     Tile **arr;
-    bool opened;
 } Tiles;
 
-Tiles *empty_tiles() {
+Tiles *tiles_empty() {
     Tiles *tiles = calloc(sizeof(*tiles), 1);
     return tiles;
 }
@@ -25,7 +24,7 @@ void tiles_add_tile(Tiles *tiles, Tile *tile) {
     tiles->arr[tiles->len - 1] = tile;
 }
 
-Tile *get_tile(const Tiles *tiles, int pos) { return tiles->arr[pos]; }
+Tile *tiles_get_tile(const Tiles *tiles, int pos) { return tiles->arr[pos]; }
 
 void tiles_remove_tile(Tiles *tiles, int pos) {
     if (tiles->len == 0) {
@@ -40,7 +39,7 @@ void tiles_remove_tile(Tiles *tiles, int pos) {
 int tiles_size(const Tiles *tiles) { return tiles->len; }
 
 Tiles *tiles_from_string(const char *s) {
-    Tiles *tiles = empty_tiles();
+    Tiles *tiles = tiles_empty();
     char tile_string[3] = {0};
     tile_string[2] = '\0';
     int len = 0;
@@ -85,5 +84,12 @@ void tiles_free(Tiles *tiles) {
     free(tiles);
 }
 
-bool is_opened(const Tiles *tiles) { return tiles->opened; }
-bool is_closed(const Tiles *tiles) { return !tiles->opened; }
+Tiles *tiles_copy(const Tiles *tiles) {
+    Tiles *res = tiles_empty();
+    for (int i = 0; i < tiles_size(tiles); i++) {
+        tiles_add_tile(res, tile_copy(tiles_get_tile(tiles, i)));
+    }
+    return res;
+}
+
+void tiles_sort(Tiles *tiles);

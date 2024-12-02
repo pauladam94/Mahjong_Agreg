@@ -2,7 +2,7 @@ CC = clang
 BUILD_DIR ?= ./build
 NAME = mahjong_agreg
 
-VPATH = ./client:./data:./logic:./visuals:./website:./game:$(BUILD_DIR)
+VPATH = ./client:./data:./logic:./visuals:./utils:./website:./game:$(BUILD_DIR)
 
 RAYLIB_DIR ?= ./raylib/src/
 
@@ -42,7 +42,7 @@ LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
-SOURCES = $(notdir $(wildcard ./client/*.c ./logic/*.c ./visuals/*.c ./game/*.c))
+SOURCES = $(notdir $(wildcard ./client/*.c ./logic/*.c ./visuals/*.c ./game/*.c ./utils/*.c))
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.c=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
@@ -63,15 +63,13 @@ $(LIBRAYLIB):
 	$(MAKE) -C $(RAYLIB_DIR)
 
 TEST_SOURCE = $(wildcard test/*.c)
-TEST_EXECUTABLE = $(TEST_SOURCE:%.c=%.x)
+TEST_EXECUTABLE = $(TEST_SOURCE:test/%.c=build/%.x)
 
 test: $(TEST_EXECUTABLE)
-	@for executable in $(TEST_EXECUTABLE); do \
-		./$$executable ;\
-	done
+	@for binary in $(wildcard build/*.x); do ./$$binary; done
 
-test/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
-	$(CC) $(CFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/main.o, $(OBJECTS)) $(LIBRAYLIB)
+build/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/main.o, $(OBJECTS)) $(LIBRAYLIB)
 
 cleanall : clean clean_raylib
 
@@ -79,6 +77,7 @@ clean:
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
+	$(RM) $(BUILD_DIR)/*
 	$(RM) --dir $(BUILD_DIR)
 	$(RM) $(NAME)
 	$(RM) test/*.x
@@ -86,4 +85,4 @@ clean:
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
 
-.PHONY: clean cleanall clean_raylib
+.PHONY: clean cleanall clean_raylib test

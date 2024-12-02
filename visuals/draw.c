@@ -1,4 +1,4 @@
-#include "utils.h"
+#include "draw.h"
 #include "../logic/tiles.h"
 #include "../logic/tile.h"
 #include "raylib.h"
@@ -9,7 +9,7 @@
 int tiles_tile_pressed(const Tiles *tiles, int posX, int posY, int degrees) {
     draw_tiles(tiles, posX, posY, degrees);
     for (int i = 0; i < tiles_size(tiles); i++) {
-        Tile *tile = get_tile(tiles, i);
+        Tile *tile = tiles_get_tile(tiles, i);
         Texture2D texture = tile_texture(tile);
         int height = texture.height;
         int width = texture.width;
@@ -26,7 +26,7 @@ int tiles_tile_pressed(const Tiles *tiles, int posX, int posY, int degrees) {
 
 void draw_tiles(const Tiles *tiles, int posX, int posY, int degrees) {
     for (int i = 0; i < tiles_size(tiles); i++) {
-        Tile *tile = get_tile(tiles, i);
+        Tile *tile = tiles_get_tile(tiles, i);
         Texture2D texture = tile_texture(tile);
         DrawTexture(texture, posX + i * texture.width, posY, WHITE);
     }

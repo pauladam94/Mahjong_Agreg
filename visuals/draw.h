@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef DRAW_H
+#define DRAW_H
 #include "../logic/tiles.h"
 
 // returns -1 if nothing is pressed
@@ -8,4 +8,4 @@ int tiles_tile_pressed(const Tiles *tiles, int posX, int posY, int degrees);
 void draw_tiles(const Tiles *tiles, int posX, int posY, int degrees);
 void draw_tile(const Tile *tile, int posX, int posY, int degrees);
 
-#endif // UTILS_H
+#endif // DRAW_H

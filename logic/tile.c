@@ -46,7 +46,7 @@ typedef struct Tile {
     _Tile tile;
 } Tile;
 
-int get_number(Tile *t) {
+int tile_number(Tile *t) {
     switch (t->tile) {
     case M1:
     case P1:
@@ -95,53 +95,21 @@ int get_number(Tile *t) {
     }
 }
 
-bool is_honor(Tile *t) {
-    switch (t->tile) {
-    case Z1:
-    case Z2:
-    case Z3:
-    case Z4:
-    case Z5:
-    case Z6:
-    case Z7:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool is_dragon(Tile *t) {
-    switch (t->tile) {
-    case Z5:
-    case Z6:
-    case Z7:
-        return true;
-    default:
-        return false;
-    }
-}
-
-bool is_wind(Tile *t) {
-    switch (t->tile) {
-    case Z1:
-    case Z2:
-    case Z3:
-    case Z4:
-        return true;
-    default:
-        return false;
-    }
-}
-
+bool is_honor(Tile *t) { return (Z1 <= t->tile && t->tile <= Z7); }
+bool is_dragon(Tile *t) { return (Z5 <= t->tile && t->tile <= Z7); }
+bool is_wind(Tile *t) { return (Z1 <= t->tile && t->tile <= Z4); }
 bool is_family(Tile *t) { return !is_honor(t); }
-
-bool is_adjacent(Tile *t0, Tile *t1) {
-    if (!(is_family(t0) || is_family(t1))) {
-        return false;
-    }
-    int n0 = get_number(t0);
-    int n1 = get_number(t1);
-    return (n0 == n1 + 1) || (n0 + 1 == n1);
+bool is_man(Tile *t) { return (M1 <= t->tile && t->tile <= M9); }
+bool is_pin(Tile *t) { return (P1 <= t->tile && t->tile <= P9); }
+bool is_su(Tile *t) { return (S1 <= t->tile && t->tile <= S9); }
+bool tile_same_family(Tile *t1, Tile *t2) {
+    return ((is_man(t1) && is_man(t2)) || (is_pin(t1) && is_pin(t2)) ||
+            (is_su(t1) && is_su(t2)));
+}
+bool is_adjacent(Tile *t1, Tile *t2) {
+    return (is_family(t1) && is_family(t2) && (tile_same_family(t1, t2)) &&
+            ((tile_number(t1) == tile_number(t2) + 1) ||
+             tile_number(t1) + 1 == tile_number(t2)));
 };
 
 // 1m for Man number 1
@@ -338,7 +306,9 @@ void pp_tile(FILE *file, Tile *t) {
 }
 
 void free_tile(Tile *tile) { free(tile); }
-bool tiles_equals(Tile *t1, Tile *t2) { return t1->tile == t2->tile; }
+bool tile_equals(const Tile *t1, const Tile *t2) {
+    return t1->tile == t2->tile;
+}
 
 Tile *next_dora(const Tile *tile) {
     printf("tile = %d\n", tile->tile);
@@ -390,4 +360,10 @@ Tile *next_dora(const Tile *tile) {
     }
     new_tile->tile = res;
     return new_tile;
+}
+
+Tile *tile_copy(const Tile *tile) {
+    Tile *res = calloc(sizeof(*res), 1);
+    res->tile = tile->tile;
+    return res;
 }

@@ -1,7 +1,7 @@
 #include "../logic/tiles.h"
 #include "../logic/tile.h"
 #include "../visuals/button.h"
-#include "../visuals/utils.h"
+#include "../visuals/draw.h"
 #include "raylib.h"
 #include <stdio.h>
 
