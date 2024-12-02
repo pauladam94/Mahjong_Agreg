@@ -15,7 +15,26 @@ Tiles *tiles_empty() {
     return tiles;
 }
 
-void tiles_add_tile(Tiles *tiles, Tile *tile) {
+void tiles_pp(FILE *file, const Tiles *tiles) {
+    for (int i = 0; i < tiles->len; i++) {
+        tile_pp(file, tiles->arr[i]);
+        if (i != tiles->len - 1) {
+            printf(" ");
+        }
+    }
+}
+
+int comp(const void *a, const void *b) {
+    const Tile *t1 = *(const Tile **)a;
+    const Tile *t2 = *(const Tile **)b;
+    return tile_comp(t1, t2);
+}
+
+void tiles_sort(Tiles *tiles) {
+    qsort(tiles->arr, tiles->len, sizeof(*tiles->arr), &comp);
+}
+
+void tiles_add(Tiles *tiles, Tile *tile) {
     tiles->len++;
     if (tiles->len > tiles->cap) {
         tiles->cap = (tiles->cap == 0) ? 1 : tiles->cap * 2;
@@ -24,13 +43,14 @@ void tiles_add_tile(Tiles *tiles, Tile *tile) {
     tiles->arr[tiles->len - 1] = tile;
 }
 
-Tile *tiles_get_tile(const Tiles *tiles, int pos) { return tiles->arr[pos]; }
+Tile *tiles_get(const Tiles *tiles, int pos) { return tiles->arr[pos]; }
 
-void tiles_remove_tile(Tiles *tiles, int pos) {
+void tiles_remove(Tiles *tiles, int pos) {
     if (tiles->len == 0) {
         fprintf(stderr, "Removing Tile in Empty Tiles\n");
         exit(1);
     }
+    free(tiles->arr[pos]);
     memmove(tiles->arr + pos, tiles->arr + pos + 1,
             sizeof(tiles->arr) * (tiles->len - pos - 1));
     tiles->len--;
@@ -61,7 +81,7 @@ Tiles *tiles_from_string(const char *s) {
                 tile_string[0] = buf[j];
                 tile_string[1] = c;
                 Tile *tile = tile_from_string(tile_string);
-                tiles_add_tile(tiles, tile);
+                tiles_add(tiles, tile);
             }
             free(buf);
             buf = NULL;
@@ -87,9 +107,7 @@ void tiles_free(Tiles *tiles) {
 Tiles *tiles_copy(const Tiles *tiles) {
     Tiles *res = tiles_empty();
     for (int i = 0; i < tiles_size(tiles); i++) {
-        tiles_add_tile(res, tile_copy(tiles_get_tile(tiles, i)));
+        tiles_add(res, tile_copy(tiles_get(tiles, i)));
     }
     return res;
 }
-
-void tiles_sort(Tiles *tiles);

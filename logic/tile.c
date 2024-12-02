@@ -46,7 +46,17 @@ typedef struct Tile {
     _Tile tile;
 } Tile;
 
-int tile_number(Tile *t) {
+int tile_comp(const Tile *t1, const Tile *t2) {
+    if (t1->tile > t2->tile) {
+        return 1;
+    } else if (t1->tile < t2->tile) {
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
+int tile_number(const Tile *t) {
     switch (t->tile) {
     case M1:
     case P1:
@@ -95,19 +105,21 @@ int tile_number(Tile *t) {
     }
 }
 
-bool is_honor(Tile *t) { return (Z1 <= t->tile && t->tile <= Z7); }
-bool is_dragon(Tile *t) { return (Z5 <= t->tile && t->tile <= Z7); }
-bool is_wind(Tile *t) { return (Z1 <= t->tile && t->tile <= Z4); }
-bool is_family(Tile *t) { return !is_honor(t); }
-bool is_man(Tile *t) { return (M1 <= t->tile && t->tile <= M9); }
-bool is_pin(Tile *t) { return (P1 <= t->tile && t->tile <= P9); }
-bool is_su(Tile *t) { return (S1 <= t->tile && t->tile <= S9); }
+bool tile_is_honor(const Tile *t) { return (Z1 <= t->tile && t->tile <= Z7); }
+bool tile_is_dragon(const Tile *t) { return (Z5 <= t->tile && t->tile <= Z7); }
+bool tile_is_wind(const Tile *t) { return (Z1 <= t->tile && t->tile <= Z4); }
+bool tile_is_family(const Tile *t) { return !tile_is_honor(t); }
+bool tile_is_man(const Tile *t) { return (M1 <= t->tile && t->tile <= M9); }
+bool tile_is_pin(const Tile *t) { return (P1 <= t->tile && t->tile <= P9); }
+bool tile_is_su(const Tile *t) { return (S1 <= t->tile && t->tile <= S9); }
 bool tile_same_family(Tile *t1, Tile *t2) {
-    return ((is_man(t1) && is_man(t2)) || (is_pin(t1) && is_pin(t2)) ||
-            (is_su(t1) && is_su(t2)));
+    return ((tile_is_man(t1) && tile_is_man(t2)) ||
+            (tile_is_pin(t1) && tile_is_pin(t2)) ||
+            (tile_is_su(t1) && tile_is_su(t2)));
 }
-bool is_adjacent(Tile *t1, Tile *t2) {
-    return (is_family(t1) && is_family(t2) && (tile_same_family(t1, t2)) &&
+bool tile_adjacents(Tile *t1, Tile *t2) {
+    return (tile_is_family(t1) && tile_is_family(t2) &&
+            (tile_same_family(t1, t2)) &&
             ((tile_number(t1) == tile_number(t2) + 1) ||
              tile_number(t1) + 1 == tile_number(t2)));
 };
@@ -184,6 +196,11 @@ void load_all_tiles() {
     tiles_textures[Z7] = LoadTexture("data/DR.png");
 }
 
+Tile *tile_random(void) {
+    Tile *t = calloc(sizeof(*t), 1);
+    t->tile = rand() % (Z7 + 1);
+    return t;
+}
 Texture2D tile_texture(const Tile *tile) {
     if (!loaded_has_been_done) {
         load_all_tiles();
@@ -191,14 +208,14 @@ Texture2D tile_texture(const Tile *tile) {
     return tiles_textures[tile->tile];
 }
 
-void free_tiles_textures() {
+void tiles_free_textures() {
     for (size_t i = 0; i < Z7; i++) {
         UnloadTexture(tiles_textures[i]);
     }
     free(tiles_textures);
 }
 
-void pp_tile(FILE *file, Tile *t) {
+void tile_pp(FILE *file, Tile *t) {
     switch (t->tile) {
     case M1:
         fprintf(file, "1m");
