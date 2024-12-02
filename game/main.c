@@ -1,4 +1,4 @@
-#include "../logic/hand.h"
+#include "../logic/tiles.h"
 #include "../logic/tile.h"
 #include "../visuals/button.h"
 #include "../visuals/utils.h"
@@ -9,18 +9,18 @@ void test1() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
     Tile *tile = tile_from_string("7m");
-    Hand *hand = hand_from_string("123m12p1z");
-    Hand *hand2 = hand_from_string("123m12p112z");
+    Tiles *tiles = tiles_from_string("123m12p1z");
+    Tiles *tiles2 = tiles_from_string("123m12p112z");
     pp_tile(stdout, tile);
     printf("\n");
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
         draw_tile(tile, 100, 100, 90);
-        draw_hand(hand, 200, 200, 0);
-        draw_hand(hand2, 500, 500, 10);
+        draw_tiles(tiles, 200, 200, 0);
+        draw_tiles(tiles2, 500, 500, 10);
 
-        hand_tile_pressed(hand2, 800, 800, 0);
+        tiles_tile_pressed(tiles2, 800, 800, 0);
         bool result = button_is_pressed(100, 100, 200, 200);
         EndDrawing();
     }
@@ -30,14 +30,14 @@ void test1() {
 void test2() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
-    Hand *hand = hand_from_string("123m12p112z");
+    Tiles *tiles = tiles_from_string("123m12p112z");
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
 
-        int tile_pressed = hand_tile_pressed(hand, 200, 200, 0);
+        int tile_pressed = tiles_tile_pressed(tiles, 200, 200, 0);
         if (tile_pressed != -1) {
-            hand_remove_tile(hand, tile_pressed);
+            tiles_remove_tile(tiles, tile_pressed);
         }
         EndDrawing();
     }
@@ -47,16 +47,16 @@ void test2() {
 void test3() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
-    Hand *hand = hand_from_string("123m12p112z");
+    Tiles *tiles = tiles_from_string("123m12p112z");
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
         if (button_text_is_pressed(100, 500, 50, 100, "DRAW CARD")) {
-            hand_add_tile(hand, tile_from_string("1m"));
+            tiles_add_tile(tiles, tile_from_string("1m"));
         }
-        int tile_pressed = hand_tile_pressed(hand, 200, 200, 0);
+        int tile_pressed = tiles_tile_pressed(tiles, 200, 200, 0);
         if (tile_pressed != -1) {
-            hand_remove_tile(hand, tile_pressed);
+            tiles_remove_tile(tiles, tile_pressed);
         }
         EndDrawing();
     }
@@ -66,14 +66,14 @@ void test3() {
 void test4() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
-    Hand *hand = hand_from_string("123m12p112z");
+    Tiles *tiles = tiles_from_string("123m12p112z");
     bool should_draw = false;
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
         if (button_text_is_pressed(100, 500, 140, 40, "DRAW CARD") &&
             should_draw) {
-            hand_add_tile(hand, tile_from_string("1m"));
+            tiles_add_tile(tiles, tile_from_string("1m"));
             should_draw = false;
         }
 
@@ -83,16 +83,14 @@ void test4() {
             DrawText("You should Delete a Card", 100, 100, 20, BLACK);
         }
 
-        int tile_pressed = hand_tile_pressed(hand, 200, 200, 0);
+        int tile_pressed = tiles_tile_pressed(tiles, 200, 200, 0);
         if (tile_pressed != -1 && !should_draw) {
-            printf("tile pressed = %d\n", tile_pressed);
-            hand_remove_tile(hand, tile_pressed);
+            tiles_remove_tile(tiles, tile_pressed);
             should_draw = true;
         }
         EndDrawing();
     }
-    hand_free(hand);
-    // free_tiles_textures();
+    tiles_free(tiles);
 }
 
 int main() {
