@@ -61,6 +61,16 @@ $(LIBRAYLIB):
 	@mkdir -p $(BUILD_DIR)
 	$(MAKE) -C $(RAYLIB_DIR)
 
+TEST_SOURCE = $(wildcard test/*.c)
+TEST_EXECUTABLE = $(TEST_SOURCE:%.c=%.x)
+
+test: $(TEST_EXECUTABLE)
+	for executable in $(TEST_EXECUTABLE); do \
+		./$$executable ;\
+	done
+
+test/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
+	$(CC) $(CFLAGS) -o $ $(filter-out $(BUILD_DIR)/main.o, $(OBJECTS)) $(LIBRAYLIB)
 
 cleanall : clean clean_raylib
 
@@ -70,6 +80,7 @@ clean:
 	$(RM) $(LIBRAYLIB)
 	$(RM) --dir $(BUILD_DIR)
 	$(RM) $(NAME)
+	$(RM) test/*.x
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)

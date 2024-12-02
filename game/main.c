@@ -92,7 +92,7 @@ void test4() {
         EndDrawing();
     }
     hand_free(hand);
-    free_tiles_textures();
+    // free_tiles_textures();
 }
 
 int main() {

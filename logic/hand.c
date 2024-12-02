@@ -28,10 +28,6 @@ void hand_add_tile(Hand *hand, Tile *tile) {
 Tile *get_tile(const Hand *hand, int pos) { return hand->arr[pos]; }
 
 void hand_remove_tile(Hand *hand, int pos) {
-    printf("\nIn Hand Remove Tile\n");
-    printf("hand->len :%d\n", hand->len);
-    printf("hand->cap :%d\n", hand->cap);
-    printf("pos :%d\n", pos);
     if (hand->len == 0) {
         fprintf(stderr, "Removing Tile in Empty Hand\n");
         exit(1);
@@ -73,6 +69,10 @@ Hand *hand_from_string(const char *s) {
             len = 0;
             cap = 0;
         }
+    }
+    if (buf != NULL) {
+        fprintf(stderr, "%s Not the right format of hand", s);
+        exit(1);
     }
     return hand;
 }
