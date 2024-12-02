@@ -1,4 +1,3 @@
-
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +8,9 @@
 
 #define BUF_SIZE 500
 
-int main(int argc, char *argv[]) {
+int server() {
+    char *argv[] = {"", "", "", ""};
+    int argc = 2;
     int sfd, s;
     char buf[BUF_SIZE];
     ssize_t nread;

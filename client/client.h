@@ -1,4 +1,7 @@
+#ifndef CLIENT_H
+#define CLIENT_H
 
+int client(int id);
 
-void send_data(void);
+#endif // CLIENT_H
 

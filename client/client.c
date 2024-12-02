@@ -9,7 +9,9 @@
 
 #define BUF_SIZE 500
 
-int main(int argc, char *argv[]) {
+int client(int id) {
+    char *argv[] = {"client", "test", "test", "test"};
+    int argc = 2;
     int sfd, s;
     char buf[BUF_SIZE];
     size_t len;

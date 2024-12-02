@@ -12,12 +12,15 @@ int hand_tile_pressed(const Hand *hand, int posX, int posY, int degrees) {
     for (int i = 0; i < tiles_size(hand_closed_tiles(hand)); i++) {
         Tile *tile = tiles_get(hand_closed_tiles(hand), i);
         Texture2D texture = tile_texture(tile);
+        int tilePosX = posX + i * texture.width;
+        DrawTexture(texture, tilePosX, posY, WHITE);
+    }
+    for (int i = 0; i < tiles_size(hand_closed_tiles(hand)); i++) {
+        Tile *tile = tiles_get(hand_closed_tiles(hand), i);
+        Texture2D texture = tile_texture(tile);
         int height = texture.height;
         int width = texture.width;
-
         int tilePosX = posX + i * texture.width;
-
-        DrawTexture(texture, tilePosX, posY, WHITE);
         if (button_is_pressed(tilePosX, posY, width, height)) {
             return i;
         }

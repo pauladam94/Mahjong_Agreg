@@ -1,3 +1,5 @@
+#include "../client/client.h"
+#include "../client/server.h"
 #include "../logic/hand.h"
 #include "../logic/tile.h"
 #include "../logic/tiles.h"
@@ -5,6 +7,7 @@
 #include "../visuals/draw.h"
 #include "raylib.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 void basic_tile_drawing() {
     InitWindow(1920, 1080, "MahJong Agreg");
@@ -103,7 +106,7 @@ void test5() {
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
-        if (button_text_is_pressed(100, 500, 140, 40, "DRAW CARD") &&
+        if (button_text_is_pressed(100, 500, 145, 45, "DRAW CARD") &&
             should_draw) {
             hand_add_tile(hand, tile_random());
             hand_sort(hand);
@@ -126,7 +129,20 @@ void test5() {
     hand_free(hand);
 }
 
-int main() {
+int client_server(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Usage: %s id(between 1 and 4)\n", argv[0]);
+    }
+    int id = atoi(argv[1]);
+    if (id == 1) {
+        return server();
+    } else {
+        return client(0);
+    }
+    return 0;
+}
+
+int main(int argc, char *argv[]) {
     test5();
     return 0;
 }
