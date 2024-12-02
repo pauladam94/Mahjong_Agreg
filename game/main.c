@@ -91,6 +91,7 @@ void test4() {
         }
         EndDrawing();
     }
+    hand_free(hand);
     free_tiles_textures();
 }
 

@@ -78,6 +78,9 @@ Hand *hand_from_string(const char *s) {
 }
 
 void hand_free(Hand *hand) {
+    for (int i = 0; i < hand->len; i++) {
+        free(hand->arr[i]);
+    }
     free(hand->arr);
     free(hand);
 }
