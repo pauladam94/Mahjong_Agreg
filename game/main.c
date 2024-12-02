@@ -6,7 +6,7 @@
 #include "raylib.h"
 #include <stdio.h>
 
-void test1() {
+void basic_tile_drawing() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
     Tile *tile = tile_from_string("7m");
@@ -28,7 +28,7 @@ void test1() {
     tiles_free_textures();
 }
 
-void test2() {
+void basic_tiles_stuff() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
     Tiles *tiles = tiles_from_string("123m12p112z");
@@ -45,7 +45,7 @@ void test2() {
     tiles_free_textures();
 }
 
-void test3() {
+void simple_gui_tiles() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
     Tiles *tiles = tiles_from_string("123m12p112z");
@@ -64,7 +64,7 @@ void test3() {
     tiles_free_textures();
 }
 
-void test4() {
+void tiles_with_redraw() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
     Tiles *tiles = tiles_from_string("123m12p112z");

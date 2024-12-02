@@ -31,7 +31,7 @@ int comp(const void *a, const void *b) {
 }
 
 void tiles_sort(Tiles *tiles) {
-    qsort(tiles->arr, tiles->len, sizeof(*tiles->arr), &comp);
+    qsort(tiles->arr, tiles->len, sizeof(tiles->arr), &comp);
 }
 
 void tiles_add(Tiles *tiles, Tile *tile) {
