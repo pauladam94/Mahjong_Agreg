@@ -17,7 +17,7 @@ Hand *empty_hand() {
 }
 
 void hand_add_tile(Hand *hand, Tile *tile) {
-    hand->len ++;
+    hand->len++;
     if (hand->len > hand->cap) {
         hand->cap = (hand->cap == 0) ? 1 : hand->cap * 2;
         hand->arr = realloc(hand->arr, sizeof(hand->arr) * hand->cap);
@@ -27,7 +27,7 @@ void hand_add_tile(Hand *hand, Tile *tile) {
 
 Tile *get_tile(const Hand *hand, int pos) { return hand->arr[pos]; }
 
-void hand_remove_tile(Hand* hand, int pos) {
+void hand_remove_tile(Hand *hand, int pos) {
     printf("\nIn Hand Remove Tile\n");
     printf("hand->len :%d\n", hand->len);
     printf("hand->cap :%d\n", hand->cap);
@@ -36,8 +36,9 @@ void hand_remove_tile(Hand* hand, int pos) {
         fprintf(stderr, "Removing Tile in Empty Hand\n");
         exit(1);
     }
-    memmove(hand->arr + pos, hand->arr + pos + 1, sizeof(hand->arr) * (hand->len - pos - 1));
-    hand->len --;
+    memmove(hand->arr + pos, hand->arr + pos + 1,
+            sizeof(hand->arr) * (hand->len - pos - 1));
+    hand->len--;
 }
 
 int hand_size(const Hand *hand) { return hand->len; }
@@ -76,7 +77,10 @@ Hand *hand_from_string(const char *s) {
     return hand;
 }
 
-void hand_free(const Hand *hand);
+void hand_free(Hand *hand) {
+    free(hand->arr);
+    free(hand);
+}
 
 bool is_opened(const Hand *hand) { return hand->opened; }
 bool is_closed(const Hand *hand) { return !hand->opened; }
