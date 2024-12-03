@@ -1,5 +1,7 @@
-# Mahjong_Agreg
-This project is a Mahjong Game in C Raylib (still a work in progress). The object is too pratice C programming and to produce clear code (instead of the fastest one).
+# Metal Mahjong ![](./data/Logo_Mental_Mahjong2.svg)
+This project is a Mahjong Game in C Raylib (still a work in progress). The object is too pratice C programming and to produce clear code (instead of the fastest one). This project is going to use the [mental poker](https://en.wikipedia.org/wiki/Mental_poker) algorithm to assure that no player can cheat and without any third party server.
+
+
 
 # TODO (don't hesitate to contribute)
 ## Logic of the Game (`logic/`)
