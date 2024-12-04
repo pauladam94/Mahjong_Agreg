@@ -112,12 +112,12 @@ bool tile_is_family(const Tile *t) { return !tile_is_honor(t); }
 bool tile_is_man(const Tile *t) { return (M1 <= t->tile && t->tile <= M9); }
 bool tile_is_pin(const Tile *t) { return (P1 <= t->tile && t->tile <= P9); }
 bool tile_is_su(const Tile *t) { return (S1 <= t->tile && t->tile <= S9); }
-bool tile_same_family(Tile *t1, Tile *t2) {
+bool tile_same_family(const Tile *t1, const Tile *t2) {
     return ((tile_is_man(t1) && tile_is_man(t2)) ||
             (tile_is_pin(t1) && tile_is_pin(t2)) ||
             (tile_is_su(t1) && tile_is_su(t2)));
 }
-bool tile_adjacents(Tile *t1, Tile *t2) {
+bool tile_adjacent(const Tile *t1, const Tile *t2) {
     return (tile_is_family(t1) && tile_is_family(t2) &&
             (tile_same_family(t1, t2)) &&
             ((tile_number(t1) == tile_number(t2) + 1) ||
@@ -322,7 +322,7 @@ void tile_pp(FILE *file, Tile *t) {
     }
 }
 
-void free_tile(Tile *tile) { free(tile); }
+void tile_free(Tile *tile) { free(tile); }
 bool tile_equals(const Tile *t1, const Tile *t2) {
     return t1->tile == t2->tile;
 }
@@ -380,6 +380,9 @@ Tile *next_dora(const Tile *tile) {
 }
 
 Tile *tile_copy(const Tile *tile) {
+    if (tile == NULL) {
+        return NULL;
+    }
     Tile *res = calloc(sizeof(*res), 1);
     res->tile = tile->tile;
     return res;

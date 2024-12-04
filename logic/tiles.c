@@ -3,7 +3,6 @@
 #include <ctype.h>
 #include <stdbool.h>
 #include <string.h>
-
 typedef struct Tiles {
     int len;
     int cap;
@@ -34,16 +33,21 @@ void tiles_sort(Tiles *tiles) {
     qsort(tiles->arr, tiles->len, sizeof(tiles->arr), &comp);
 }
 
-void tiles_add(Tiles *tiles, Tile *tile) {
+void tiles_add(Tiles *tiles, const Tile *tile) {
     tiles->len++;
     if (tiles->len > tiles->cap) {
         tiles->cap = (tiles->cap == 0) ? 1 : tiles->cap * 2;
         tiles->arr = realloc(tiles->arr, sizeof(tiles->arr) * tiles->cap);
     }
-    tiles->arr[tiles->len - 1] = tile;
+    tiles->arr[tiles->len - 1] = (Tile *)tile;
 }
 
-Tile *tiles_get(const Tiles *tiles, int pos) { return tiles->arr[pos]; }
+Tile *tiles_get(const Tiles *tiles, int pos) {
+    if (pos < 0 || pos >= tiles->len) {
+        return NULL;
+    }
+    return tiles->arr[pos];
+}
 
 void tiles_remove(Tiles *tiles, int pos) {
     if (tiles->len == 0) {
@@ -98,7 +102,7 @@ Tiles *tiles_from_string(const char *s) {
 
 void tiles_free(Tiles *tiles) {
     for (int i = 0; i < tiles->len; i++) {
-        free(tiles->arr[i]);
+        tile_free(tiles->arr[i]);
     }
     free(tiles->arr);
     free(tiles);

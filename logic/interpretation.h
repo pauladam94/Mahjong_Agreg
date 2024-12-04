@@ -1,5 +1,0 @@
-
-
-
-typedef struct interpretation interpretation;
-

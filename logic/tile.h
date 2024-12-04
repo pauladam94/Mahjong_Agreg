@@ -20,6 +20,7 @@ bool tile_is_honor(const Tile *t);
 bool tile_is_dragon(const Tile *t);
 bool tile_is_wind(const Tile *t);
 bool tile_is_family(const Tile *t);
+bool tile_same_family(const Tile *t0, const Tile *t1);
 bool tile_is_man(const Tile *t);
 bool tile_is_pin(const Tile *t);
 bool tile_is_su(const Tile *t);
@@ -27,6 +28,6 @@ bool tile_equals(const Tile *t1, const Tile *t2);
 Texture2D tile_texture(const Tile *t);
 void tiles_free_textures();
 void tile_pp(FILE *file, Tile *t);
-void free_tile(Tile *tile);
+void tile_free(Tile *tile);
 
 #endif // TILE_H

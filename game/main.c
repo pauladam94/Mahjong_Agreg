@@ -100,7 +100,7 @@ void tiles_with_redraw() {
 void test5() {
     InitWindow(1920, 1080, "MahJong Agreg");
     SetTargetFPS(60);
-    Hand *hand = hand_from_string("7z12m1p12z2m7p");
+    Hand *hand = hand_from_string("67z12m123p12z2m712p");
     hand_sort(hand);
     bool should_draw = false;
     while (!WindowShouldClose()) {
@@ -114,7 +114,7 @@ void test5() {
         }
 
         if (should_draw) {
-            DrawText("You should draw a Card", 100, 100, 20, BLACK);
+            DrawText("You should draw a Card", 10, 100, 20, BLACK);
         } else {
             DrawText("You should Delete a Card", 100, 100, 20, BLACK);
         }

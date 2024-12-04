@@ -1,9 +1,7 @@
-#ifndef tiles_H
-#define tiles_H
-
+#ifndef TILES_H
+#define TILES_H
 #include "tile.h"
 #include <stdbool.h>
-
 typedef struct Tiles Tiles;
 
 Tiles *tiles_empty(void);
@@ -14,9 +12,9 @@ Tiles *tiles_copy(const Tiles *tiles);
 Tile *tiles_get(const Tiles *tiles, int pos);
 int tiles_size(const Tiles *tiles);
 void tiles_sort(Tiles *tiles);
-void tiles_free(const Tiles *tiles);
-void tiles_add(Tiles *tiles, Tile *tile);
+void tiles_free(Tiles *tiles);
+void tiles_add(Tiles *tiles, const Tile *tile);
 void tiles_remove(Tiles *tiles, int pos);
 void tiles_pp(FILE *file, const Tiles *tiles);
 
-#endif // tiles_H
+#endif // TILES_H

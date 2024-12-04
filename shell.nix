@@ -40,4 +40,3 @@ pkgs.mkShell {
     openlibm
   ]);
 }
-

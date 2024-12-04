@@ -7,5 +7,5 @@ int main() {
     printf("=====[TEST Tiles]=====\n");
     reset();
     Tiles *tiles = tiles_empty();
-    tiles_add_tile(tiles, tile_from_string("1m"));
+    tiles_add(tiles, tile_from_string("1m"));
 }

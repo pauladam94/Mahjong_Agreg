@@ -3,15 +3,11 @@
 # Metal Mahjong 
 This project is a Mahjong Game in C Raylib (still a work in progress). The object is too pratice C programming and to produce clear code (instead of the fastest one). This project is going to use the [mental poker](https://en.wikipedia.org/wiki/Mental_poker) algorithm to assure that no player can cheat and without any third party server.
 
-
-
 # TODO (don't hesitate to contribute)
 ## Logic of the Game (`logic/`)
 - [ ] remove the loaded of textures from `logic/tile.c` this should be in
 visuals only
 - [ ] Write the logic of the game
-    - [x] Tile Implementation
-    - [x] Hand Implementation
     - [ ] All the rules with tests
     - [ ] Complete game
     - [ ] Expert Program (AI) that computes probability
