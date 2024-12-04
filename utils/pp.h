@@ -10,5 +10,6 @@
 //
 // This model have the purpose to replicate the one from Ocaml `Format.printf`
 void fppf(FILE *file, const char *s, ...);
+void ppf(const char*s, ...);
 
 #endif

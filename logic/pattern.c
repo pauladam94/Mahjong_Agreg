@@ -61,18 +61,31 @@ void pattern_pp(FILE *file, Pattern *pat) {
         for (int i = 0; i < 3; i++) {
             if (pat->group[i][j] != NULL) {
                 tile_pp(file, pat->group[i][j]);
-                fprintf(file, " ");
+                if (i != 2)
+                    fprintf(file, " ");
             }
         }
         fprintf(file, "|");
     }
+    if (pat->pair[0] != NULL)
+        tile_pp(file, pat->pair[0]);
+    if (pat->pair[1] != NULL)
+        tile_pp(file, pat->pair[1]);
+    fprintf(file, "|");
     fprintf(file, " ");
     if (pat->tiles != NULL)
         tiles_pp(file, pat->tiles);
 }
 
+bool pattern_has_pair(Pattern *pat) {
+    return pat->pair[0] == NULL && pat->pair[1] == NULL;
+}
+
 void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
-    if (pat->pair[0] == NULL) {
+    printf("Pattern inside add pair:");
+    pattern_pp(stdout, pat);
+    printf("\n");
+    if (pattern_has_pair(pat)) {
         pat->pair[0] = t0;
         pat->pair[1] = t1;
     } else {
@@ -80,7 +93,7 @@ void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
     }
 }
 
-Tile *pattern_get_tile(Pattern *pat, int pos) {
+Tile *pattern_get_tile(const Pattern *pat, int pos) {
     return tiles_get(pat->tiles, pos);
 }
 
@@ -95,7 +108,7 @@ void pattern_free(Pattern *pat) {
     free(pat);
 }
 
-Pattern *pattern_copy(Pattern *pat) {
+Pattern *pattern_copy(const Pattern *pat) {
     Pattern *res = pattern_empty();
     for (int j = 0; j < 4; j++) {
         for (int i = 0; i < 3; i++) {
@@ -109,7 +122,26 @@ Pattern *pattern_copy(Pattern *pat) {
     return res;
 }
 
-void pattern_next_three_same(Pattern *pat, Tile **fst, Tile **snd,
+void pattern_next_pair(const Pattern *pat, Tile **fst, Tile **snd) {
+    int i = 0;
+    Tile *tile = NULL;
+    while (true) {
+        tile = pattern_get_tile(pat, i);
+        if (tile == NULL) {
+            return;
+        }
+        if (*fst == NULL) {
+            *fst = tile;
+        } else if (*snd == NULL) {
+            if (tile_equals(*fst, tile)) {
+                *snd = tile;
+                break;
+            }
+        }
+        i++;
+    }
+}
+void pattern_next_three_same(const Pattern *pat, Tile **fst, Tile **snd,
                              Tile **thrd) {
     int i = 0;
     Tile *tile = NULL;
@@ -133,7 +165,8 @@ void pattern_next_three_same(Pattern *pat, Tile **fst, Tile **snd,
         i++;
     }
 }
-void pattern_next_sequence(Pattern *pat, Tile **fst, Tile **snd, Tile **thrd) {
+void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
+                           Tile **thrd) {
     int i = 0;
     Tile *tile = NULL;
     while (true) {

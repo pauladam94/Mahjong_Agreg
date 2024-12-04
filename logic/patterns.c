@@ -45,13 +45,15 @@ Pattern *patterns_pop(Patterns *patterns) {
 int patterns_size(const Patterns *patterns) { return patterns->len; }
 
 void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
-
-
+    // FIRST SEQUENCE
     Tile *fst = NULL;
     Tile *snd = NULL;
     Tile *thrd = NULL;
     pattern_next_sequence(pat, &fst, &snd, &thrd);
     if (fst != NULL && snd != NULL && thrd != NULL) {
+        fst = tile_copy(fst);
+        snd = tile_copy(snd);
+        thrd = tile_copy(thrd);
         Pattern *new_pattern = pattern_copy(pat);
         pattern_add_group(new_pattern, fst, snd, thrd);
         pattern_remove_tile(new_pattern, fst);
@@ -59,10 +61,36 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
         pattern_remove_tile(new_pattern, thrd);
         patterns_add_pattern(patterns, new_pattern);
     }
-
-    printf("pattern:");
-    pattern_pp(stdout, pat);
-    printf("\n");
+    // FIRST THREE OF A KIND
+    fst = NULL;
+    snd = NULL;
+    thrd = NULL;
+    pattern_next_three_same(pat, &fst, &snd, &thrd);
+    if (fst != NULL && snd != NULL && thrd != NULL) {
+        fst = tile_copy(fst);
+        snd = tile_copy(snd);
+        thrd = tile_copy(thrd);
+        Pattern *new_pattern = pattern_copy(pat);
+        pattern_add_group(new_pattern, fst, snd, thrd);
+        pattern_remove_tile(new_pattern, fst);
+        pattern_remove_tile(new_pattern, snd);
+        pattern_remove_tile(new_pattern, thrd);
+        patterns_add_pattern(patterns, new_pattern);
+    }
+    // FIRST PAIR
+    fst = NULL;
+    snd = NULL;
+    pattern_next_pair(pat, &fst, &snd);
+    if (fst != NULL && snd != NULL) {
+        fst = tile_copy(fst);
+        snd = tile_copy(snd);
+        thrd = tile_copy(thrd);
+        Pattern *new_pattern = pattern_copy(pat);
+        pattern_add_pair(new_pattern, fst, snd);
+        pattern_remove_tile(new_pattern, fst);
+        pattern_remove_tile(new_pattern, snd);
+        patterns_add_pattern(patterns, new_pattern);
+    }
 }
 
 void patterns_free(Patterns *patterns) {

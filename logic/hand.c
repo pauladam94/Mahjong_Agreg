@@ -29,6 +29,7 @@ bool is_closed(const Hand *hand) { return !hand->opened; }
 
 void hand_pp(FILE *file, const Hand *hand) { tiles_pp(file, hand->hand); }
 Patterns *hand_patterns(const Hand *hand) {
+    tiles_sort(hand->hand);
     Patterns *res = patterns_empty();
     Patterns *todo = patterns_empty();
     Tiles *tiles = tiles_copy(hand->hand);
@@ -39,31 +40,38 @@ Patterns *hand_patterns(const Hand *hand) {
 
     while (patterns_size(todo) != 0) {
         Pattern *pattern = patterns_pop(todo);
+        /*
         printf("res:");
         patterns_pp(stdout, res);
         printf("\n");
         printf("todo:");
         patterns_pp(stdout, todo);
         printf("\n");
-
+        printf("pattern:");
         pattern_pp(stdout, pattern);
         printf("\n");
+        */
 
         if (pattern_is_complete(pattern)) {
             patterns_add_pattern(res, pattern);
             continue;
         }
         patterns_add_first_group_pattern(todo, pattern);
+        pattern_free(pattern);
     }
     patterns_free(todo);
-    tiles_free(tiles);
-    pattern_free(pat);
+    // tiles_free(tiles);
+    // pattern_free(pat);
     return res;
 }
 
 bool hand_is_complete(const Hand *hand) {
     Patterns *patterns = hand_patterns(hand);
+
+    printf("Patterns :\n");
     patterns_pp(stdout, patterns);
+    printf("\n");
+
     int n_patterns = patterns_size(patterns);
     patterns_free(patterns);
     return n_patterns >= 1;
@@ -84,9 +92,15 @@ Hand *hand_from_string(const char *s) {
 }
 
 void hand_free(Hand *hand) {
-    free(hand->hand);
-    free(hand->chi);
+    tiles_free(hand->hand);
+    for (int i = 0; i < hand->chi_len; i ++)
+        tiles_free(hand->chi[i]);
+    for (int i = 0; i < hand->kan_len; i ++)
+        tiles_free(hand->kan[i]);
+    for (int i = 0; i < hand->pon_len; i ++)
+        tiles_free(hand->pon[i]);
     free(hand->pon);
+    free(hand->chi);
     free(hand->kan);
     free(hand);
 }

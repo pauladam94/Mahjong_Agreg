@@ -8,6 +8,7 @@ Tiles *tiles_empty(void);
 // 1m12p124s1z is the tiles with
 // Man 1, Pin 1, Pin 2, Su 1, Su 2, Su 4, East Wind
 Tiles *tiles_from_string(const char *s);
+// Deep copy of the tiles (conserving the order)
 Tiles *tiles_copy(const Tiles *tiles);
 Tile *tiles_get(const Tiles *tiles, int pos);
 int tiles_size(const Tiles *tiles);
