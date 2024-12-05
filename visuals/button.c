@@ -1,32 +1,58 @@
+#include "draw.h"
 #include "raylib.h"
+#include "settings.h"
 
-bool button_is_pressed(int posX, int posY, int width, int height) {
+void DrawBox(Rectangle rec, int thickness, Color color, Align align) {
+    float roundness = 0.12;
+    DrawRectangleRoundedLinesEx(rec, roundness, 2, thickness, ORANGE);
+}
+
+bool button_is_pressed(int posX, int posY, int width, int height, Align align) {
     int x = GetMouseX();
     int y = GetMouseY();
-    float thickness = 7.;
-    float roudness = 0.12;
+    float thickness = (float)TILE_HEIGHT / 20;
     Rectangle rec = {0};
-    rec.x = posX + thickness;
-    rec.y = posY + thickness;
-    rec.width = width - thickness * 2;
-    rec.height = height - thickness * 2;
-
-    if (posX <= x && x <= posX + width && posY <= y && y <= posY + height) {
+    switch (align) {
+    case DOWN:
+        rec.x = posX + thickness;
+        rec.y = posY + thickness;
+        rec.width = width - thickness * 2;
+        rec.height = height - thickness * 2;
+        break;
+    case RIGHT:
+        rec.x = posX;
+        rec.y = posY - TILE_WIDTH;
+        rec.width = height;
+        rec.height = width;
+        break;
+    case UP:
+        rec.x = posX - TILE_WIDTH;
+        rec.y = posY - TILE_HEIGHT;
+        rec.width = width;
+        rec.height = height;
+        break;
+    case LEFT:
+        rec.x = posX - TILE_HEIGHT;
+        rec.y = posY;
+        rec.width = height;
+        rec.height = width;
+        break;
+    }
+    if (rec.x <= x && x <= rec.x + rec.width && rec.y <= y && y <= rec.y + rec.height) {
         if (IsMouseButtonDown(0)) {
-            DrawRectangleRoundedLinesEx(rec, roudness, 2, thickness, GREEN);
+            DrawBox(rec, thickness, GREEN, align);
             return true;
         } else {
-            DrawRectangleRoundedLinesEx(rec, roudness, 2, thickness, ORANGE);
+            DrawBox(rec, thickness, ORANGE, align);
             return false;
         }
     } else {
-        DrawRectangleRoundedLinesEx(rec, roudness, 2, thickness, BLACK);
         return false;
     }
 }
 
 bool button_text_is_pressed(int posX, int posY, int width, int height,
-                            const char *text) {
+                            const char *text, Align align) {
     DrawText(text, posX + 10, posY + 10, 20, BLACK);
-    return button_is_pressed(posX, posY, width, height);
+    return button_is_pressed(posX, posY, width, height, align);
 }

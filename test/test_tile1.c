@@ -3,7 +3,7 @@
 
 int main() {
     purple();
-    printf("=====[TEST Tile 1]=====\n");
+    printf("[TEST Tile 1]\n");
     reset();
 
     Tile *t1 = tile_from_string("1m");

@@ -4,6 +4,6 @@
 
 int main() {
     purple();
-    printf("=====[TEST Tiles 2]=====\n");
+    printf("[TEST Tiles 2]\n");
     reset();
 }

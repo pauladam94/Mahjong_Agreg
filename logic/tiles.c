@@ -100,6 +100,17 @@ Tiles *tiles_from_string(const char *s) {
     return tiles;
 }
 
+Tiles *tiles_all(void) {
+    return tiles_from_string(
+        "111122223333444455556666777788889999m111122223333"
+        "444455556666777788889999p11112222333344445555666677"
+        "7788889999s111122223333444455556667777z");
+}
+
+Tile *tiles_random_from(const Tiles *from) {
+    return tile_copy(tiles_get(from, rand() % (from->len)));
+}
+
 void tiles_free(Tiles *tiles) {
     for (int i = 0; i < tiles->len; i++) {
         tile_free(tiles->arr[i]);
@@ -114,4 +125,13 @@ Tiles *tiles_copy(const Tiles *tiles) {
         tiles_add(res, tile_copy(tiles_get(tiles, i)));
     }
     return res;
+}
+
+void tiles_remove_equals(Tiles *tiles, Tile *tile) {
+    for (int i = 0; i < tiles_size(tiles); i++) {
+        if (tile_equals(tile, tiles_get(tiles, i))) {
+            tiles_remove(tiles, i);
+            break;
+        }
+    }
 }

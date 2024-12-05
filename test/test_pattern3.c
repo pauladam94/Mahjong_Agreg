@@ -1,4 +1,3 @@
-
 #include "../logic/hand.h"
 #include "../logic/tile.h"
 #include "../logic/tiles.h"
@@ -6,7 +5,7 @@
 
 int main() {
     purple();
-    printf("=====[TEST Pattern 3]=====\n");
+    printf("[TEST Pattern 3]\n");
     Tiles *tiles = tiles_from_string("1111123123123m234p");
     Pattern *pat = pattern_from_tiles(tiles);
 

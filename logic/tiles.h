@@ -10,12 +10,17 @@ Tiles *tiles_empty(void);
 Tiles *tiles_from_string(const char *s);
 // Deep copy of the tiles (conserving the order)
 Tiles *tiles_copy(const Tiles *tiles);
+Tiles *tiles_all(void);
+Tile *tiles_random_from(const Tiles *from);
 Tile *tiles_get(const Tiles *tiles, int pos);
 int tiles_size(const Tiles *tiles);
 void tiles_sort(Tiles *tiles);
 void tiles_free(Tiles *tiles);
 void tiles_add(Tiles *tiles, const Tile *tile);
+// Remove tile at a given position in tiles
 void tiles_remove(Tiles *tiles, int pos);
+// Remove first tile in tiles equals `tile` and nothing if this does not exits.
+void tiles_remove_equals(Tiles *tiles, Tile *tile);
 void tiles_pp(FILE *file, const Tiles *tiles);
 
 #endif // TILES_H

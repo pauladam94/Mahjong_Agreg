@@ -46,10 +46,10 @@ typedef struct Tile {
     _Tile tile;
 } Tile;
 
-int tile_comp(const Tile *t1, const Tile *t2) {
-    if (t1->tile > t2->tile) {
+int tile_comp(const Tile *t0, const Tile *t1) {
+    if (t0->tile > t1->tile) {
         return 1;
-    } else if (t1->tile < t2->tile) {
+    } else if (t0->tile < t1->tile) {
         return -1;
     } else {
         return 0;
@@ -112,16 +112,16 @@ bool tile_is_family(const Tile *t) { return !tile_is_honor(t); }
 bool tile_is_man(const Tile *t) { return (M1 <= t->tile && t->tile <= M9); }
 bool tile_is_pin(const Tile *t) { return (P1 <= t->tile && t->tile <= P9); }
 bool tile_is_su(const Tile *t) { return (S1 <= t->tile && t->tile <= S9); }
-bool tile_same_family(const Tile *t1, const Tile *t2) {
-    return ((tile_is_man(t1) && tile_is_man(t2)) ||
-            (tile_is_pin(t1) && tile_is_pin(t2)) ||
-            (tile_is_su(t1) && tile_is_su(t2)));
+bool tile_same_family(const Tile *t0, const Tile *t1) {
+    return ((tile_is_man(t0) && tile_is_man(t1)) ||
+            (tile_is_pin(t0) && tile_is_pin(t1)) ||
+            (tile_is_su(t0) && tile_is_su(t1)));
 }
-bool tile_adjacent(const Tile *t1, const Tile *t2) {
-    return (tile_is_family(t1) && tile_is_family(t2) &&
-            (tile_same_family(t1, t2)) &&
-            ((tile_number(t1) == tile_number(t2) + 1) ||
-             tile_number(t1) + 1 == tile_number(t2)));
+bool tile_adjacent(const Tile *t0, const Tile *t1) {
+    return (tile_is_family(t0) && tile_is_family(t1) &&
+            (tile_same_family(t0, t1)) &&
+            ((tile_number(t0) == tile_number(t1) + 1) ||
+             tile_number(t0) + 1 == tile_number(t1)));
 };
 
 // 1m for Man number 1
@@ -194,6 +194,10 @@ void load_all_tiles() {
     tiles_textures[Z5] = LoadTexture("data/DB.png");
     tiles_textures[Z6] = LoadTexture("data/DV.png");
     tiles_textures[Z7] = LoadTexture("data/DR.png");
+
+    for (int i = M1; i <= Z7; i++) {
+        SetTextureFilter(tiles_textures[i], TEXTURE_FILTER_BILINEAR);
+    }
 }
 
 Tile *tile_random(void) {

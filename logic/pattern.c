@@ -21,12 +21,7 @@ Pattern *pattern_from_tiles(Tiles *tiles) {
 }
 
 void pattern_remove_tile(Pattern *pat, Tile *t) {
-    for (int i = 0; i < tiles_size(pat->tiles); i++) {
-        if (tile_equals(t, tiles_get(pat->tiles, i))) {
-            tiles_remove(pat->tiles, i);
-            break;
-        }
-    }
+    tiles_remove_equals(pat->tiles, t);
 }
 
 bool pattern_is_complete(Pattern *pat) {

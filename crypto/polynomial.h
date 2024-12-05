@@ -1,10 +1,14 @@
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
-typedef struct Polynome Polynome;
+#include <stdbool.h>
+// Polynomial expression that implements all basics operation
+typedef struct Poly Poly;
 
-Polynome *modulo(Polynome *poly, Polynome *modulo);
-Polynome *add(Polynome *poly1, Polynome *poly2);
-Polynome *sub(Polynome *poly1, Polynome *poly2);
-Polynome *inverse(Polynome *poly);
+Poly *poly_modulo(Poly *poly, Poly *modulo);
+Poly *poly_add(Poly *poly1, Poly *poly2);
+Poly *poly_sub(Poly *poly1, Poly *poly2);
+Poly *poly_inverse(Poly *poly);
+Poly *poly_from_string(const char *str);
+bool poly_equals(Poly *p1, Poly *p2);
 
 #endif // POLYNOMIAL_H
