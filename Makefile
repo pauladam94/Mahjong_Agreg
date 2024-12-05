@@ -2,8 +2,6 @@ CC = clang
 BUILD_DIR ?= ./build
 NAME = mahjong_agreg
 
-VPATH = ./client:./data:./logic:./visuals:./utils:./website:./game:$(BUILD_DIR)
-
 RAYLIB_DIR ?= ./raylib/src/
 
 # This allows the preprocessor to also generate the dependencies in the *.d files
@@ -42,7 +40,7 @@ LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
-SOURCES = $(notdir $(wildcard ./client/*.c ./logic/*.c ./visuals/*.c ./game/*.c ./utils/*.c))
+SOURCES = $(shell find . -name '*.c' -not -path './test/*')
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.c=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
@@ -53,7 +51,7 @@ $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.o: %.c
-	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/$(dir $<)
 	$(CC) $(CFLAGS) $(CPPFLAGS) -c -o $@ $<
 
 raylib: $(LIBRAYLIB)
@@ -69,7 +67,7 @@ test: $(TEST_EXECUTABLE)
 	@for binary in $(wildcard build/*.x); do ./$$binary; done
 
 build/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/main.o, $(OBJECTS)) $(LIBRAYLIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/./game/main.o, $(OBJECTS)) $(LIBRAYLIB)
 
 cleanall : clean clean_raylib
 
@@ -77,10 +75,9 @@ clean:
 	$(RM) $(OBJECTS)
 	$(RM) $(MAKEFILES)
 	$(RM) $(LIBRAYLIB)
-	$(RM) $(BUILD_DIR)/*
-	$(RM) --dir $(BUILD_DIR)
+	$(RM) $(TEST_EXECUTABLE)
+	$(RM) --dir $(shell find $(BUILD_DIR) -type d | sort --reverse)
 	$(RM) $(NAME)
-	$(RM) test/*.x
 
 clean_raylib:
 	$(MAKE) clean -C $(RAYLIB_DIR)
