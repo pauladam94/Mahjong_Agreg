@@ -4,8 +4,6 @@
 
 int main() {
     purple();
-    printf("=====[TEST Tiles]=====\n");
+    printf("=====[TEST Tiles 2]=====\n");
     reset();
-    Tiles *tiles = tiles_empty();
-    tiles_add(tiles, tile_from_string("1m"));
 }

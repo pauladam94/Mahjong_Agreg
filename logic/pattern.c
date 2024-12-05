@@ -30,15 +30,17 @@ void pattern_remove_tile(Pattern *pat, Tile *t) {
 }
 
 bool pattern_is_complete(Pattern *pat) {
-    bool res = true;
     for (int j = 0; j < 4; j++) {
         for (int i = 0; i < 3; i++) {
-            res = res && (pat->group[i][j] != NULL);
+            if (pat->group[i][j] == NULL)
+                return false;
         }
     }
-    res = res && (pat->pair[0] != NULL);
-    res = res && (pat->pair[1] != NULL);
-    return res;
+    if (pat->pair[0] == NULL)
+        return false;
+    if (pat->pair[1] == NULL)
+        return false;
+    return true;
 }
 
 void pattern_add_group(Pattern *pat, Tile *t0, Tile *t1, Tile *t2) {
@@ -57,6 +59,7 @@ void pattern_add_group(Pattern *pat, Tile *t0, Tile *t1, Tile *t2) {
 }
 
 void pattern_pp(FILE *file, Pattern *pat) {
+    fprintf(file, "|");
     for (int j = 0; j < 4; j++) {
         for (int i = 0; i < 3; i++) {
             if (pat->group[i][j] != NULL) {
@@ -67,10 +70,11 @@ void pattern_pp(FILE *file, Pattern *pat) {
         }
         fprintf(file, "|");
     }
-    if (pat->pair[0] != NULL)
+    if (pat->pair[0] != NULL && pat->pair[1] != NULL) {
         tile_pp(file, pat->pair[0]);
-    if (pat->pair[1] != NULL)
+        fprintf(file, " ");
         tile_pp(file, pat->pair[1]);
+    }
     fprintf(file, "|");
     fprintf(file, " ");
     if (pat->tiles != NULL)
@@ -78,14 +82,20 @@ void pattern_pp(FILE *file, Pattern *pat) {
 }
 
 bool pattern_has_pair(Pattern *pat) {
-    return pat->pair[0] == NULL && pat->pair[1] == NULL;
+    return pat->pair[0] != NULL && pat->pair[1] != NULL;
+}
+bool pattern_has_four_group(Pattern *pat) {
+    for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 3; i++) {
+            if (pat->group[i][j] == NULL)
+                return false;
+        }
+    }
+    return true;
 }
 
 void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
-    printf("Pattern inside add pair:");
-    pattern_pp(stdout, pat);
-    printf("\n");
-    if (pattern_has_pair(pat)) {
+    if (!pattern_has_pair(pat)) {
         pat->pair[0] = t0;
         pat->pair[1] = t1;
     } else {
@@ -103,6 +113,7 @@ void pattern_free(Pattern *pat) {
             tile_free(pat->group[i][j]);
         }
     }
+    tiles_free(pat->tiles);
     tile_free(pat->pair[0]);
     tile_free(pat->pair[1]);
     free(pat);

@@ -19,7 +19,6 @@ void hand_free(Hand *hand);
 void hand_sort(Hand *hand);
 void hand_pp(FILE *file, const Hand *hand);
 Hand *hand_from_string(const char *s);
-Hand *hand_from_tiles(Tiles *tiles);
 Tiles *hand_closed_tiles(const Hand *hand);
 
 Patterns *tiles_patterns(Tiles *tiles);

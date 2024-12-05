@@ -236,7 +236,7 @@ void tile_pp(FILE *file, Tile *t) {
         fprintf(file, "2s");
         break;
     case M3:
-        fprintf(file, "3p");
+        fprintf(file, "3m");
         break;
     case P3:
         fprintf(file, "3p");

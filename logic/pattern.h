@@ -25,5 +25,6 @@ void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd, Tile **th
 void pattern_next_three_same(const Pattern *pat, Tile **fst, Tile **snd, Tile **thrd);
 bool pattern_is_complete(const Pattern *pat);
 bool pattern_has_pair(Pattern *pat);
+bool pattern_has_four_group(Pattern *pat);
 
 #endif // PATTERN_H

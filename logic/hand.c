@@ -40,8 +40,9 @@ Patterns *hand_patterns(const Hand *hand) {
 
     while (patterns_size(todo) != 0) {
         Pattern *pattern = patterns_pop(todo);
+
         /*
-        printf("res:");
+        printf("\nres:");
         patterns_pp(stdout, res);
         printf("\n");
         printf("todo:");
