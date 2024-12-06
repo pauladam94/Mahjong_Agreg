@@ -14,10 +14,10 @@ bool button_is_pressed(int posX, int posY, int width, int height, Align align) {
     Rectangle rec = {0};
     switch (align) {
     case DOWN:
-        rec.x = posX + thickness;
-        rec.y = posY + thickness;
-        rec.width = width - thickness * 2;
-        rec.height = height - thickness * 2;
+        rec.x = posX;
+        rec.y = posY;
+        rec.width = width;
+        rec.height = height;
         break;
     case RIGHT:
         rec.x = posX;
@@ -38,6 +38,10 @@ bool button_is_pressed(int posX, int posY, int width, int height, Align align) {
         rec.height = width;
         break;
     }
+    rec.x += thickness;
+    rec.y += thickness;
+    rec.width += - thickness * 2;
+    rec.height += - thickness * 2;
     if (rec.x <= x && x <= rec.x + rec.width && rec.y <= y && y <= rec.y + rec.height) {
         if (IsMouseButtonDown(0)) {
             DrawBox(rec, thickness, GREEN, align);

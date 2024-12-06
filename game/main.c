@@ -10,6 +10,7 @@
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 typedef enum Player { Player0, Player1, Player2, Player3 } Player;
 
@@ -86,8 +87,11 @@ void test_game() {
                 align = LEFT;
                 break;
             }
-
-            Tile *tile_pressed = hand_tile_pressed(hands[i], x, y, align);
+            Tile *tile_pressed;
+            tile_pressed = hand_tile_pressed(hands[i], x, y, align);
+            if (i != Player0) {
+                tile_pressed = tiles_random_from(hand_closed_tiles(hands[i]));
+            }
             if (tile_pressed != NULL && i == player) {
                 hand_discard_tile(hands[i], tile_pressed);
 
@@ -97,6 +101,9 @@ void test_game() {
                 hand_add_tile(hands[player], random_tile);
                 tiles_remove_equals(tiles, random_tile);
                 hand_sort(hands[player]);
+                if (player == Player0) {
+                    sleep(1);
+                }
             }
         }
         EndDrawing();

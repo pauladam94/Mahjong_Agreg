@@ -100,12 +100,12 @@ Tile *hand_tile_pressed(const Hand *hand, int posX, int posY, Align align) {
             y = posY - (i % 6) * TILE_WIDTH - 3 * TILE_WIDTH;
             break;
         case UP:
-            x = posX + (i % 6) * TILE_WIDTH + 3 * TILE_WIDTH;
-            y = posY + (i / 6) * TILE_HEIGHT - 4 * TILE_HEIGHT;
+            x = posX - (i % 6) * TILE_WIDTH + 10 * TILE_WIDTH;
+            y = posY - (i / 6) * TILE_HEIGHT + 4 * TILE_HEIGHT;
             break;
         case LEFT:
-            x = posX + (i % 6) * TILE_WIDTH + 3 * TILE_WIDTH;
-            y = posY + (i / 6) * TILE_HEIGHT - 4 * TILE_HEIGHT;
+            x = posX - (i / 6) * TILE_HEIGHT + 4 * TILE_HEIGHT;
+            y = posY + (i % 6) * TILE_WIDTH + 3 * TILE_WIDTH;
             break;
         }
         draw_tile(tile, x, y, align);
