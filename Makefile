@@ -40,7 +40,7 @@ LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
-SOURCES = $(shell find . -name '*.c' -not -path './test/*')
+SOURCES = $(shell find . -name '*.c' -not -path './test/*:./raylib/*')
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.c=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
