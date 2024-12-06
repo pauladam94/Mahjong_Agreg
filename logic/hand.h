@@ -34,4 +34,6 @@ Tiles *hand_discarded_tiles(const Hand *hand);
 
 Patterns *hand_patterns(const Hand *hand);
 
+Patterns *tiles_patterns(Tiles *tiles);
+
 #endif // HAND_H
