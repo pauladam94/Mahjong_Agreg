@@ -97,6 +97,7 @@ Tiles *tiles_from_string(const char *s) {
         fprintf(stderr, "%s Not the right format of tiles", s);
         exit(1);
     }
+    free(buf);
     return tiles;
 }
 

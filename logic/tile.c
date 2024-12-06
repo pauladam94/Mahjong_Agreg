@@ -46,6 +46,11 @@ typedef struct Tile {
     _Tile tile;
 } Tile;
 
+Tile* tile_empty() {
+    Tile* res = calloc(sizeof(*res), 1);
+    return res;
+}
+
 int tile_comp(const Tile *t0, const Tile *t1) {
     if (t0->tile > t1->tile) {
         return 1;
@@ -134,7 +139,7 @@ Tile *tile_from_string(const char *name) {
                 name);
         exit(1);
     }
-    Tile *t = calloc(sizeof(*t), 1);
+    Tile *t = tile_empty();
     _Tile res;
     switch (name[1]) {
     case 'm':
@@ -201,7 +206,7 @@ void load_all_tiles() {
 }
 
 Tile *tile_random(void) {
-    Tile *t = calloc(sizeof(*t), 1);
+    Tile *t = tile_empty();
     t->tile = rand() % (Z7 + 1);
     return t;
 }
@@ -333,7 +338,7 @@ bool tile_equals(const Tile *t1, const Tile *t2) {
 
 Tile *next_dora(const Tile *tile) {
     printf("tile = %d\n", tile->tile);
-    Tile *new_tile = calloc(sizeof(*new_tile), 1);
+    Tile *new_tile = tile_empty();
     _Tile res;
     switch (tile->tile) {
     case M1:
@@ -387,7 +392,7 @@ Tile *tile_copy(const Tile *tile) {
     if (tile == NULL) {
         return NULL;
     }
-    Tile *res = calloc(sizeof(*res), 1);
+    Tile *res = tile_empty();
     res->tile = tile->tile;
     return res;
 }

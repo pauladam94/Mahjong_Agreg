@@ -85,7 +85,6 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
     if (fst != NULL && snd != NULL && !pattern_has_pair(pat)) {
         fst = tile_copy(fst);
         snd = tile_copy(snd);
-        thrd = tile_copy(thrd);
         Pattern *new_pattern = pattern_copy(pat);
         pattern_add_pair(new_pattern, fst, snd);
         pattern_remove_tile(new_pattern, fst);

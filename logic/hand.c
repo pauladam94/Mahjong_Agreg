@@ -115,7 +115,8 @@ bool hand_is_valid(const Hand *hand) {
 }
 
 Hand *hand_from_string(const char *s) {
-    Hand *hand = calloc(sizeof(*hand), 1);
+    Hand *hand = hand_empty();
+    tiles_free(hand->hand);
     hand->hand = tiles_from_string(s);
     return hand;
 }

@@ -11,7 +11,7 @@ CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
 LDFLAGS += -lm
 DEBUGFLAGS = -g3 -fsanitize=address
 # RELEASEFLAGS = -flto -O3 -DNDEBUG
-RELEASEFLAGS = -O3 -DNDEBUG
+RELEASEFLAGS = -O1 -DNDEBUG
 
 MODE ?= RELEASE# Default is Release
 
@@ -40,7 +40,7 @@ LIBRAYLIB = $(BUILD_DIR)/libraylib.a
 export CUSTOM_CFLAGS
 export RAYLIB_RELEASE_PATH
 
-SOURCES = $(shell find . -name '*.c' -not -path './test/*:./raylib/*')
+SOURCES = $(shell find . -name '*.c' -not -path './test/*' -not -path './raylib/*')
 OBJECTS = $(addprefix $(BUILD_DIR)/, $(SOURCES:%.c=%.o))
 MAKEFILES = $(OBJECTS:%.o=%.d)
 
@@ -48,6 +48,7 @@ MAKEFILES = $(OBJECTS:%.o=%.d)
 -include $(MAKEFILES)
 
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
+	@echo "Compiling Mahjong $(SOURCES) $(OBJECTS) $(LIBRAYLIB)"
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
 
 $(BUILD_DIR)/%.o: %.c
