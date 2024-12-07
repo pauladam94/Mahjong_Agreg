@@ -50,10 +50,8 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
     Tile *snd = NULL;
     Tile *thrd = NULL;
     pattern_next_sequence(pat, &fst, &snd, &thrd);
-    if (fst != NULL && snd != NULL && thrd != NULL && !pattern_has_four_group(pat)) {
-        fst = tile_copy(fst);
-        snd = tile_copy(snd);
-        thrd = tile_copy(thrd);
+    if (fst != NULL && snd != NULL && thrd != NULL &&
+        !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
         pattern_add_group(new_pattern, fst, snd, thrd);
         pattern_remove_tile(new_pattern, fst);
@@ -68,9 +66,6 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
     pattern_next_three_same(pat, &fst, &snd, &thrd);
     if (fst != NULL && snd != NULL && thrd != NULL &&
         !pattern_has_four_group(pat)) {
-        fst = tile_copy(fst);
-        snd = tile_copy(snd);
-        thrd = tile_copy(thrd);
         Pattern *new_pattern = pattern_copy(pat);
         pattern_add_group(new_pattern, fst, snd, thrd);
         pattern_remove_tile(new_pattern, fst);
@@ -83,14 +78,22 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
     snd = NULL;
     pattern_next_pair(pat, &fst, &snd);
     if (fst != NULL && snd != NULL && !pattern_has_pair(pat)) {
-        fst = tile_copy(fst);
-        snd = tile_copy(snd);
         Pattern *new_pattern = pattern_copy(pat);
         pattern_add_pair(new_pattern, fst, snd);
         pattern_remove_tile(new_pattern, fst);
         pattern_remove_tile(new_pattern, snd);
         patterns_add_pattern(patterns, new_pattern);
     }
+    pattern_free(pat);
+    /*
+    Tile *t = pattern_get_tile(pat, 0);
+    if (t != NULL) {
+        pattern_remove_tile(pat, t);
+        patterns_add_pattern(patterns, pat);
+    } else {
+        pattern_free(pat);
+    }
+    */
 }
 
 void patterns_free(Patterns *patterns) {

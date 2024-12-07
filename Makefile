@@ -65,7 +65,15 @@ TEST_SOURCE = $(wildcard test/*.c)
 TEST_EXECUTABLE = $(TEST_SOURCE:test/%.c=build/%.x)
 
 test: $(TEST_EXECUTABLE)
-	@for binary in $(wildcard build/*.x); do ./$$binary; done
+	@start_time=$$(date +%s); \
+	number_test=0; \
+	for binary in $(wildcard build/*.x); do \
+		./$$binary 2>&1 ; \
+		number_test=$$((number_test + 1)); \
+	done; \
+	end_time=$$(date +%s); \
+	elapsed_time=$$((end_time - start_time)); \
+	echo "$$number_test test took $$elapsed_time s"
 
 build/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/./game/main.o, $(OBJECTS)) $(LIBRAYLIB)

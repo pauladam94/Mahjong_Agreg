@@ -12,7 +12,6 @@ typedef struct Tile Tile;
 
 Tile *tile_from_string(const char *);
 Tile *next_dora(const Tile *tile);
-Tile *tile_copy(const Tile *tile);
 Tile *tile_random();
 int tile_number(const Tile *t);
 // Man before Pin before Su before Wind before Dragon

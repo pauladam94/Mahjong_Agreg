@@ -3,7 +3,7 @@
 
 int main() {
     purple();
-    printf("[TEST Hand]\n");
+    printf("[TEST Hand 1]\n");
     reset();
     Hand *h1 = hand_from_string("123m2p3s1m3z");
     Hand *h2 = hand_from_string("123m234p333345s222z");

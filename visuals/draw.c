@@ -121,7 +121,7 @@ Tile *hand_tile_pressed(const Hand *hand, int posX, int posY, Align align) {
             break;
         }
         if (button_is_pressed(x, y, width, height, align)) {
-            return tile_copy(tile);
+            return tile;
         }
     }
 

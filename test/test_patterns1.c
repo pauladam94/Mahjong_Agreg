@@ -5,7 +5,7 @@
 
 int main() {
     purple();
-    printf("[TEST Patterns]\n");
+    printf("[TEST Patterns 1]\n");
     Patterns *patterns = patterns_empty();
     Tiles *tiles = tiles_from_string("1111123123123m234p");
     Pattern *pat = pattern_from_tiles(tiles);

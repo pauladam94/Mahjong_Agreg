@@ -118,11 +118,11 @@ Pattern *pattern_copy(const Pattern *pat) {
     Pattern *res = pattern_empty();
     for (int j = 0; j < 4; j++) {
         for (int i = 0; i < 3; i++) {
-            res->group[i][j] = tile_copy(pat->group[i][j]);
+            res->group[i][j] = pat->group[i][j];
         }
     }
-    res->pair[0] = tile_copy(pat->pair[0]);
-    res->pair[1] = tile_copy(pat->pair[1]);
+    res->pair[0] = pat->pair[0];
+    res->pair[1] = pat->pair[1];
 
     res->tiles = tiles_copy(pat->tiles);
     return res;

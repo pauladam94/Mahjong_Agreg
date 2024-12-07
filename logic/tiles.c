@@ -54,7 +54,7 @@ void tiles_remove(Tiles *tiles, int pos) {
         fprintf(stderr, "Removing Tile in Empty Tiles\n");
         exit(1);
     }
-    free(tiles->arr[pos]);
+    tile_free(tiles->arr[pos]);
     memmove(tiles->arr + pos, tiles->arr + pos + 1,
             sizeof(tiles->arr) * (tiles->len - pos - 1));
     tiles->len--;
@@ -109,7 +109,7 @@ Tiles *tiles_all(void) {
 }
 
 Tile *tiles_random_from(const Tiles *from) {
-    return tile_copy(tiles_get(from, rand() % (from->len)));
+    return tiles_get(from, rand() % (from->len));
 }
 
 void tiles_free(Tiles *tiles) {
@@ -123,7 +123,7 @@ void tiles_free(Tiles *tiles) {
 Tiles *tiles_copy(const Tiles *tiles) {
     Tiles *res = tiles_empty();
     for (int i = 0; i < tiles_size(tiles); i++) {
-        tiles_add(res, tile_copy(tiles_get(tiles, i)));
+        tiles_add(res, tiles_get(tiles, i));
     }
     return res;
 }

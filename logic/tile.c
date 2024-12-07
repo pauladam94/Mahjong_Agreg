@@ -1,11 +1,13 @@
 #include "tile.h"
 #include "raylib.h"
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 typedef enum {
+    None = 0, // is O
     M1, // Man 1
     M2, // ...
     M3,
@@ -43,18 +45,14 @@ typedef enum {
 } _Tile;
 
 typedef struct Tile {
-    _Tile tile;
 } Tile;
 
-Tile* tile_empty() {
-    Tile* res = calloc(sizeof(*res), 1);
-    return res;
-}
-
 int tile_comp(const Tile *t0, const Tile *t1) {
-    if (t0->tile > t1->tile) {
+    _Tile _t0 = (uint64_t)t0;
+    _Tile _t1 = (uint64_t)t1;
+    if (_t0 > _t1) {
         return 1;
-    } else if (t0->tile < t1->tile) {
+    } else if (_t0 < _t1) {
         return -1;
     } else {
         return 0;
@@ -62,7 +60,7 @@ int tile_comp(const Tile *t0, const Tile *t1) {
 }
 
 int tile_number(const Tile *t) {
-    switch (t->tile) {
+    switch ((_Tile)(uint64_t)t) {
     case M1:
     case P1:
     case S1:
@@ -106,17 +104,30 @@ int tile_number(const Tile *t) {
     case Z5:
     case Z6:
     case Z7:
+    case None:
         return -1;
     }
 }
 
-bool tile_is_honor(const Tile *t) { return (Z1 <= t->tile && t->tile <= Z7); }
-bool tile_is_dragon(const Tile *t) { return (Z5 <= t->tile && t->tile <= Z7); }
-bool tile_is_wind(const Tile *t) { return (Z1 <= t->tile && t->tile <= Z4); }
+bool tile_is_honor(const Tile *t) {
+    return (Z1 <= (uint64_t)t && (uint64_t)t <= Z7);
+}
+bool tile_is_dragon(const Tile *t) {
+    return (Z5 <= (uint64_t)t && (uint64_t)t <= Z7);
+}
+bool tile_is_wind(const Tile *t) {
+    return (Z1 <= (uint64_t)t && (uint64_t)t <= Z4);
+}
 bool tile_is_family(const Tile *t) { return !tile_is_honor(t); }
-bool tile_is_man(const Tile *t) { return (M1 <= t->tile && t->tile <= M9); }
-bool tile_is_pin(const Tile *t) { return (P1 <= t->tile && t->tile <= P9); }
-bool tile_is_su(const Tile *t) { return (S1 <= t->tile && t->tile <= S9); }
+bool tile_is_man(const Tile *t) {
+    return (M1 <= (uint64_t)t && (uint64_t)t <= M9);
+}
+bool tile_is_pin(const Tile *t) {
+    return (P1 <= (uint64_t)t && (uint64_t)t <= P9);
+}
+bool tile_is_su(const Tile *t) {
+    return (S1 <= (uint64_t)t && (uint64_t)t <= S9);
+}
 bool tile_same_family(const Tile *t0, const Tile *t1) {
     return ((tile_is_man(t0) && tile_is_man(t1)) ||
             (tile_is_pin(t0) && tile_is_pin(t1)) ||
@@ -139,7 +150,6 @@ Tile *tile_from_string(const char *name) {
                 name);
         exit(1);
     }
-    Tile *t = tile_empty();
     _Tile res;
     switch (name[1]) {
     case 'm':
@@ -155,8 +165,7 @@ Tile *tile_from_string(const char *name) {
         res = Z1 + ((int)name[0] - '0') - 1;
         break;
     }
-    t->tile = res;
-    return t;
+    return (Tile *)res;
 }
 
 static Texture2D *tiles_textures = NULL;
@@ -205,16 +214,12 @@ void load_all_tiles() {
     }
 }
 
-Tile *tile_random(void) {
-    Tile *t = tile_empty();
-    t->tile = rand() % (Z7 + 1);
-    return t;
-}
-Texture2D tile_texture(const Tile *tile) {
+Tile *tile_random(void) { return (Tile *)(uint64_t)(rand() % (Z7 + 1)); }
+Texture2D tile_texture(const Tile *t) {
     if (!loaded_has_been_done) {
         load_all_tiles();
     }
-    return tiles_textures[tile->tile];
+    return tiles_textures[(uint64_t)t];
 }
 
 void tiles_free_textures() {
@@ -227,7 +232,9 @@ void tiles_free_textures() {
 }
 
 void tile_pp(FILE *file, const Tile *t) {
-    switch (t->tile) {
+    switch ((_Tile)(uint64_t)t) {
+    case None:
+        fprintf(file, "None");
     case M1:
         fprintf(file, "1m");
         break;
@@ -333,16 +340,12 @@ void tile_pp(FILE *file, const Tile *t) {
     }
 }
 
-void tile_free(Tile *tile) { free(tile); }
-bool tile_equals(const Tile *t1, const Tile *t2) {
-    return t1->tile == t2->tile;
-}
+void tile_free(Tile *tile) {}
+bool tile_equals(const Tile *t1, const Tile *t2) { return t1 == t2; }
 
 Tile *next_dora(const Tile *tile) {
-    printf("tile = %d\n", tile->tile);
-    Tile *new_tile = tile_empty();
     _Tile res;
-    switch (tile->tile) {
+    switch ((_Tile)(uint64_t)tile) {
     case M1:
     case P1:
     case S1:
@@ -372,29 +375,19 @@ Tile *next_dora(const Tile *tile) {
     case Z3:
     case Z5:
     case Z6:
-        res = tile->tile + 1;
+        res = (_Tile)(uint64_t)tile + 1;
         break;
     case M9:
     case P9:
     case S9:
-        res = tile->tile - 8;
+        res = (_Tile)(uint64_t)tile - 8;
         break;
     case Z4:
-        res = tile->tile - 3;
+        res = (_Tile)(uint64_t)tile - 3;
         break;
     case Z7:
-        res = tile->tile - 2;
+        res = (_Tile)(uint64_t)tile - 2;
         break;
     }
-    new_tile->tile = res;
-    return new_tile;
-}
-
-Tile *tile_copy(const Tile *tile) {
-    if (tile == NULL) {
-        return NULL;
-    }
-    Tile *res = tile_empty();
-    res->tile = tile->tile;
-    return res;
+    return (Tile *)res;
 }

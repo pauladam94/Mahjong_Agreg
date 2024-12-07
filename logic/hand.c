@@ -54,6 +54,7 @@ Hand *hand_draw_from(Tiles *from, int n) {
 }
 
 void hand_pp(FILE *file, const Hand *hand) { tiles_pp(file, hand->hand); }
+
 Patterns *hand_patterns(const Hand *hand) {
     tiles_sort(hand->hand);
     Patterns *res = patterns_empty();
@@ -67,24 +68,19 @@ Patterns *hand_patterns(const Hand *hand) {
     while (patterns_size(todo) != 0) {
         Pattern *pattern = patterns_pop(todo);
 
-        /*
-        printf("\nres:");
-        patterns_pp(stdout, res);
-        printf("\n");
-        printf("todo:");
-        patterns_pp(stdout, todo);
-        printf("\n");
-        printf("pattern:");
-        pattern_pp(stdout, pattern);
-        printf("\n");
-        */
-
         if (pattern_is_complete(pattern)) {
             patterns_add_pattern(res, pattern);
             continue;
         }
         patterns_add_first_group_pattern(todo, pattern);
-        pattern_free(pattern);
+
+        // printf("\nRes:\n");
+        // patterns_pp(stdout, res);
+        // printf("\n");
+        // printf("Todo:\n");
+        // patterns_pp(stdout, todo);
+        // printf("\n");
+        //
     }
     patterns_free(todo);
     // tiles_free(tiles);
