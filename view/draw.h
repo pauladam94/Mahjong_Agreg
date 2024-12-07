@@ -1,9 +1,8 @@
 #ifndef DRAW_H
 #define DRAW_H
-#include "../logic/hand.h"
-#include "../logic/tiles.h"
+#include "../model/hand.h"
+#include "../model/tiles.h"
 #include "align.h"
-
 
 // returns -1 if nothing is pressed
 // return i > 0 if the i th tile in the tiles has been pressed

@@ -1,7 +1,7 @@
 #include "draw.h"
-#include "../logic/hand.h"
-#include "../logic/tile.h"
-#include "../logic/tiles.h"
+#include "../model/hand.h"
+#include "../model/tile.h"
+#include "../model/tiles.h"
 #include "button.h"
 #include "raylib.h"
 #include "settings.h"
@@ -19,33 +19,6 @@ void draw_tile(const Tile *tile, int posX, int posY, Align align) {
     DrawTextureEx(texture, pos, rotation, scale, WHITE);
 }
 
-/*
-void draw_tiles(const Tiles *tiles, int posX, int posY, Align align) {
-    for (int i = 0; i < tiles_size(tiles); i++) {
-        Tile *tile = tiles_get(tiles, i);
-        int x, y = 0;
-        switch (align) {
-        case DOWN:
-            x = posX + i * TILE_WIDTH;
-            y = posY;
-            break;
-        case RIGHT:
-            x = posX;
-            y = posY - i * TILE_WIDTH;
-            break;
-        case UP:
-            x = posX + i * TILE_WIDTH;
-            y = posY;
-            break;
-        case LEFT:
-            x = posX;
-            y = posY + i * TILE_WIDTH;
-            break;
-        }
-        draw_tile(tile, x, y, align);
-    }
-}
-*/
 
 Tile *hand_tile_pressed(const Hand *hand, int posX, int posY, Align align) {
     Tiles *closed = hand_closed_tiles(hand);

@@ -1,4 +1,4 @@
-#include "../logic/hand.h"
+#include "../model/hand.h"
 #include "../utils/error.h"
 
 int main() {

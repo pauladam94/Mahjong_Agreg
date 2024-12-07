@@ -13,4 +13,4 @@ void hands_draw_from(Hands *hands, Tiles *from);
 Hand *hands_get(Hands *hands, Player player);
 void hands_free(Hands *hands);
 
-#endif
+#endif // HANDS_H

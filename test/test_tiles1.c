@@ -1,5 +1,5 @@
-#include "../logic/tile.h"
-#include "../logic/tiles.h"
+#include "../model/tile.h"
+#include "../model/tiles.h"
 #include "../utils/error.h"
 
 int main() {

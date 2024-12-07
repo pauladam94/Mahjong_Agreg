@@ -1,6 +1,5 @@
-#include "../logic/hand.h"
-#include "../logic/tile.h"
-#include "../logic/tiles.h"
+#include "../model/pattern.h"
+#include "../model/tiles.h"
 #include "../utils/error.h"
 
 int main() {

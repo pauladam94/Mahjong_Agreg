@@ -1,4 +1,4 @@
-#include "../logic/tile.h"
+#include "../model/tile.h"
 #include "../utils/error.h"
 
 int main() {
