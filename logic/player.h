@@ -1,6 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "../visuals/align.h"
+#include "../view/align.h"
 
 typedef enum Player { Player0, Player1, Player2, Player3 } Player;
 

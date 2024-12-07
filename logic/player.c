@@ -1,6 +1,6 @@
 #include "player.h"
-#include "../visuals/align.h"
-#include "../visuals/settings.h"
+#include "../view/align.h"
+#include "../view/settings.h"
 
 void player_position(Player i, int *x, int *y) {
     switch (i) {

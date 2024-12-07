@@ -5,10 +5,10 @@
 #include "../logic/player.h"
 #include "../logic/tile.h"
 #include "../logic/tiles.h"
-#include "../visuals/button.h"
-#include "../visuals/draw.h"
-#include "../visuals/settings.h"
-#include "../visuals/setup.h"
+#include "../view/button.h"
+#include "../view/draw.h"
+#include "../view/settings.h"
+#include "../view/setup.h"
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,7 +21,6 @@ void test_game() {
     Tiles *tiles = tiles_all();
     Player current_player = Player0;
     int x, y = 0;
-    float rotation = 10.;
     Vector2 origin;
     origin.x = (float)WIDTH / 2;
     origin.y = (float)HEIGHT / 2;
@@ -31,16 +30,11 @@ void test_game() {
     hands_draw_from(hands, tiles);
 
     while (!WindowShouldClose()) {
-        rotation += 0.5;
         BeginDrawing();
         ClearBackground(WHITE);
 
-        // hand_add_tile(hands[0], tile_random());
-        // hand_sort(hands[0]);
-
-        sprintf(buff, "Turn : %d\nRemaining : %d", current_player,
-                tiles_size(tiles));
-        DrawText(buff, TILE_WIDTH * 2, HEIGHT - TILE_HEIGHT, 20, BLACK);
+        sprintf(buff, "\nRemaining : %d", tiles_size(tiles));
+        DrawText(buff, WIDTH / 2 - 2 * TILE_WIDTH, HEIGHT / 2, 20, BLACK);
 
         if (hand_is_complete(hands_get(hands, Player0))) {
             DrawText("Hand Complete", TILE_WIDTH * 2, HEIGHT - TILE_HEIGHT / 2,
@@ -49,7 +43,6 @@ void test_game() {
             DrawText("Hand Not Complete", TILE_WIDTH * 2,
                      HEIGHT - TILE_HEIGHT / 2, 20, BLACK);
         }
-
         for (Player player = Player0; player <= Player3; player++) {
             player_position(player, &x, &y);
             player_align(player, &align);
