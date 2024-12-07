@@ -2,8 +2,8 @@
 #define DRAW_H
 #include "../logic/hand.h"
 #include "../logic/tiles.h"
+#include "align.h"
 
-typedef enum Align { LEFT, RIGHT, UP, DOWN } Align;
 
 // returns -1 if nothing is pressed
 // return i > 0 if the i th tile in the tiles has been pressed

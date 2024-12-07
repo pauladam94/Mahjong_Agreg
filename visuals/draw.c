@@ -14,21 +14,8 @@ void draw_tile(const Tile *tile, int posX, int posY, Align align) {
     pos.x = posX;
     pos.y = posY;
     float scale = (float)TILE_WIDTH / (float)texture.width;
-    float rotation;
-    switch (align) {
-    case DOWN:
-        rotation = 0.;
-        break;
-    case RIGHT:
-        rotation = -90.;
-        break;
-    case UP:
-        rotation = 180.;
-        break;
-    case LEFT:
-        rotation = 90.;
-        break;
-    }
+    float rotation = align_rotation(align);
+
     DrawTextureEx(texture, pos, rotation, scale, WHITE);
 }
 

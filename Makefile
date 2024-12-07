@@ -11,7 +11,7 @@ CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
 LDFLAGS += -lm
 DEBUGFLAGS = -g3 -fsanitize=address
 # RELEASEFLAGS = -flto -O3 -DNDEBUG
-RELEASEFLAGS = -O1 -DNDEBUG
+RELEASEFLAGS = -O3 -DNDEBUG -fshort-enums
 
 MODE ?= RELEASE# Default is Release
 

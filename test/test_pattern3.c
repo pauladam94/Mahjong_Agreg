@@ -12,9 +12,5 @@ int main() {
     Tile *fst = NULL;
     Tile *snd = NULL;
     pattern_next_pair(pat, &fst, &snd);
-    if (fst != NULL && snd != NULL) {
-        tile_pp(stdout, fst);
-        tile_pp(stdout, snd);
-    }
     pattern_free(pat);
 }

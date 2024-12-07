@@ -159,7 +159,7 @@ Tile *tile_from_string(const char *name) {
     return t;
 }
 
-static Texture2D *tiles_textures;
+static Texture2D *tiles_textures = NULL;
 static bool loaded_has_been_done = false;
 
 void load_all_tiles() {
@@ -201,7 +201,7 @@ void load_all_tiles() {
     tiles_textures[Z7] = LoadTexture("data/DR.png");
 
     for (int i = M1; i <= Z7; i++) {
-        SetTextureFilter(tiles_textures[i], TEXTURE_FILTER_BILINEAR);
+        SetTextureFilter(tiles_textures[i], TEXTURE_FILTER_TRILINEAR);
     }
 }
 
@@ -218,13 +218,15 @@ Texture2D tile_texture(const Tile *tile) {
 }
 
 void tiles_free_textures() {
-    for (size_t i = 0; i < Z7; i++) {
+    for (size_t i = M1; i <= Z7; i++) {
         UnloadTexture(tiles_textures[i]);
     }
+    loaded_has_been_done = false;
     free(tiles_textures);
+    tiles_textures = NULL;
 }
 
-void tile_pp(FILE *file, Tile *t) {
+void tile_pp(FILE *file, const Tile *t) {
     switch (t->tile) {
     case M1:
         fprintf(file, "1m");

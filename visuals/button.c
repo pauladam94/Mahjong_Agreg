@@ -1,10 +1,10 @@
-#include "draw.h"
+#include "align.h"
 #include "raylib.h"
 #include "settings.h"
 
 void DrawBox(Rectangle rec, int thickness, Color color, Align align) {
-    float roundness = 0.12;
-    DrawRectangleRoundedLinesEx(rec, roundness, 2, thickness, ORANGE);
+    float roundness = 0.02;
+    DrawRectangleRoundedLinesEx(rec, roundness, 1, thickness, ORANGE);
 }
 
 bool button_is_pressed(int posX, int posY, int width, int height, Align align) {

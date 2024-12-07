@@ -1,7 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
-#include "draw.h"
-#include "raylib.h"
+#include "align.h"
 #include <stdbool.h>
 
 bool button_is_pressed(int posX, int posY, int width, int height, Align align);

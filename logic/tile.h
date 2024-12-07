@@ -32,7 +32,7 @@ bool tile_is_su(const Tile *t);
 bool tile_equals(const Tile *t0, const Tile *t1);
 Texture2D tile_texture(const Tile *t);
 void tiles_free_textures();
-void tile_pp(FILE *file, Tile *t);
+void tile_pp(FILE *file, const Tile *t);
 void tile_free(Tile *tile);
 
 #endif // TILE_H
