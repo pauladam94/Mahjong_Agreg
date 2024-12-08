@@ -2,6 +2,8 @@
 #include "../view/align.h"
 #include "../view/settings.h"
 
+void next_player(Player *p) { *p = (*p + 1) % 4; }
+
 void player_position(Player i, int *x, int *y) {
     switch (i) {
     case Player0:
@@ -23,19 +25,15 @@ void player_position(Player i, int *x, int *y) {
     }
 }
 
-void player_align(const Player i, Align *align) {
+Align player_align(const Player i) {
     switch (i) {
     case Player0:
-        *align = DOWN;
-        break;
+        return DOWN;
     case Player1:
-        *align = RIGHT;
-        break;
+        return RIGHT;
     case Player2:
-        *align = UP;
-        break;
+        return UP;
     case Player3:
-        *align = LEFT;
-        break;
+        return LEFT;
     }
 }

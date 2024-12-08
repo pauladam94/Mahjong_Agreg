@@ -4,7 +4,8 @@
 
 typedef enum Player { Player0, Player1, Player2, Player3 } Player;
 
+void next_player(Player *p);
 void player_position(Player i, int *x, int *y);
-void player_align(const Player i, Align *align);
+Align player_align(const Player i);
 
 #endif // PLAYER_H

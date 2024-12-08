@@ -11,7 +11,7 @@
 typedef struct Hand Hand;
 
 Hand *hand_empty(void);
-Hand *hand_draw_from(Tiles *from, int n);
+Hand *hand_pick_from(Tiles *from, int n);
 Hand *hand_from_string(const char *s);
 // 4 sequences or three same tile and 1 pair
 bool hand_is_complete(const Hand *hand);

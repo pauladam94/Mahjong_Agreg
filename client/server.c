@@ -9,7 +9,44 @@
 #define BUF_SIZE 500
 
 int server() {
-    char *argv[] = {"", "", "", ""};
+    struct addrinfo hints, *res;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
+    hints.ai_socktype = SOCK_STREAM; // TCP
+    hints.ai_flags = AI_PASSIVE;     // For binding to all interfaces
+
+    getaddrinfo(NULL, "8080", &hints, &res); // Resolve server address
+    // Handle error if getaddrinfo() fails
+
+    int server_fd = socket(res->ai_family, res->ai_socktype, res->ai_protocol); // Create socket
+    // Handle error if socket() fails
+
+    bind(server_fd, res->ai_addr, res->ai_addrlen); // Bind socket to address
+    // Handle error if bind() fails
+
+    listen(server_fd, 5); // Listen for incoming connections
+    // Handle error if listen() fails
+
+    int client_fd = accept(server_fd, NULL, NULL); // Accept a connection
+    // Handle error if accept() fails
+
+    char buffer[1024];
+    recv(client_fd, buffer, sizeof(buffer), 0); // Receive message from client
+    printf("Message from client: %s\n", buffer);
+
+    const char* response = "Hello from server!";
+    send(client_fd, response, strlen(response), 0); // Send response to client
+
+    close(client_fd); // Close client connection
+    close(server_fd); // Close server socket
+    freeaddrinfo(res); // Free memory allocated by getaddrinfo
+    return 0;
+}
+
+int server2() {
+
+    printf("Run Server\n");
+    char *argv[] = {"server", "host_paul"};
     int argc = 2;
     int sfd, s;
     char buf[BUF_SIZE];
@@ -23,10 +60,11 @@ int server() {
         fprintf(stderr, "Usage: %s port\n", argv[0]);
         exit(EXIT_FAILURE);
     }
+    printf("port : %s\n", argv[1]);
 
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;    /* Allow IPv4 or IPv6 */
-    hints.ai_socktype = SOCK_DGRAM; /* Datagram socket */
+    hints.ai_socktype = SOCK_STREAM; // SOCK_DGRAM; /* Datagram socket */
     hints.ai_flags = AI_PASSIVE;    /* For wildcard IP address */
     hints.ai_protocol = 0;          /* Any protocol */
     hints.ai_canonname = NULL;

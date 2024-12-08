@@ -195,3 +195,22 @@ void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
         i++;
     }
 }
+
+int pattern_all_simple(Pattern *pat) {
+    if (!pattern_is_complete(pat)) {
+        return false;
+    }
+    for (int j = 0; j < 4; j++) {
+        for (int i = 0; i < 3; i++) {
+            if (!tile_is_terminal(pat->group[i][j])) {
+                return false;
+            }
+        }
+    }
+    for (int i = 0; i < 2; i ++) {
+        if (!tile_is_terminal(pat->pair[i])) {
+            return false;
+        }
+    }
+    return true;
+}

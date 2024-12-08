@@ -136,3 +136,9 @@ void tiles_remove_equals(Tiles *tiles, Tile *tile) {
         }
     }
 }
+
+Tile *tiles_pick_from(Tiles *from) {
+    Tile *t = tiles_random_from(from);
+    tiles_remove_equals(from, t);
+    return t;
+}

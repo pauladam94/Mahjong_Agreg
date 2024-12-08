@@ -9,8 +9,38 @@
 #define BUF_SIZE 500
 
 int client(int id) {
-    char *argv[] = {"client", "test", "test", "test"};
-    int argc = 2;
+    struct addrinfo hints, *res;
+    memset(&hints, 0, sizeof(hints));
+    hints.ai_family = AF_INET;     // IPv4 or IPv6
+    hints.ai_socktype = SOCK_STREAM; // TCP
+
+    getaddrinfo("127.0.0.1", "8080", &hints, &res); // Resolve server address
+    // Handle error if getaddrinfo() fails
+
+    int client_fd = socket(res->ai_family, res->ai_socktype,
+                           res->ai_protocol); // Create socket
+    // Handle error if socket() fails
+
+    connect(client_fd, res->ai_addr, res->ai_addrlen); // Connect to server
+    // Handle error if connect() fails
+
+    const char *message = "Hello from client!";
+    send(client_fd, message, strlen(message), 0); // Send message to server
+
+    char buffer[1024];
+    recv(client_fd, buffer, sizeof(buffer), 0); // Receive response from server
+    printf("Message from server: %s\n", buffer);
+
+    close(client_fd);  // Close connection
+    freeaddrinfo(res); // Free memory allocated by getaddrinfo
+    return 0;
+    ///////////////////////////////////////////////////
+}
+
+int client2() {
+    printf("Run Client\n");
+    char *argv[] = {"client", "host_paul", "8090", "my message"};
+    int argc = 3;
     int sfd, s;
     char buf[BUF_SIZE];
     size_t len;
@@ -22,6 +52,9 @@ int client(int id) {
         fprintf(stderr, "Usage: %s host port msg...\n", argv[0]);
         exit(EXIT_FAILURE);
     }
+    printf("host : %s\n", argv[1]);
+    printf("port : %s\n", argv[2]);
+    printf("msg : %s\n", argv[3]);
 
     /* Obtain address(es) matching host/port. */
 

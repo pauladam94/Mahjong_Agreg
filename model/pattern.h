@@ -27,4 +27,7 @@ bool pattern_is_complete(const Pattern *pat);
 bool pattern_has_pair(Pattern *pat);
 bool pattern_has_four_group(Pattern *pat);
 
+// YAKU
+int pattern_all_simple(Pattern *pat);
+
 #endif // PATTERN_H

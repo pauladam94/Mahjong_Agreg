@@ -1,11 +1,18 @@
+#include "../view/align.h"
+#include "../view/draw.h"
 #include "pattern.h"
 #include "patterns.h"
+#include "player.h"
+#include "raylib.h"
 #include "tiles.h"
 #include <stdlib.h>
 
 typedef struct Hand {
     Tiles *hand;
+    Vector2 *hand_pos;
+
     Tiles *discard;
+    Vector2 *discard_pos;
 
     Tiles **chi;
     int chi_len;
@@ -20,7 +27,22 @@ typedef struct Hand {
     int kan_cap;
 
     bool opened;
+    Align align;
+    Player player;
 } Hand;
+
+void hand_draw(Hand *hand) {
+    Tiles *tiles = hand->hand;
+    for (int i = 0; i < tiles_size(tiles); i++) {
+        tile_draw(tiles_get(tiles, i), hand->hand_pos[i].x, hand->hand_pos[i].y,
+                  hand->align);
+    }
+    for (int i = 0; i < tiles_size(hand->discard); i++) {
+        tile_draw(tiles_get(tiles, i), hand->hand_pos[i].x, hand->hand_pos[i].y,
+                  hand->align);
+    }
+    return;
+}
 
 Hand *hand_empty(void) {
     Hand *hand = calloc(sizeof(*hand), 1);
@@ -45,10 +67,12 @@ void hand_add_tile(Hand *hand, Tile *tile) { tiles_add(hand->hand, tile); }
 bool is_opened(const Hand *hand) { return hand->opened; }
 bool is_closed(const Hand *hand) { return !hand->opened; }
 
-Hand *hand_draw_from(Tiles *from, int n) {
+Hand *hand_pick_from(Tiles *from, int n) {
     Hand *hand = hand_empty();
     for (int i = 0; i < n; i++) {
-        hand_add_tile(hand, tiles_random_from(from));
+        Tile *t = tiles_pick_from(from);
+
+        hand_add_tile(hand, t);
     }
     return hand;
 }

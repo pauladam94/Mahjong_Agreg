@@ -27,7 +27,7 @@ void test_game() {
     Align align = DOWN;
 
     Hands *hands = hands_empty();
-    hands_draw_from(hands, tiles);
+    hands_pick_from(hands, tiles);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -45,7 +45,7 @@ void test_game() {
         }
         for (Player player = Player0; player <= Player3; player++) {
             player_position(player, &x, &y);
-            player_align(player, &align);
+            align = player_align(player);
 
             Tile *tile_pressed;
             tile_pressed =
@@ -57,7 +57,7 @@ void test_game() {
             if (tile_pressed != NULL && player == current_player) {
                 hand_discard_tile(hands_get(hands, player), tile_pressed);
 
-                current_player = (current_player + 1) % 4;
+                next_player(&current_player);
 
                 Tile *random_tile = tiles_random_from(tiles);
                 hand_add_tile(hands_get(hands, player), random_tile);
@@ -91,6 +91,6 @@ int client_server(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    test_game();
+    test_game(argc, argv);
     return 0;
 }

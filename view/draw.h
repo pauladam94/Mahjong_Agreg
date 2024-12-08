@@ -9,6 +9,9 @@
 Tile *hand_tile_pressed(const Hand *hand, int posX, int posY, Align align);
 int tiles_tile_pressed(const Tiles *tiles, int posX, int posY, int degrees);
 void draw_tiles(const Tiles *tiles, int posX, int posY, Align align);
-void draw_tile(const Tile *tile, int posX, int posY, Align align);
+
+void tile_draw(const Tile *tile, int posX, int posY, Align align);
+void tiles_free_textures();
+
 
 #endif // DRAW_H
