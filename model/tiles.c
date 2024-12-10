@@ -10,8 +10,8 @@ typedef struct Tiles {
 } Tiles;
 
 Tiles *tiles_empty() {
-    Tiles *tiles = calloc(sizeof(*tiles), 1);
-    return tiles;
+    Tiles *res = calloc(sizeof(*res), 1);
+    return res;
 }
 
 void tiles_pp(FILE *file, const Tiles *tiles) {
@@ -33,11 +33,11 @@ void tiles_sort(Tiles *tiles) {
     qsort(tiles->arr, tiles->len, sizeof(tiles->arr), &comp);
 }
 
-void tiles_add(Tiles *tiles, const Tile *tile) {
+void tiles_add(Tiles *tiles, Tile *tile) {
     tiles->len++;
     if (tiles->len > tiles->cap) {
         tiles->cap = (tiles->cap == 0) ? 1 : tiles->cap * 2;
-        tiles->arr = realloc(tiles->arr, sizeof(tiles->arr) * tiles->cap);
+        tiles->arr = realloc(tiles->arr, sizeof(*tiles->arr) * tiles->cap);
     }
     tiles->arr[tiles->len - 1] = (Tile *)tile;
 }
@@ -128,13 +128,14 @@ Tiles *tiles_copy(const Tiles *tiles) {
     return res;
 }
 
-void tiles_remove_equals(Tiles *tiles, Tile *tile) {
+int tiles_remove_equals(Tiles *tiles, Tile *tile) {
     for (int i = 0; i < tiles_size(tiles); i++) {
         if (tile_equals(tile, tiles_get(tiles, i))) {
             tiles_remove(tiles, i);
-            break;
+            return i;
         }
     }
+    return -1;
 }
 
 Tile *tiles_pick_from(Tiles *from) {

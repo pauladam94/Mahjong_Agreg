@@ -1,28 +1,30 @@
 #include "player.h"
-#include "../view/align.h"
+#include "../model/align.h"
 #include "../view/settings.h"
 
-void next_player(Player *p) { *p = (*p + 1) % 4; }
+void player_next(Player *p) { *p = (*p + 1) % 4; }
 
-void player_position(Player i, int *x, int *y) {
+Vector2 player_pos(Player i) {
+    Vector2 pos;
     switch (i) {
     case Player0:
-        *x = WIDTH / 2 - 7 * TILE_WIDTH;
-        *y = HEIGHT - TILE_HEIGHT;
+        pos.x = WIDTH / 2 - 7 * TILE_WIDTH;
+        pos.y = HEIGHT - TILE_HEIGHT;
         break;
     case Player1:
-        *x = WIDTH - TILE_HEIGHT;
-        *y = HEIGHT / 2 + 7 * TILE_WIDTH;
+        pos.x = WIDTH - TILE_HEIGHT;
+        pos.y = HEIGHT / 2 + 7 * TILE_WIDTH;
         break;
     case Player2:
-        *x = WIDTH / 2 - 7 * TILE_WIDTH;
-        *y = TILE_HEIGHT;
+        pos.x = WIDTH / 2 - 7 * TILE_WIDTH;
+        pos.y = TILE_HEIGHT;
         break;
     case Player3:
-        *x = TILE_HEIGHT;
-        *y = HEIGHT / 2 - 7 * TILE_WIDTH;
+        pos.x = TILE_HEIGHT;
+        pos.y = HEIGHT / 2 - 7 * TILE_WIDTH;
         break;
     }
+    return pos;
 }
 
 Align player_align(const Player i) {

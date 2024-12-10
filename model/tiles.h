@@ -16,11 +16,11 @@ Tile *tiles_get(const Tiles *tiles, int pos);
 int tiles_size(const Tiles *tiles);
 void tiles_sort(Tiles *tiles);
 void tiles_free(Tiles *tiles);
-void tiles_add(Tiles *tiles, const Tile *tile);
+void tiles_add(Tiles *tiles, Tile *tile);
 // Remove tile at a given position in tiles
 void tiles_remove(Tiles *tiles, int pos);
-// Remove first tile in tiles equals `tile` and nothing if this does not exits.
-void tiles_remove_equals(Tiles *tiles, Tile *tile);
+// Remove first tile in tiles equals `tile` and return it's position
+int tiles_remove_equals(Tiles *tiles, Tile *tile);
 // Remove a random tile and return it
 Tile *tiles_pick_from(Tiles *from);
 void tiles_pp(FILE *file, const Tiles *tiles);

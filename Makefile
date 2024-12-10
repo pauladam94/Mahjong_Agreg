@@ -76,7 +76,7 @@ test: $(TEST_EXECUTABLE)
 	echo "$$number_test test took $$elapsed_time s"
 
 build/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/./game/main.o, $(OBJECTS)) $(LIBRAYLIB)
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/./controller/controller.o, $(OBJECTS)) $(LIBRAYLIB)
 
 cleanall : clean clean_raylib
 

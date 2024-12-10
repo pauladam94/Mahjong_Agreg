@@ -1,11 +1,8 @@
 #include "draw.h"
-#include "../model/hand.h"
+#include "../model/align.h"
 #include "../model/tile.h"
-#include "../model/tiles.h"
-#include "button.h"
 #include "raylib.h"
 #include "settings.h"
-#include "align.h"
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -13,6 +10,22 @@ const int N_TILE = (3 * 9) + 3 + 4;
 
 static Texture2D *tiles_textures = NULL;
 static bool loaded_has_been_done = false;
+static Tile *tile_hover = NULL;
+static Tile *tile_pressed = NULL;
+
+
+void reset_hover_pressed() {
+    tile_hover = NULL;
+    tile_pressed = NULL;
+
+}
+void tile_hover_set(Tile *tile) {
+    tile_hover = tile;
+}
+
+void tile_pressed_set(Tile *tile) {
+    tile_pressed = tile;
+}
 
 void load_all_tiles() {
     tiles_textures = calloc(sizeof(*tiles_textures), N_TILE + 1);
@@ -66,44 +79,24 @@ void tiles_free_textures() {
     tiles_textures = NULL;
 }
 
-void tile_draw(const Tile *tile, int posX, int posY, Align align) {
+void highlight_tile_draw(Vector2 pos, Color color, Align align) {
+    Rectangle rec = align_rect(align, pos);
+    rec.x += THICKNESS;
+    rec.y += THICKNESS;
+    rec.width += -THICKNESS * 2;
+    rec.height += -THICKNESS * 2;
+    DrawRectangleRoundedLinesEx(rec, ROUNDNESS, 1, THICKNESS, color);
+}
+
+void tile_draw(const Tile *tile, Vector2 pos, Align align) {
     if (!loaded_has_been_done) {
         load_all_tiles();
     }
     Texture2D texture = tiles_textures[(uint64_t)tile];
-    Vector2 pos;
-    pos.x = posX;
-    pos.y = posY;
     float scale = (float)TILE_WIDTH / (float)texture.width;
     float rotation = align_rotation(align);
-
     DrawTextureEx(texture, pos, rotation, scale, WHITE);
-}
-
-Tile *hand_tile_pressed(const Hand *hand, int posX, int posY, Align align) {
-    Tiles *closed = hand_closed_tiles(hand);
-    for (int i = 0; i < tiles_size(closed); i++) {
-        Tile *tile = tiles_get(closed, i);
-        int x, y;
-        align_pos_hand(align, &x, &y, posX, posY, i);
-        tile_draw(tile, x, y, align);
+    if (tile_equals(tile, tile_hover)) {
+        highlight_tile_draw(pos, ORANGE, align);
     }
-
-    Tiles *discarded = hand_discarded_tiles(hand);
-    for (int i = 0; i < tiles_size(discarded); i++) {
-        Tile *tile = tiles_get(discarded, i);
-        int x, y;
-        align_pos_discard(align, &x, &y, posX, posY, i);
-        tile_draw(tile, x, y, align);
-    }
-    for (int i = 0; i < tiles_size(closed); i++) {
-        Tile *tile = tiles_get(closed, i);
-        int x, y;
-        align_pos_hand(align, &x, &y, posX, posY, i);
-        if (button_is_pressed(x, y, TILE_WIDTH, TILE_HEIGHT, align)) {
-            return tile;
-        }
-    }
-
-    return NULL;
 }

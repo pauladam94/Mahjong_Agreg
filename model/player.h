@@ -1,11 +1,11 @@
 #ifndef PLAYER_H
 #define PLAYER_H
-#include "../view/align.h"
+#include "../model/align.h"
 
 typedef enum Player { Player0, Player1, Player2, Player3 } Player;
 
-void next_player(Player *p);
-void player_position(Player i, int *x, int *y);
+void player_next(Player *p);
+Vector2 player_pos(Player i);
 Align player_align(const Player i);
 
 #endif // PLAYER_H

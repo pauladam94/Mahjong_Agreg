@@ -13,5 +13,4 @@ int main() {
     patterns_add_first_group_pattern(patterns, pat);
 
     patterns_free(patterns);
-    pattern_free(pat);
 }

@@ -5,7 +5,7 @@
 #include "../model/player.h"
 #include "../model/tile.h"
 #include "../model/tiles.h"
-#include "../view/button.h"
+#include "../view/context.h"
 #include "../view/draw.h"
 #include "../view/settings.h"
 #include "../view/setup.h"
@@ -19,15 +19,19 @@ void test_game() {
 
     char buff[100];
     Tiles *tiles = tiles_all();
-    Player current_player = Player0;
-    int x, y = 0;
+    Tiles *dead_wall = tiles_empty();
+    for (int i = 0; i < 14; i++) {
+        tiles_add(dead_wall, tiles_pick_from(tiles));
+    }
+
     Vector2 origin;
     origin.x = (float)WIDTH / 2;
     origin.y = (float)HEIGHT / 2;
-    Align align = DOWN;
 
     Hands *hands = hands_empty();
     hands_pick_from(hands, tiles);
+    // First player has one more tile to begin the game
+    hand_pick_from(hands_get(hands, Player0), tiles);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -35,7 +39,6 @@ void test_game() {
 
         sprintf(buff, "\nRemaining : %d", tiles_size(tiles));
         DrawText(buff, WIDTH / 2 - 2 * TILE_WIDTH, HEIGHT / 2, 20, BLACK);
-
         if (hand_is_complete(hands_get(hands, Player0))) {
             DrawText("Hand Complete", TILE_WIDTH * 2, HEIGHT - TILE_HEIGHT / 2,
                      20, BLACK);
@@ -43,36 +46,13 @@ void test_game() {
             DrawText("Hand Not Complete", TILE_WIDTH * 2,
                      HEIGHT - TILE_HEIGHT / 2, 20, BLACK);
         }
-        for (Player player = Player0; player <= Player3; player++) {
-            player_position(player, &x, &y);
-            align = player_align(player);
 
-            Tile *tile_pressed;
-            tile_pressed =
-                hand_tile_pressed(hands_get(hands, player), x, y, align);
-            if (player != Player0) {
-                tile_pressed = tiles_random_from(
-                    hand_closed_tiles(hands_get(hands, player)));
-            }
-            if (tile_pressed != NULL && player == current_player) {
-                hand_discard_tile(hands_get(hands, player), tile_pressed);
-
-                next_player(&current_player);
-
-                Tile *random_tile = tiles_random_from(tiles);
-                hand_add_tile(hands_get(hands, player), random_tile);
-                tiles_remove_equals(tiles, random_tile);
-                hand_sort(hands_get(hands, player));
-                if (current_player == Player0) {
-                    sleep(1);
-                }
-            }
-        }
+        hands_draw(hands);
+        Context ctx = context_get();
+        hands_update(hands, tiles, ctx);
         EndDrawing();
     }
-
     hands_free(hands);
-
     tiles_free(tiles);
     tiles_free_textures();
 }
