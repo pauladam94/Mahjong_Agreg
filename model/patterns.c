@@ -1,50 +1,19 @@
+#include "../utils/better_int.h"
 #include "pattern.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Patterns {
-    int cap;
-    int len;
-    Pattern **arr;
-} Patterns;
-
-void patterns_pp(FILE *file, const Patterns *patterns) {
-    for (int i = 0; i < patterns->len; i++) {
-        fprintf(file, "Pat %d :", i);
-        pattern_pp(file, patterns->arr[i]);
-        if (i != patterns->len - 1) {
+void patterns_pp(FILE *file, const vec(Pattern *) patterns) {
+    for (u64 i = 0; i < vec_len(patterns); i++) {
+        fprintf(file, "Pat %lu :", i);
+        pattern_pp(file, patterns[i]);
+        if (i != vec_len(patterns) - 1) {
             fprintf(file, "\n");
         }
     }
 }
 
-Patterns *patterns_empty(void) {
-    Patterns *patterns = calloc(sizeof(*patterns), 1);
-    return patterns;
-}
-
-void patterns_add_pattern(Patterns *patterns, Pattern *pat) {
-    patterns->len++;
-    if (patterns->len > patterns->cap) {
-        patterns->cap = patterns->cap == 0 ? 1 : patterns->cap * 2;
-        patterns->arr =
-            realloc(patterns->arr, sizeof(patterns->arr) * patterns->cap);
-    }
-    patterns->arr[patterns->len - 1] = pat;
-}
-
-Pattern *patterns_pop(Patterns *patterns) {
-    if (patterns->len == 0) {
-        fprintf(stderr, "Pop on an Empty Pattern");
-        exit(1);
-    }
-    patterns->len--;
-    return patterns->arr[patterns->len];
-}
-
-int patterns_size(const Patterns *patterns) { return patterns->len; }
-
-void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
+void patterns_add_first_group_pattern(vec(Pattern *) patterns, Pattern *pat) {
     // FIRST SEQUENCE
     Tile *fst = NULL;
     Tile *snd = NULL;
@@ -57,7 +26,7 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
         pattern_remove_tile(new_pattern, fst);
         pattern_remove_tile(new_pattern, snd);
         pattern_remove_tile(new_pattern, thrd);
-        patterns_add_pattern(patterns, new_pattern);
+        vec_push(patterns, new_pattern);
     }
     // FIRST THREE OF A KIND
     fst = NULL;
@@ -71,7 +40,7 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
         pattern_remove_tile(new_pattern, fst);
         pattern_remove_tile(new_pattern, snd);
         pattern_remove_tile(new_pattern, thrd);
-        patterns_add_pattern(patterns, new_pattern);
+        vec_push(patterns, new_pattern);
     }
     // FIRST PAIR
     fst = NULL;
@@ -82,7 +51,7 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
         pattern_add_pair(new_pattern, fst, snd);
         pattern_remove_tile(new_pattern, fst);
         pattern_remove_tile(new_pattern, snd);
-        patterns_add_pattern(patterns, new_pattern);
+        vec_push(patterns, new_pattern);
     }
     pattern_free(pat);
     /*
@@ -96,11 +65,10 @@ void patterns_add_first_group_pattern(Patterns *patterns, Pattern *pat) {
     */
 }
 
-void patterns_free(Patterns *patterns) {
-    for (int i = 0; i < patterns->len; i++) {
-        pattern_free(patterns->arr[i]);
-        patterns->arr[i] = NULL;
+void patterns_free(vec(Pattern *) patterns) {
+    for (u64 i = 0; i < vec_len(patterns); i++) {
+        pattern_free(patterns[i]);
+        patterns[i] = NULL;
     }
-    free(patterns->arr);
-    free(patterns);
+    vec_free(patterns);
 }

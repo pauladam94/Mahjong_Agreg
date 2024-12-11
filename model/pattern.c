@@ -54,7 +54,7 @@ void pattern_add_group(Pattern *pat, Tile *t0, Tile *t1, Tile *t2) {
     }
 }
 
-void pattern_pp(FILE *file, Pattern *pat) {
+void pattern_pp(FILE *file, const Pattern *pat) {
     fprintf(file, "|");
     for (int j = 0; j < 4; j++) {
         for (int i = 0; i < 3; i++) {

@@ -73,7 +73,7 @@ void hand_add_discard(Hand *hand, Tile *tile) {
     vec_push(hand->discard, tile);
     vec_push(hand->discard_pos, pos_from_vec(align_pos_discard(
                                     hand->align, hand->pos.x, hand->pos.y,
-                                    vec_len(hand->discard))));
+                                    vec_len(hand->discard) - 1)));
 }
 
 vec(Tile *) hand_discard(Hand *hand) { return hand->discard; }
@@ -87,7 +87,6 @@ void hand_discard_tile(Hand *hand, Tile *tile) {
     }
     Vector2 prev = pos_get(hand->hand_pos[pos]);
     hand_add_discard(hand, tile);
-    // hand_update_pos(hand);
     Vector2 next = pos_get(hand->discard_pos[vec_len(hand->discard_pos) - 1]);
     hand->discard_pos[vec_len(hand->discard) - 1] = pos_transi(prev, next);
 }
@@ -115,21 +114,22 @@ void hand_pp(FILE *file, const Hand *hand) {
     tiles_pp(file, (const vec(Tile *))hand->hand);
 }
 
-Patterns *hand_patterns(const Hand *hand) {
+vec(Pattern *) hand_patterns(const Hand *hand) {
     tiles_sort(hand->hand);
-    Patterns *res = patterns_empty();
-    Patterns *todo = patterns_empty();
+    vec(Pattern *) res = NULL;
+    vec(Pattern *) todo = NULL;
     vec(Tile *) tiles = tiles_copy((const vec(Tile *))hand->hand);
 
     // TODO: Add in the first pattern the different chi and su
     Pattern *pat = pattern_from_tiles(tiles);
-    patterns_add_pattern(todo, pat);
+    vec_push(todo, pat);
 
-    while (patterns_size(todo) != 0) {
-        Pattern *pattern = patterns_pop(todo);
+    while (vec_len(todo) != 0) {
+        Pattern *pattern = todo[vec_len(todo) - 1];
+        vec_pop(todo);
 
         if (pattern_is_complete(pattern)) {
-            patterns_add_pattern(res, pattern);
+            vec_push(res, pattern);
             continue;
         }
         patterns_add_first_group_pattern(todo, pattern);
@@ -146,13 +146,13 @@ Patterns *hand_patterns(const Hand *hand) {
 }
 
 bool hand_is_complete(const Hand *hand) {
-    Patterns *patterns = hand_patterns(hand);
+    vec(Pattern *) patterns = hand_patterns(hand);
 
     // printf("Patterns :\n");
     // patterns_pp(stdout, patterns);
     // printf("\n");
 
-    int n_patterns = patterns_size(patterns);
+    int n_patterns = vec_len(patterns);
     patterns_free(patterns);
     return n_patterns >= 1;
 }
