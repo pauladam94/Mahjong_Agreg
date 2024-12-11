@@ -45,7 +45,7 @@ typedef enum {
 
 typedef struct Tile Tile;
 
-int tile_comp(const Tile *t0, const Tile *t1) {
+int _tile_comp(const Tile *t0, const Tile *t1) {
     _Tile _t0 = (uint64_t)t0;
     _Tile _t1 = (uint64_t)t1;
     if (_t0 > _t1) {
@@ -55,6 +55,12 @@ int tile_comp(const Tile *t0, const Tile *t1) {
     } else {
         return 0;
     }
+}
+
+int tile_comp(const void *a, const void *b) {
+    const Tile *t1 = *(const Tile **)a;
+    const Tile *t2 = *(const Tile **)b;
+    return _tile_comp(t1, t2);
 }
 
 int tile_number(const Tile *t) {
@@ -280,12 +286,15 @@ void tile_pp(FILE *file, const Tile *t) {
     }
 }
 
-void tile_free(Tile *tile) {}
 bool tile_equals(const Tile *t1, const Tile *t2) { return t1 == t2; }
 
 Tile *next_dora(const Tile *tile) {
     _Tile res;
     switch ((_Tile)(uint64_t)tile) {
+    case None:
+        fprintf(stderr, "Next Dora one None Tile\n");
+        exit(1);
+        break;
     case M1:
     case P1:
     case S1:

@@ -17,7 +17,8 @@ int tile_number(const Tile *t);
 // - In order of next Dora
 // - West Wind First
 // - White Drago First
-int tile_comp(const Tile *t0, const Tile *t1);
+// This function take into argument pointers to (Tile *)
+int tile_comp(const void *a, const void *b);
 bool tile_adjacent(const Tile *t0, const Tile *t1);
 bool tile_is_terminal(const Tile* t);
 bool tile_is_honor(const Tile *t);
@@ -30,6 +31,5 @@ bool tile_is_pin(const Tile *t);
 bool tile_is_su(const Tile *t);
 bool tile_equals(const Tile *t0, const Tile *t1);
 void tile_pp(FILE *file, const Tile *t);
-void tile_free(Tile *tile);
 
 #endif // TILE_H

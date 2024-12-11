@@ -5,6 +5,7 @@
 #include "../model/player.h"
 #include "../model/tile.h"
 #include "../model/tiles.h"
+#include "../utils/vec.h"
 #include "../view/context.h"
 #include "../view/draw.h"
 #include "../view/settings.h"
@@ -14,14 +15,14 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void test_game() {
+void test_game(int argc, char **argv) {
     setup_window();
 
     char buff[100];
-    Tiles *tiles = tiles_all();
-    Tiles *dead_wall = tiles_empty();
+    vec(Tile *) tiles = tiles_all();
+    vec(Tile *) dead_wall = NULL;
     for (int i = 0; i < 14; i++) {
-        tiles_add(dead_wall, tiles_pick_from(tiles));
+        vec_push(dead_wall, tiles_pick_from(tiles));
     }
 
     Vector2 origin;
@@ -37,7 +38,7 @@ void test_game() {
         BeginDrawing();
         ClearBackground(WHITE);
 
-        sprintf(buff, "\nRemaining : %d", tiles_size(tiles));
+        sprintf(buff, "\nRemaining : %" PRIu64, vec_len(tiles));
         DrawText(buff, WIDTH / 2 - 2 * TILE_WIDTH, HEIGHT / 2, 20, BLACK);
         if (hand_is_complete(hands_get(hands, Player0))) {
             DrawText("Hand Complete", TILE_WIDTH * 2, HEIGHT - TILE_HEIGHT / 2,
@@ -53,7 +54,7 @@ void test_game() {
         EndDrawing();
     }
     hands_free(hands);
-    tiles_free(tiles);
+    vec_free(tiles);
     tiles_free_textures();
 }
 

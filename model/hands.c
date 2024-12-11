@@ -1,8 +1,8 @@
 #include "../view/context.h"
+#include "../view/draw.h"
+#include "../utils/vec.h"
 #include "hand.h"
 #include "player.h"
-#include "../view/draw.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 typedef struct Hands {
@@ -25,7 +25,7 @@ Hands *hands_empty(void) {
     return res;
 }
 
-void hands_pick_from(Hands *hands, Tiles *from) {
+void hands_pick_from(Hands *hands, vec(Tile *) from) {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 13; j++) {
             hand_pick_from(hands->hands[i], from);
@@ -43,10 +43,10 @@ void hands_free(Hands *hands) {
     free(hands);
 }
 
-void hands_update(Hands *hands, Tiles *tiles, Context ctx) {
+void hands_update(Hands *hands, vec(Tile *) tiles, Context ctx) {
     reset_hover_pressed();
-    Hand* hand = hands->hands[hands->player];
-    for (Player player = Player0; player <= Player3; player ++) {
+    Hand *hand = hands->hands[hands->player];
+    for (Player player = Player0; player <= Player3; player++) {
         hand_update_pos_transi(hands->hands[player]);
     }
     if (hand_update(hand, tiles, ctx)) {
@@ -54,7 +54,6 @@ void hands_update(Hands *hands, Tiles *tiles, Context ctx) {
     }
     int hand_hover = hand_get_hand_hover(hand);
     if (hand_hover != -1) {
-        tile_hover_set(tiles_get(hand_closed_tiles(hand), hand_hover));
+        tile_hover_set(hand_closed_tiles(hand)[hand_hover]);
     }
-
 }

@@ -1,3 +1,4 @@
+#include "../utils/vec.h"
 #include "tile.h"
 #include "tiles.h"
 #include <stdio.h>
@@ -6,7 +7,7 @@
 typedef struct Pattern {
     Tile *group[3][4]; // The four sequences or three of a kind
     Tile *pair[2];
-    Tiles *tiles; // The Pattern is partial until tiles is not NULL
+    vec(Tile *) tiles; // The Pattern is partial until tiles is not NULL
 } Pattern;
 
 Pattern *pattern_empty(void) {
@@ -14,7 +15,7 @@ Pattern *pattern_empty(void) {
     return pattern;
 }
 
-Pattern *pattern_from_tiles(Tiles *tiles) {
+Pattern *pattern_from_tiles(vec(Tile *) tiles) {
     Pattern *pat = pattern_empty();
     pat->tiles = tiles;
     return pat;
@@ -73,7 +74,7 @@ void pattern_pp(FILE *file, Pattern *pat) {
     fprintf(file, "|");
     fprintf(file, " ");
     if (pat->tiles != NULL)
-        tiles_pp(file, pat->tiles);
+        tiles_pp(file, (const vec(Tile *))pat->tiles);
 }
 
 bool pattern_has_pair(Pattern *pat) {
@@ -99,18 +100,14 @@ void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
 }
 
 Tile *pattern_get_tile(const Pattern *pat, int pos) {
-    return tiles_get(pat->tiles, pos);
+    if (pos >= vec_len(pat->tiles)) {
+        return NULL;
+    }
+    return pat->tiles[pos];
 }
 
 void pattern_free(Pattern *pat) {
-    for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 3; i++) {
-            tile_free(pat->group[i][j]);
-        }
-    }
-    tiles_free(pat->tiles);
-    tile_free(pat->pair[0]);
-    tile_free(pat->pair[1]);
+    vec_free(pat->tiles);
     free(pat);
 }
 
@@ -124,7 +121,7 @@ Pattern *pattern_copy(const Pattern *pat) {
     res->pair[0] = pat->pair[0];
     res->pair[1] = pat->pair[1];
 
-    res->tiles = tiles_copy(pat->tiles);
+    res->tiles = tiles_copy((const vec(Tile *))pat->tiles);
     return res;
 }
 
@@ -207,7 +204,7 @@ int pattern_all_simple(Pattern *pat) {
             }
         }
     }
-    for (int i = 0; i < 2; i ++) {
+    for (int i = 0; i < 2; i++) {
         if (!tile_is_terminal(pat->pair[i])) {
             return false;
         }

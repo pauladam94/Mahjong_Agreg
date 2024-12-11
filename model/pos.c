@@ -1,11 +1,12 @@
 #include "raylib.h"
-#include <stdio.h>
 #include <stdlib.h>
+
+const float SPEED = 0.01;
 
 typedef struct Pos {
     Vector2 begin;
     Vector2 end;
-    float t; //
+    float t;
 } Pos;
 
 Vector2 pos_get(Pos *pos) {
@@ -24,7 +25,7 @@ void pos_update(Pos *pos) {
     } else if (pos->t < 0.) {
         pos->t = 0.;
     } else {
-        pos->t += 0.01;
+        pos->t += SPEED;
     }
 }
 
