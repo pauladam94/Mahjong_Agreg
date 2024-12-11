@@ -64,11 +64,6 @@ Hand *hand_empty(Player player) {
     return hand;
 }
 
-void hand_remove_tile(Hand *hand, int pos) {
-    vec_remove(hand->hand, pos);
-    vec_remove(hand->hand_pos, pos);
-}
-
 void hand_add_discard(Hand *hand, Tile *tile) {
     vec_push(hand->discard, tile);
     vec_push(hand->discard_pos, pos_from_vec(align_pos_discard(
@@ -174,8 +169,14 @@ Hand *hand_from_string(const char *s) {
 
 void hand_free(Hand *hand) {
     vec_free(hand->hand);
-    vec_free(hand->hand_pos);
     vec_free(hand->discard);
+
+    for (u64 i = 0; i < vec_len(hand->hand_pos); i++)
+        pos_free(hand->hand_pos[i]);
+    vec_free(hand->hand_pos);
+
+    for (u64 i = 0; i < vec_len(hand->discard_pos); i++)
+        pos_free(hand->discard_pos[i]);
     vec_free(hand->discard_pos);
 
     for (uint64_t i = 0; i < vec_len(hand->chi); i++)

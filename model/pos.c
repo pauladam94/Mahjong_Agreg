@@ -44,3 +44,7 @@ Pos *pos_transi(Vector2 begin, Vector2 end) {
     res->t = 0.1;
     return res;
 }
+
+void pos_free(Pos* pos) {
+    free(pos);
+}

@@ -1,13 +1,13 @@
+#include "../utils/better_int.h"
 #include "../utils/vec.h"
 #include "stdlib.h"
 #include "tile.h"
 #include <ctype.h>
 #include <stdbool.h>
-#include <stdint.h>
 #include <string.h>
 
 void tiles_pp(FILE *file, const vec(Tile *) tiles) {
-    for (uint64_t i = 0; i < vec_len(tiles); i++) {
+    for (u64 i = 0; i < vec_len(tiles); i++) {
         tile_pp(file, tiles[i]);
         if (i != vec_len(tiles) - 1) {
             printf(" ");
@@ -31,7 +31,7 @@ vec(Tile *) tiles_from_string(const char *s) {
         if (isdigit(c)) {
             vec_push(buf, c);
         } else {
-            for (uint64_t j = 0; j < vec_len(buf); j++) {
+            for (u64 j = 0; j < vec_len(buf); j++) {
                 tile_string[0] = buf[j];
                 tile_string[1] = c;
                 Tile *tile = tile_from_string(tile_string);
@@ -62,14 +62,14 @@ Tile *tiles_random_from(vec(Tile *) from) {
 
 vec(Tile *) tiles_copy(const vec(Tile *) tiles) {
     vec(Tile *) res = NULL;
-    for (uint64_t i = 0; i < vec_len(tiles); i++) {
+    for (u64 i = 0; i < vec_len(tiles); i++) {
         vec_push(res, tiles[i]);
     }
     return res;
 }
 
 int tiles_remove_equals(vec(Tile *) tiles, Tile *tile) {
-    for (uint64_t i = 0; i < vec_len(tiles); i++) {
+    for (u64 i = 0; i < vec_len(tiles); i++) {
         if (tile_equals(tile, tiles[i])) {
             vec_remove(tiles, i);
             return i;

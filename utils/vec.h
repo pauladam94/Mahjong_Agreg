@@ -20,17 +20,6 @@ void vec_maybe_shrink(void **vec, uint64_t size, uint64_t new_size);
 
 #define vec_len(V) ((V) ? vec_get_header(V)->len : 0)
 
-#define suppress_warning_sizeof_begin
-_Pragma("clang diagnostic push")
-// _Pragma("clang diagnostic ignored \"-Wsizeof_expression\"")
-
-#define suppress_warning_sizeof_end _Pragma("clang diagnostic pop")
-
-// #pragma clang diagnostic push
-// #pragma clang diagnostic ignored "-Wfloat-equal -Wdeprecated"
-// #pragma clang diagnostic pop
-// suppress_warning_sizeof_begin
-// suppress_warning_sizeof_end
 #define vec_push(V, E)                                                         \
     do {                                                                       \
         vec_maybe_expand((void **)&(V), (uint64_t)sizeof(*(V)),                \

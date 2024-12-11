@@ -1,6 +1,7 @@
 #include "../utils/vec.h"
 #include "tile.h"
 #include "tiles.h"
+#include "../utils/better_int.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -99,7 +100,7 @@ void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
     }
 }
 
-Tile *pattern_get_tile(const Pattern *pat, int pos) {
+Tile *pattern_get_tile(const Pattern *pat, u64 pos) {
     if (pos >= vec_len(pat->tiles)) {
         return NULL;
     }

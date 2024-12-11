@@ -70,7 +70,7 @@ int client_server(int argc, char *argv[]) {
     if (id == 1) {
         return server();
     } else {
-        return client(0);
+        return client();
     }
     return 0;
 }

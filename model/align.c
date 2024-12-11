@@ -43,18 +43,18 @@ Vector2 align_pos_discard(Align align, int posX, int posY, int i) {
     switch (align) {
     case DOWN:
         pos.x = posX + (i % 6) * TILE_WIDTH + 3 * TILE_WIDTH;
-        pos.y = posY + (i / 6) * TILE_HEIGHT - 4 * TILE_HEIGHT;
+        pos.y = posY + ((float)i / 6) * TILE_HEIGHT - 4 * TILE_HEIGHT;
         break;
     case RIGHT:
-        pos.x = posX + (i / 6) * TILE_HEIGHT - 4 * TILE_HEIGHT;
+        pos.x = posX + ((float)i / 6) * TILE_HEIGHT - 4 * TILE_HEIGHT;
         pos.y = posY - (i % 6) * TILE_WIDTH - 3 * TILE_WIDTH;
         break;
     case UP:
         pos.x = posX - (i % 6) * TILE_WIDTH + 9 * TILE_WIDTH;
-        pos.y = posY - (i / 6) * TILE_HEIGHT + 4 * TILE_HEIGHT;
+        pos.y = posY - ((float)i / 6) * TILE_HEIGHT + 4 * TILE_HEIGHT;
         break;
     case LEFT:
-        pos.x = posX - (i / 6) * TILE_HEIGHT + 4 * TILE_HEIGHT;
+        pos.x = posX - ((float)i / 6) * TILE_HEIGHT + 4 * TILE_HEIGHT;
         pos.y = posY + (i % 6) * TILE_WIDTH + 3 * TILE_WIDTH;
         break;
     }
