@@ -6,9 +6,13 @@ int main() {
     purple();
     printf("[TEST Tiles 1]\n");
     reset();
-    Tiles *tiles = tiles_empty();
-    tiles_add(tiles, tile_from_string("1m"));
+    vec(Tile *) tiles = NULL;
+    // #pragma clang diagnostic push
+    // #pragma clang diagnostic ignored "-WarnOnSizeOfPointerToAggregate"
+    // bugprone-sizeof-expression
+    vec_push(tiles, tile_from_string("1m"));
+    // #pragma clang diagnostic pop
     tiles_pp(stdout, tiles);
     printf("\n");
-    tiles_free(tiles);
+    vec_free(tiles);
 }

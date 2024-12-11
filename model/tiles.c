@@ -6,9 +6,9 @@
 #include <stdint.h>
 #include <string.h>
 
-void tiles_pp(FILE *file, const vec(Tile *) * tiles) {
+void tiles_pp(FILE *file, const vec(Tile *) tiles) {
     for (uint64_t i = 0; i < vec_len(tiles); i++) {
-        tile_pp(file, *tiles[i]);
+        tile_pp(file, tiles[i]);
         if (i != vec_len(tiles) - 1) {
             printf(" ");
         }

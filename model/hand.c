@@ -174,7 +174,10 @@ Hand *hand_from_string(const char *s) {
 
 void hand_free(Hand *hand) {
     vec_free(hand->hand);
+    vec_free(hand->hand_pos);
+
     vec_free(hand->discard);
+    vec_free(hand->discard_pos);
     for (uint64_t i = 0; i < vec_len(hand->chi); i++)
         vec_free(hand->chi[i]);
     for (uint64_t i = 0; i < vec_len(hand->kan); i++)
@@ -228,7 +231,6 @@ bool hand_update(Hand *hand, vec(Tile *) tiles, Context ctx) {
         hand->hand_pressed = -1; // Back to -1
         hand->hand_hover = -1;   // Back to -1
     }
-
     return next_turn;
 }
 
