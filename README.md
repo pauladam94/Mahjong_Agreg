@@ -52,3 +52,11 @@ something with it, to be able to test the GUI.
     - `crypto/`
 - `crypto/` depends on nothing
 - `logic/` depends on nothing
+
+# Dependency for Ubuntu
+```
+sudo apt-get install libxcursor-dev
+sudo apt install libxrandr-dev
+sudo apt-get install libxinerama-dev
+sudo apt-get install libxi-dev
+```
