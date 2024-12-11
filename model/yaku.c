@@ -139,7 +139,7 @@ bool lipeikou(Pattern *pat, bool open) {
     if (open) return false;
 
     for (int i = 0; i < 4; i++) {
-        for (int j = 1; j < 4; j++) {
+        for (int j = i + 1; j < 4; j++) {
             for (int k = 0; k < 3; k++) {
                 if (pattern_get_group(pat)[i][k] != pattern_get_group(pat)[j][k]) {
                     break;
@@ -180,11 +180,38 @@ bool pinfu(Pattern *pat, bool open) {
 
 // triple suite
 bool shanshoku_doujun(Pattern *pat, bool open) {
+    Tile ***groups = pattern_get_group(pat);
+    for (int k = 0; k < 4; k++) {
+        if (
+            tile_number(groups[(k)%4][0]) == tile_number(groups[(k+1)%4][0]) &&
+            tile_number(groups[(k)%4][0]) == tile_number(groups[(k+2)%4][0]) &&
+            tile_number(groups[(k)%4][0]) + 1 == tile_number(groups[(k)%4][0]) &&
+            tile_number(groups[(k+1)%4][0]) + 1 == tile_number(groups[(k+1)%4][0]) &&
+            tile_number(groups[(k+2)%4][0]) + 1 == tile_number(groups[(k+2)%4][0])
+        ) {
+            return true;
+        }
+    }
     return false;
 }
 
 // grande suite pure
 bool ittsuu(Pattern *pat, bool open) {
+    Tile ***groups = pattern_get_group(pat);
+    for (int k = 0; k < 4; k++) {
+        int count = 1;
+        int v1 = tile_number(groups[(k)%4][0]);
+        int v2 = tile_number(groups[(k+1)%4][0]);
+        int v3 = tile_number(groups[(k+2)%4][0]);
+        if (
+            v1%4 == 1 &&
+            v2%4 == 1 && tile_same_family(groups[(k)%4][0], groups[(k+1)%4][0]) &&
+            v3%4 == 1 && tile_same_family(groups[(k)%4][0], groups[(k+2)%4][0]) &&
+            v1*v2*v3 == 28
+        ) {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -262,12 +289,39 @@ bool daisuushi(Pattern *pat, bool open) {
 
 // terminale et honneurs de partout
 bool chanta(Pattern *pat, bool open) {
-    return false;
+    Tile ***groups = pattern_get_group(pat);
+    for (int i = 0; i < 4; i++) {
+        if (
+            !tile_is_terminal(groups[i][0]) &&
+            !tile_is_terminal(groups[i][2]) &&
+            !tile_is_honor(groups[i][0])
+        ) {
+            return false;
+        }
+    }
+    if (
+        !tile_is_terminal(pattern_get_pair(pat)[0]) &&
+        !tile_is_honor(pattern_get_pair(pat)[0])
+    ) {
+        return false;
+    }
+    return true;
 }
 
 // terminale partout
 bool junchan(Pattern *pat, bool open) {
-    return false;
+    Tile ***groups = pattern_get_group(pat);
+    for (int i = 0; i < 4; i++) {
+        for (int k = 0; k < 3; k++) {
+            if (!tile_is_terminal(groups[i][k])) {
+                return false;
+            }
+        }
+    }
+    if (!tile_is_terminal(pattern_get_pair(pat)[0])) {
+        return false;
+    }
+    return true;
 }
 
 // tout terminale et honneur
@@ -359,6 +413,20 @@ bool suuankou(Pattern *pat, bool open) {
 
 // triple brelan
 bool sanshoku_doukou(Pattern *pat, bool open) {
+    Tile ***groups = pattern_get_group(pat);
+    for (int k = 0; k < 4; k++) {
+        if (
+            tile_number(groups[(k)%4][0]) == tile_number(groups[(k)%4][1]) &&
+            tile_number(groups[(k+1)%4][0]) == tile_number(groups[(k+1)%4][1]) &&
+            tile_number(groups[(k+2)%4][0]) == tile_number(groups[(k+2)%4][1]) &&
+            tile_number(groups[(k)%4][0]) == tile_number(groups[(k+1)%4][0]) &&
+            tile_number(groups[(k)%4][0]) == tile_number(groups[(k+2)%4][0]) &&
+            !tile_same_family(groups[(k)%4][0], groups[(k+1)%4][0]) &&
+            !tile_same_family(groups[(k)%4][0], groups[(k+2)%4][0])
+        ) {
+            return true;
+        }
+    }
     return false;
 }
 
