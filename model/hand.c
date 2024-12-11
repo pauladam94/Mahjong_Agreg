@@ -175,18 +175,19 @@ Hand *hand_from_string(const char *s) {
 void hand_free(Hand *hand) {
     vec_free(hand->hand);
     vec_free(hand->hand_pos);
-
     vec_free(hand->discard);
     vec_free(hand->discard_pos);
+
     for (uint64_t i = 0; i < vec_len(hand->chi); i++)
         vec_free(hand->chi[i]);
+    vec_free(hand->chi);
     for (uint64_t i = 0; i < vec_len(hand->kan); i++)
         vec_free(hand->kan[i]);
+    vec_free(hand->kan);
     for (uint64_t i = 0; i < vec_len(hand->pon); i++)
         vec_free(hand->pon[i]);
     vec_free(hand->pon);
-    vec_free(hand->chi);
-    vec_free(hand->kan);
+
     free(hand);
 }
 

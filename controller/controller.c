@@ -1,5 +1,5 @@
-#include "../client/client.h"
-#include "../client/server.h"
+#include "../client-server/client.h"
+#include "../client-server/server.h"
 #include "../model/hand.h"
 #include "../model/hands.h"
 #include "../model/player.h"
@@ -15,7 +15,10 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void test_game(int argc, char **argv) {
+#define RAYGUI_IMPLEMENTATION
+#include "../utils/raygui.h"
+
+void game(int argc, char **argv) {
     setup_window();
 
     char buff[100];
@@ -55,6 +58,7 @@ void test_game(int argc, char **argv) {
     }
     hands_free(hands);
     vec_free(tiles);
+    vec_free(dead_wall);
     tiles_free_textures();
 }
 
@@ -72,6 +76,7 @@ int client_server(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    test_game(argc, argv);
+    game(argc, argv);
+    // client_server(argc, argv);
     return 0;
 }
