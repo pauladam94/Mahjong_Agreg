@@ -30,11 +30,11 @@ void pattern_next_three_same(const Pattern *pat, Tile **fst, Tile **snd,
 bool pattern_is_complete(const Pattern *pat);
 bool pattern_has_pair(Pattern *pat);
 bool pattern_has_four_group(Pattern *pat);
-// getters
-Tile ***pattern_get_group(Pattern *pat);
-Tile **pattern_get_pair(Pattern *pat);
-// Tell if the pattern is open
+
+vec(vec(Tile *))pattern_get_group(Pattern *pat);
+
 bool pattern_is_open(Pattern *pat);
+
 vec(GroupType) pattern_get_group_type(Pattern *pat);
 
 #endif // PATTERN_H

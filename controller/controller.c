@@ -3,21 +3,19 @@
 #include "../model/player.h"
 #include "../model/tile.h"
 #include "../model/tiles.h"
+#include "../utils/raygui.h"
 #include "../utils/vec.h"
 #include "../view/client.h"
 #include "../view/context.h"
 #include "../view/draw.h"
-#include "menu.h"
 #include "../view/server.h"
 #include "../view/settings.h"
 #include "../view/setup.h"
+#include "menu.h"
 #include "raylib.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-#define RAYGUI_IMPLEMENTATION
-#include "../utils/raygui.h"
 
 void game(int argc, char **argv) {
     setup_window();

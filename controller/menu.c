@@ -1,22 +1,25 @@
-#include "../utils/raygui.h"
+#include "../utils/error.h"
 #include "../view/client.h"
 #include "../view/server.h"
 #include "raylib.h"
+#include "../utils/raygui.h"
 
 void start_menu(void) {
-
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(WHITE);
-        if (GuiButton((Rectangle){100, 100, 100, 100}, "Server")) {
+        GuiSetStyle(DEFAULT, TEXT_SIZE, 25);
 
+        if (GuiButton((Rectangle){100, 100, 100, 100}, "Server")) {
             // Multithread this thing potentially
-            launch_server();
+            test("Lauch Server", launch_server() == 0);
             // Run Also the client here
+            server();
         }
 
         if (GuiButton((Rectangle){100, 300, 100, 100}, "Client")) {
-            launch_client();
+            test("Lauch Client", launch_client() == 0);
+            client();
         }
         EndDrawing();
     }
