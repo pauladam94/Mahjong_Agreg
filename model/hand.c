@@ -64,11 +64,6 @@ Hand *hand_empty(Player player) {
     return hand;
 }
 
-void hand_remove_tile(Hand *hand, int pos) {
-    vec_remove(hand->hand, pos);
-    vec_remove(hand->hand_pos, pos);
-}
-
 void hand_add_discard(Hand *hand, Tile *tile) {
     vec_push(hand->discard, tile);
     vec_push(hand->discard_pos, pos_from_vec(align_pos_discard(
@@ -99,7 +94,6 @@ void hand_add_tile(Hand *hand, Tile *tile) {
     vec_push(hand->hand_pos,
              pos_from_vec(align_pos_hand(hand->align, hand->pos.x, hand->pos.y,
                                          vec_len(hand->hand) - 1)));
-    // hand_update_pos(hand);
 }
 
 bool is_opened(const Hand *hand) { return hand->opened; }
@@ -174,19 +168,26 @@ Hand *hand_from_string(const char *s) {
 
 void hand_free(Hand *hand) {
     vec_free(hand->hand);
+    vec_free(hand->discard);
+
+    for (u64 i = 0; i < vec_len(hand->hand_pos); i++)
+        pos_free(hand->hand_pos[i]);
     vec_free(hand->hand_pos);
 
-    vec_free(hand->discard);
+    for (u64 i = 0; i < vec_len(hand->discard_pos); i++)
+        pos_free(hand->discard_pos[i]);
     vec_free(hand->discard_pos);
+
     for (uint64_t i = 0; i < vec_len(hand->chi); i++)
         vec_free(hand->chi[i]);
+    vec_free(hand->chi);
     for (uint64_t i = 0; i < vec_len(hand->kan); i++)
         vec_free(hand->kan[i]);
+    vec_free(hand->kan);
     for (uint64_t i = 0; i < vec_len(hand->pon); i++)
         vec_free(hand->pon[i]);
     vec_free(hand->pon);
-    vec_free(hand->chi);
-    vec_free(hand->kan);
+
     free(hand);
 }
 

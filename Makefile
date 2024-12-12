@@ -1,6 +1,6 @@
 CC = clang
 BUILD_DIR ?= ./build
-NAME = mahjong_agreg
+NAME = mental_mahjong
 
 RAYLIB_DIR ?= ./raylib/src/
 
@@ -63,6 +63,8 @@ $(LIBRAYLIB):
 
 TEST_SOURCE = $(wildcard test/*.c)
 TEST_EXECUTABLE = $(TEST_SOURCE:test/%.c=build/%.x)
+
+all: $(NAME) test
 
 test: $(TEST_EXECUTABLE)
 	@start_time=$$(date +%s); \

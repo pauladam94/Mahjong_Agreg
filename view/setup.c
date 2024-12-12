@@ -6,6 +6,5 @@
 void setup_window(void) {
     InitWindow(WIDTH, HEIGHT, "MahJong Agreg");
     SetTargetFPS(60);
-
     srand(time(NULL));
 }

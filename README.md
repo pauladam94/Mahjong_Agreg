@@ -21,10 +21,11 @@ something with it, to be able to test the GUI.
 - [ ] Try to compile with wasm
 
 ## Cryptographic(`crypto/`)
+- [ ] Polynomial implementation (fast if possible)
 - [ ] basic elgamal (or RSA) cryptographics primitive
 - [ ] implement an idea of protocol to prepare the cards at the beggining
 
-## Server-Client for Multiplayer(`client/`)
+## Server-Client for Multiplayer(`client`)
 - [ ] write basic client for multiplayers
 - [ ] use cryptographic primitive to have no server (only peer to peer)
 - [ ] Test connection when the program is compiled with wasm
@@ -38,23 +39,12 @@ something with it, to be able to test the GUI.
 ## Put everything on a website(`website`)
 - [ ] compile to wasm and make work a wasm executable compiled with wasm
 
-# Dependency between part of the project
-- `website/` depends on `game/`
-- `game/` depends on
-    - `visuals/`
-    - `client/`
-    - `logic/`
-- visuals depends on
-    - `logic/`
-- client depends on
-    - `crypto/`
-- `crypto/` depends on nothing
-- `logic/` depends on nothing
-
 # Dependency for Ubuntu
+Here the different packages that have to be installed for the project to be
+compiled. (This has been tested on Linux Mint for X11).
 ```
 sudo apt-get install libxcursor-dev
 sudo apt install libxrandr-dev
 sudo apt-get install libxinerama-dev
 sudo apt-get install libxi-dev
-```
+`perror("setsockopt(SO_REUSEADDR) failed");``
