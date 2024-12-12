@@ -29,8 +29,8 @@ void pattern_next_three_same(const Pattern *pat, Tile **fst, Tile **snd,
 bool pattern_is_complete(const Pattern *pat);
 bool pattern_has_pair(Pattern *pat);
 bool pattern_has_four_group(Pattern *pat);
-
-// YAKU
-int pattern_all_simple(Pattern *pat);
+// getters
+Tile ***pattern_get_group(Pattern *pat);
+Tile **pattern_get_pair(Pattern *pat);
 
 #endif // PATTERN_H
