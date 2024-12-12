@@ -42,6 +42,6 @@ bool suukantsu(Pattern *pat, bool open); // TODO (carrés)
 bool honitsu(Pattern *pat, bool open);
 bool chinitsu(Pattern *pat, bool open);
 bool ryuuiisou(Pattern *pat, bool open);
-bool churen_poutou(Pattern *pat, bool open);
+bool churen_poutou(Pattern *pat, bool open); // TODO (neuf portes)
 
 #endif
