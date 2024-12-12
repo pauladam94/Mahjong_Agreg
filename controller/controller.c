@@ -1,13 +1,14 @@
-#include "../client-server/client.h"
-#include "../client-server/server.h"
 #include "../model/hand.h"
 #include "../model/hands.h"
 #include "../model/player.h"
 #include "../model/tile.h"
 #include "../model/tiles.h"
 #include "../utils/vec.h"
+#include "../view/client.h"
 #include "../view/context.h"
 #include "../view/draw.h"
+#include "menu.h"
+#include "../view/server.h"
 #include "../view/settings.h"
 #include "../view/setup.h"
 #include "raylib.h"
@@ -20,6 +21,8 @@
 
 void game(int argc, char **argv) {
     setup_window();
+
+    start_menu();
 
     char buff[100];
     vec(Tile *) tiles = tiles_all();
@@ -62,21 +65,7 @@ void game(int argc, char **argv) {
     tiles_free_textures();
 }
 
-int client_server(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "Usage: %s id(between 1 and 4)\n", argv[0]);
-    }
-    int id = atoi(argv[1]);
-    if (id == 1) {
-        return server();
-    } else {
-        return client();
-    }
-    return 0;
-}
-
 int main(int argc, char *argv[]) {
     game(argc, argv);
-    // client_server(argc, argv);
     return 0;
 }

@@ -10,11 +10,9 @@
 
 #define BUF_SIZE 500
 
-void lauch_client() {
-}
+static int client_client_fd;
 
-
-int client() {
+int launch_client() {
     blue();
     printf("[Client]\n");
     reset();
@@ -31,24 +29,29 @@ int client() {
         exit(EXIT_FAILURE);
     }
 
-    int client_fd = socket(result->ai_family, result->ai_socktype,
-                           result->ai_protocol); // Create socket
-    test("Socket creation", client_fd != -1);
+    client_client_fd = socket(result->ai_family, result->ai_socktype,
+                              result->ai_protocol); // Create socket
+    test("Socket creation", client_client_fd != -1);
 
-    int connect_output = connect(client_fd, result->ai_addr,
+    int connect_output = connect(client_client_fd, result->ai_addr,
                                  result->ai_addrlen); // Connect to server
     test("Connection", connect_output == 0);
+    freeaddrinfo(result); // Free memory allocated by getaddrinfo
+    return 0;
+}
+
+int client() {
 
     int i = 0;
     while (i++ < 5) {
         char message[30];
         sprintf(message, "%d : from Client", i);
-        int nbytes_send = send(client_fd, message, strlen(message),
+        int nbytes_send = send(client_client_fd, message, strlen(message),
                                0); // Send message to server
         test("Send Message", nbytes_send != -1);
 
         char buffer[1024];
-        int recv_output = recv(client_fd, buffer, sizeof(buffer),
+        int recv_output = recv(client_client_fd, buffer, sizeof(buffer),
                                0); // Receive response from server
         test("Receive Message", recv_output != -1);
         printf("Message from server: %s\n", buffer);
@@ -56,7 +59,6 @@ int client() {
         sleep(2);
     }
 
-    close(client_fd);     // Close connection
-    freeaddrinfo(result); // Free memory allocated by getaddrinfo
+    close(client_client_fd); // Close connection
     return 0;
 }

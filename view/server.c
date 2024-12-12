@@ -11,13 +11,15 @@
 
 #define BUF_SIZE 500
 
-int server() {
+static int server_fd;
+static int client_fd;
+
+int launch_server() {
     blue();
     printf("[Server]\n");
     reset();
 
     struct addrinfo hints, *result, *rp;
-    int server_fd;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
     hints.ai_socktype = SOCK_STREAM; // TCP
@@ -59,16 +61,18 @@ int server() {
         } else {
             printf("Bind Error : %s\n", strerror(errno));
         }
-        // close(server_fd);
+        close(server_fd);
     }
 
     int listen_err = listen(server_fd, 5); // Listen for incoming connections
     test("Listen Message", listen_err == 0);
-
+    freeaddrinfo(result); // Free memory allocated by getaddrinfo
     int client_fd = accept(server_fd, NULL, NULL); // Accept a connection
     test("Accept Connection", client_fd != -1);
+    return 0;
+}
 
-    // Handle error if accept() fails
+int server() {
 
     int i = 0;
     while (i++ < 5) {
@@ -85,8 +89,7 @@ int server() {
         test("Send Message", nbytes_send != -1);
     }
 
-    close(client_fd);     // Close client connection
-    close(server_fd);     // Close server socket
-    freeaddrinfo(result); // Free memory allocated by getaddrinfo
+    close(client_fd); // Close client connection
+    close(server_fd); // Close server socket
     return 0;
 }

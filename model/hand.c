@@ -94,7 +94,6 @@ void hand_add_tile(Hand *hand, Tile *tile) {
     vec_push(hand->hand_pos,
              pos_from_vec(align_pos_hand(hand->align, hand->pos.x, hand->pos.y,
                                          vec_len(hand->hand) - 1)));
-    // hand_update_pos(hand);
 }
 
 bool is_opened(const Hand *hand) { return hand->opened; }

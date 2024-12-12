@@ -6,5 +6,6 @@
 typedef struct Message Message;
 
 void send(Player to);
+void recv(Player to);
 
 #endif // MESSAGE_H
