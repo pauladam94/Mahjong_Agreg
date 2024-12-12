@@ -32,5 +32,7 @@ bool pattern_has_four_group(Pattern *pat);
 // getters
 Tile ***pattern_get_group(Pattern *pat);
 Tile **pattern_get_pair(Pattern *pat);
+// Tell if the pattern is open
+bool pattern_is_open(Pattern *pat);
 
 #endif // PATTERN_H

@@ -1,14 +1,26 @@
+#include "../utils/better_int.h"
 #include "../utils/vec.h"
 #include "tile.h"
 #include "tiles.h"
-#include "../utils/better_int.h"
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef enum GroupType {
+    // Closed
+    Pair,
+    Sequence,    // Is NOT a Chi
+    ThreeOfKind, // IS NOT Pon
+    FourOfKind,  // IS NOT Kahn
+    // Open
+    Pon,
+    Kahn,
+    Chi,
+} GroupType;
+
 typedef struct Pattern {
-    Tile *group[3][4]; // The four sequences or three of a kind
-    Tile *pair[2];
-    vec(Tile *) tiles; // The Pattern is partial until tiles is not NULL
+    vec(vec(Tile *)) group;
+    vec(GroupType) group_type;
+    vec(Tile *) tiles; // The Pattern is partial until tiles is not empty
 } Pattern;
 
 Pattern *pattern_empty(void) {
@@ -26,18 +38,39 @@ void pattern_remove_tile(Pattern *pat, Tile *t) {
     tiles_remove_equals(pat->tiles, t);
 }
 
-bool pattern_is_complete(Pattern *pat) {
-    for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 3; i++) {
-            if (pat->group[i][j] == NULL)
-                return false;
+bool pattern_is_open(Pattern *pat) {
+    for (u64 i = 0; i < vec_len(pat->group); i++) {
+        switch (pat->group_type[i]) {
+        case Pon:
+        case Kahn:
+        case Chi:
+            return true;
+        default:
+            break;
         }
     }
-    if (pat->pair[0] == NULL)
-        return false;
-    if (pat->pair[1] == NULL)
-        return false;
-    return true;
+    return false;
+}
+
+bool pattern_is_complete(Pattern *pat) {
+    int n_group = 0;
+    int n_pair = 0;
+    for (u64 i = 0; i < vec_len(pat->group); i++) {
+        switch (pat->group_type[i]) {
+        case Pair:
+            n_pair++;
+            break;
+        case Sequence:
+        case ThreeOfKind:
+        case FourOfKind:
+        case Pon:
+        case Kahn:
+        case Chi:
+            n_group++;
+            break;
+        }
+    }
+    return (n_pair == 1 && n_group == 4);
 }
 
 void pattern_add_group(Pattern *pat, Tile *t0, Tile *t1, Tile *t2) {
@@ -67,11 +100,6 @@ void pattern_pp(FILE *file, const Pattern *pat) {
         }
         fprintf(file, "|");
     }
-    if (pat->pair[0] != NULL && pat->pair[1] != NULL) {
-        tile_pp(file, pat->pair[0]);
-        fprintf(file, " ");
-        tile_pp(file, pat->pair[1]);
-    }
     fprintf(file, "|");
     fprintf(file, " ");
     if (pat->tiles != NULL)
@@ -79,22 +107,39 @@ void pattern_pp(FILE *file, const Pattern *pat) {
 }
 
 bool pattern_has_pair(Pattern *pat) {
-    return pat->pair[0] != NULL && pat->pair[1] != NULL;
-}
-bool pattern_has_four_group(Pattern *pat) {
-    for (int j = 0; j < 4; j++) {
-        for (int i = 0; i < 3; i++) {
-            if (pat->group[i][j] == NULL)
-                return false;
+    for (u64 i = 0; i < vec_len(pat->group); i++) {
+        switch (pat->group_type[i]) {
+        case Pair:
+            return true;
+        default:
+            break;
         }
     }
-    return true;
+    return false;
+}
+bool pattern_has_four_group(Pattern *pat) {
+    int n_group = 0;
+    for (u64 i = 0; i < vec_len(pat->group); i++) {
+        switch (pat->group_type[i]) {
+        case Sequence:
+        case ThreeOfKind:
+        case Pon:
+        case Chi:
+            n_group++;
+        default:
+            break;
+        }
+        return false;
+    }
+    return n_group == 4;
 }
 
 void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
     if (!pattern_has_pair(pat)) {
-        pat->pair[0] = t0;
-        pat->pair[1] = t1;
+        vec(Tile *) pair = NULL;
+        vec_push(pair, t0);
+        vec_push(pair, t1);
+        vec_push(pat->group, pair);
     } else {
         fprintf(stderr, "Add pair when Pattern has a pair\n");
     }
@@ -119,8 +164,6 @@ Pattern *pattern_copy(const Pattern *pat) {
             res->group[i][j] = pat->group[i][j];
         }
     }
-    res->pair[0] = pat->pair[0];
-    res->pair[1] = pat->pair[1];
 
     res->tiles = tiles_copy((const vec(Tile *))pat->tiles);
     return res;
@@ -194,10 +237,5 @@ void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
     }
 }
 
-Tile ***pattern_get_group(Pattern *pat) {
-    return (Tile ***)pat->group;
-}
-
-Tile **pattern_get_pair(Pattern *pat) {
-    return (Tile **)pat->pair;
-}
+vec(vec(Tile *)) pattern_get_group(Pattern *pat) { return pat->group; }
+vec(Tile *) pattern_get_group_type(Pattern *pat) { return pat->group_type; }
