@@ -44,6 +44,7 @@ void pattern_add_group(Pattern *pat, Tile *t0, Tile *t1, Tile *t2) {
         if (pat->group[0][i] != NULL) {
             if (i == 3) {
                 fprintf(stderr, "Add a group when Pattern has 3 group\n");
+                return;
             }
             continue;
         }
@@ -193,10 +194,11 @@ void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
     }
 }
 
-Tile ***pattern_get_group(Pattern *pat) {
-    return (Tile ***)pat->group;
+const Tile ***pattern_get_group(Pattern *pat) {
+    printf("\npat->group[0][0] = %d\n", tile_number(pat->group[0][0]));
+    return (Tile ***)(pat->group);
 }
 
-Tile **pattern_get_pair(Pattern *pat) {
+const Tile **pattern_get_pair(Pattern *pat) {
     return (Tile **)pat->pair;
 }

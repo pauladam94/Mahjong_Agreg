@@ -7,7 +7,7 @@ vec(yaku) max_yaku(const Hand *hand)
     // no complete, no yaku
     if (!hand_is_complete(hand)) return NULL;
 
-    Patterns *patterns = hand_patterns(hand);
+    // Patterns *patterns = hand_patterns(hand);
 }
 
 // return all the yaku for a given pattern
@@ -137,19 +137,38 @@ vec(yaku) find_yaku(Pattern *pat, bool open) {
 // double suite pure
 bool lipeikou(Pattern *pat, bool open) {
     if (open) return false;
+    pattern_pp(stdout, pat);
+    Pattern *pat2 = pattern_copy(pat);
 
-    for (int i = 0; i < 4; i++) {
-        for (int j = i + 1; j < 4; j++) {
-            for (int k = 0; k < 3; k++) {
-                if (pattern_get_group(pat)[i][k] != pattern_get_group(pat)[j][k]) {
-                    break;
-                }
-                if (k == 2) {
-                    return true;
-                }
-            }
-        }
-    }
+    const Tile *group[3][4] = pattern_get_group(pat2);
+    printf("group[0] = %d\n", tile_number(group[0][0]));
+    printf("group[1] = %d\n", tile_number(group[1]));
+    printf("group[2] = %d\n", tile_number(group[2]));
+    printf("group[3] = %d\n", tile_number(group[3]));
+    printf("group[4] = %d\n", tile_number(group[4]));
+    printf("group[5] = %d\n", tile_number(group[5]));
+    printf("group[6] = %d\n", tile_number(group[6]));
+    printf("group[7] = %d\n", tile_number(group[7]));
+    printf("group[8] = %d\n", tile_number(group[8]));
+    printf("group[9] = %d\n", tile_number(group[9]));
+    printf("group[10] = %d\n", tile_number(group[10]));
+    printf("group[11] = %d\n", tile_number(group[11]));
+    printf("group[12] = %d\n", tile_number(group[12]));
+    printf("group[13] = %d\n", tile_number(group[13]));
+    printf("group[14] = %d\n", tile_number(group[14]));
+    // printf("groups[15] = %d\n", tile_number(groups[15]));
+    // for (int i = 0; i < 4; i++) {
+    //     for (int j = i + 1; j < 4; j++) {
+    //         for (int k = 0; k < 3; k++) {
+    //             if (groups[i][k] != groups[j][k]) {
+    //                 break;
+    //             }
+    //             if (k == 2) {
+    //                 return true;
+    //             }
+    //         }
+    //     }
+    // }
     return false;
 }
 
