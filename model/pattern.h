@@ -7,6 +7,7 @@
 // to construct the pairs, sequences and three of a kind that are choosen to
 // then have complete a Hand
 typedef struct Pattern Pattern;
+typedef enum GroupType GroupType;
 
 Pattern *pattern_empty();
 // Complete deeply a Pattern
@@ -34,5 +35,6 @@ Tile ***pattern_get_group(Pattern *pat);
 Tile **pattern_get_pair(Pattern *pat);
 // Tell if the pattern is open
 bool pattern_is_open(Pattern *pat);
+vec(GroupType) pattern_get_group_type(Pattern *pat);
 
 #endif // PATTERN_H

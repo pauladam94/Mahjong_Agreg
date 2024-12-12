@@ -238,4 +238,5 @@ void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
 }
 
 vec(vec(Tile *)) pattern_get_group(Pattern *pat) { return pat->group; }
-vec(Tile *) pattern_get_group_type(Pattern *pat) { return pat->group_type; }
+
+vec(GroupType) pattern_get_group_type(Pattern *pat) { return pat->group_type; }
