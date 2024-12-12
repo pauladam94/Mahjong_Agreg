@@ -13,14 +13,12 @@ visuals only
     - [ ] Complete game
     - [ ] Expert Program (AI) that computes probability
 
-
 ## View (`view/`)
 - [ ] Create an abstraction layer between the GUI and the code that does
 something with it, to be able to test the GUI.
 - [ ] Pretty print a game -> complete game in the terminal
 - [ ] Client Side Rendering (Raylib)
 - [ ] Try to compile with wasm
-
 
 ## Cryptographic(`crypto/`)
 - [ ] basic elgamal (or RSA) cryptographics primitive

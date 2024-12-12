@@ -17,7 +17,7 @@ void pattern_add_group(Pattern *pat, Tile *t1, Tile *t2, Tile *t3);
 void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1);
 // Remove the first tiles in the pattern `tiles` that equals `t`
 void pattern_remove_tile(Pattern *pat, Tile *t);
-void pattern_pp(FILE *file, Pattern *pat);
+void pattern_pp(FILE *file, const Pattern *pat);
 // Checks wheter the Pattern contains three group and a pair (no NULL ptr)
 void pattern_free(Pattern *pat);
 void pattern_next_pair(const Pattern *pat, Tile **fst, Tile **snd);

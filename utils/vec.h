@@ -1,7 +1,6 @@
 #ifndef VEC_H
 #define VEC_H
 
-#include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,17 +20,17 @@ void vec_maybe_shrink(void **vec, uint64_t size, uint64_t new_size);
 
 #define vec_len(V) ((V) ? vec_get_header(V)->len : 0)
 
-#define suppress_warning_sizeof_begin  \
-#pragma clang diagnostic push \\
-#pragma clang diagnostic ignored "-Wfloat-equal -Wdeprecated" \\
+#define suppress_warning_sizeof_begin
+_Pragma("clang diagnostic push")
+// _Pragma("clang diagnostic ignored \"-Wsizeof_expression\"")
 
-#define suppress_warning_sizeof_end #pragma clang diagnostic pop
+#define suppress_warning_sizeof_end _Pragma("clang diagnostic pop")
 
 // #pragma clang diagnostic push
 // #pragma clang diagnostic ignored "-Wfloat-equal -Wdeprecated"
 // #pragma clang diagnostic pop
 // suppress_warning_sizeof_begin
-// suppress_warning_sizeof_end                                      
+// suppress_warning_sizeof_end
 #define vec_push(V, E)                                                         \
     do {                                                                       \
         vec_maybe_expand((void **)&(V), (uint64_t)sizeof(*(V)),                \
@@ -44,9 +43,8 @@ void vec_maybe_shrink(void **vec, uint64_t size, uint64_t new_size);
     do {                                                                       \
         if (I < 0 || I >= vec_len(V)) {                                        \
             fprintf(stderr,                                                    \
-                    "Invalid remove at position %" PRIu64                      \
-                    " in vec of size %" PRIu64 "\n",                           \
-                    I, vec_len(V));                                            \
+                    "Invalid remove at position %lu in vec of size %lu\n", I,  \
+                    vec_len(V));                                               \
             exit(1);                                                           \
         }                                                                      \
         memmove(V + I, V + I + 1, sizeof(V) * (vec_len(V) - I - 1));           \
@@ -56,8 +54,11 @@ void vec_maybe_shrink(void **vec, uint64_t size, uint64_t new_size);
 
 #define vec_pop(V)                                                             \
     do {                                                                       \
-        if (vec_get_header(V)->size != 0)                                      \
-            vec_get_header(V)->size--;                                         \
+        if (vec_get_header(V)->len == 0) {                                     \
+            fprintf(stderr, "Pop on empty vector\n");                          \
+            exit(1);                                                           \
+        }                                                                      \
+        vec_get_header(V)->len--;                                              \
     } while (0)
 
 #define vec_free(V)                                                            \

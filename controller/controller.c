@@ -38,7 +38,7 @@ void test_game(int argc, char **argv) {
         BeginDrawing();
         ClearBackground(WHITE);
 
-        sprintf(buff, "\nRemaining : %" PRIu64, vec_len(tiles));
+        sprintf(buff, "\nRemaining : %lu", vec_len(tiles));
         DrawText(buff, WIDTH / 2 - 2 * TILE_WIDTH, HEIGHT / 2, 20, BLACK);
         if (hand_is_complete(hands_get(hands, Player0))) {
             DrawText("Hand Complete", TILE_WIDTH * 2, HEIGHT - TILE_HEIGHT / 2,
