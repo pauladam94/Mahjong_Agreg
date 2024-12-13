@@ -3,7 +3,33 @@
 
 typedef enum Yaku {
     LIPEIKOU,
-    // All other
+    RYANPEIKOU,
+    PINFU,
+    SHANSHOKU_DOUJUN,
+    ITTSUU,
+    TANYAO,
+    YAKUHAI,
+    SHOUSANGEN,
+    DAISANGEN,
+    SHOUSUUSHI,
+    DAISUUSHI,
+    CHANTA,
+    JUNCHAN,
+    HONROUTOU,
+    CHINROUTOU,
+    TSUUIISOU,
+    KOKUUSHI_MUSOU,
+    CHIITOITSU,
+    TOITOI,
+    SANANKOU,
+    SUUANKOU,
+    SANSHOKU_DOUKOU,
+    SANKATSU,
+    SUUKANTSU,
+    HONITSU,
+    CHINITSU,
+    RYUUIISOU,
+    CHUREN_POUTOU,
 } Yaku;
 
 vec(yaku) max_yaku(const Hand *hand) {
