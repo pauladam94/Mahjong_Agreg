@@ -238,6 +238,20 @@ void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
     }
 }
 
+vec(vec(Tile *)) pattern_without_pair(Pattern *pat) {
+    vec(vec(Tile *)) pat_no_pair = NULL;
+    for (u64 i = 0; i < vec_len(pat->group); i++) {
+        switch (pat->group_type[i]) {
+        case Pair:
+            break;
+        default:
+            vec_push(pat_no_pair, pat->group[i]);
+            break;
+        }
+    }
+    return pat_no_pair;
+}
+
 vec(vec(Tile *)) pattern_get_group(Pattern *pat) { return pat->group; }
 
 vec(GroupType) pattern_get_group_type(Pattern *pat) { return pat->group_type; }

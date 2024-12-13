@@ -8,7 +8,7 @@ void purple() {printf("\033[1;35m"); }
 void orange() { printf("\033[1;33m"); }
 void reset() { printf("\033[0m"); }
 
-void test(char *name, bool b) {
+void test(bool b, char* name) {
     if (b) {
         green();
         printf("[PASSED] %s\n", name);

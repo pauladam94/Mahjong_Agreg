@@ -67,13 +67,12 @@ int launch_server() {
     int listen_err = listen(server_fd, 5); // Listen for incoming connections
     test("Listen Message", listen_err == 0);
     freeaddrinfo(result); // Free memory allocated by getaddrinfo
-    int client_fd = accept(server_fd, NULL, NULL); // Accept a connection
+    client_fd = accept(server_fd, NULL, NULL); // Accept a connection
     test("Accept Connection", client_fd != -1);
     return 0;
 }
 
 int server() {
-
     int i = 0;
     while (i++ < 5) {
         char buffer[1024];
