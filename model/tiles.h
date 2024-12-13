@@ -10,7 +10,7 @@ vec(Tile *) tiles_from_string(const char *s);
 // Deep copy of the tiles (conserving the order)
 vec(Tile *) tiles_copy(const vec(Tile *) tiles);
 vec(Tile *) tiles_all(void);
-Tile *tiles_random_from(const vec(Tile *) from);
+Tile *tiles_random_from(vec(Tile *) const from);
 
 void tiles_sort(vec(Tile *) tiles);
 
@@ -18,6 +18,6 @@ void tiles_sort(vec(Tile *) tiles);
 int tiles_remove_equals(vec(Tile *) tiles, Tile *tile);
 // Remove a random tile and return it
 Tile *tiles_pick_from(vec(Tile *) from);
-void tiles_pp(FILE *file, const vec(Tile *) tiles);
+void tiles_pp(FILE *file, vec(Tile *) const tiles);
 
 #endif // TILES_H

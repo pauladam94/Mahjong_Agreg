@@ -104,9 +104,7 @@ void hand_pick_from(Hand *hand, vec(Tile *) from) {
     hand_add_tile(hand, t);
 }
 
-void hand_pp(FILE *file, const Hand *hand) {
-    tiles_pp(file, (const vec(Tile *))hand->hand);
-}
+void hand_pp(FILE *file, const Hand *hand) { tiles_pp(file, hand->hand); }
 
 vec(Pattern *) hand_patterns(const Hand *hand) {
     tiles_sort(hand->hand);
@@ -141,10 +139,6 @@ vec(Pattern *) hand_patterns(const Hand *hand) {
 
 bool hand_is_complete(const Hand *hand) {
     vec(Pattern *) patterns = hand_patterns(hand);
-
-    // printf("Patterns :\n");
-    // patterns_pp(stdout, patterns);
-    // printf("\n");
 
     int n_patterns = vec_len(patterns);
     patterns_free(patterns);
@@ -222,7 +216,7 @@ bool hand_update(Hand *hand, vec(Tile *) tiles, Context ctx) {
     if (hand->hand_pressed != -1) {
         Tile *tile_pressed = hand->hand[hand->hand_pressed];
 
-        Tile *random_tile = tiles_random_from((const vec(Tile *))tiles);
+        Tile *random_tile = tiles_random_from(tiles);
         hand_add_tile(hand, random_tile);
         tiles_remove_equals(tiles, random_tile);
 

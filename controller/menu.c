@@ -11,14 +11,14 @@ void start_menu(void) {
         GuiSetStyle(DEFAULT, TEXT_SIZE, 25);
 
         if (GuiButton((Rectangle){100, 100, 100, 100}, "Server")) {
-            // Multithread this thing potentially
-            test("Lauch Server", launch_server() == 0);
+            // Multithread this server for sure.
+            test(launch_server() == 0, "Lauch Server");
             // Run Also the client here
             server();
         }
 
         if (GuiButton((Rectangle){100, 300, 100, 100}, "Client")) {
-            test("Lauch Client", launch_client() == 0);
+            test(launch_client() == 0, "Lauch Client");
             client();
         }
         EndDrawing();

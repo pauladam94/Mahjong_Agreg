@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void patterns_pp(FILE *file, const vec(Pattern *) patterns) {
+void patterns_pp(FILE *file, vec(Pattern *) const patterns) {
     for (u64 i = 0; i < vec_len(patterns); i++) {
         fprintf(file, "Pat %lu :", i);
         pattern_pp(file, patterns[i]);
@@ -22,7 +22,7 @@ void patterns_add_first_group_pattern(vec(Pattern *) patterns, Pattern *pat) {
     if (fst != NULL && snd != NULL && thrd != NULL &&
         !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, fst, snd, thrd);
+        pattern_add_group(new_pattern, fst, snd, thrd, SEQUENCE);
         pattern_remove_tile(new_pattern, fst);
         pattern_remove_tile(new_pattern, snd);
         pattern_remove_tile(new_pattern, thrd);
@@ -36,7 +36,7 @@ void patterns_add_first_group_pattern(vec(Pattern *) patterns, Pattern *pat) {
     if (fst != NULL && snd != NULL && thrd != NULL &&
         !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, fst, snd, thrd);
+        pattern_add_group(new_pattern, fst, snd, thrd, THREE_OF_KIND);
         pattern_remove_tile(new_pattern, fst);
         pattern_remove_tile(new_pattern, snd);
         pattern_remove_tile(new_pattern, thrd);
@@ -53,6 +53,12 @@ void patterns_add_first_group_pattern(vec(Pattern *) patterns, Pattern *pat) {
         pattern_remove_tile(new_pattern, snd);
         vec_push(patterns, new_pattern);
     }
+
+    //
+    // pattern_pp(stdout, pat);
+    // patterns_pp(stdout, patterns);
+    //
+
     pattern_free(pat);
     /*
     Tile *t = pattern_get_tile(pat, 0);

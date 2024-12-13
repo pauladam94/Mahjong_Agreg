@@ -1,3 +1,4 @@
+#include "tiles.h"
 #include "../utils/better_int.h"
 #include "../utils/vec.h"
 #include "stdlib.h"
@@ -6,7 +7,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-void tiles_pp(FILE *file, const vec(Tile *) tiles) {
+void tiles_pp(FILE *file, vec(Tile *) const tiles) {
     for (u64 i = 0; i < vec_len(tiles); i++) {
         tile_pp(file, tiles[i]);
         if (i != vec_len(tiles) - 1) {
@@ -45,7 +46,6 @@ vec(Tile *) tiles_from_string(const char *s) {
         fprintf(stderr, "%s Not the right format of tiles", s);
         exit(1);
     }
-    free(buf);
     return tiles;
 }
 
@@ -56,14 +56,14 @@ vec(Tile *) tiles_all(void) {
         "7788889999s111122223333444455556667777z");
 }
 
-Tile *tiles_random_from(vec(Tile *) from) {
+Tile *tiles_random_from(vec(Tile *) const from) {
     return from[rand() % (vec_len(from))];
 }
 
 vec(Tile *) tiles_copy(const vec(Tile *) tiles) {
     vec(Tile *) res = NULL;
     for (u64 i = 0; i < vec_len(tiles); i++) {
-        vec_push(res, tiles[i]);
+        vec_push(res, (Tile *)tiles[i]);
     }
     return res;
 }

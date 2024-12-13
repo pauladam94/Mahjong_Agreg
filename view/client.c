@@ -1,5 +1,4 @@
 #include "../utils/error.h"
-#include <errno.h>
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +22,7 @@ int launch_client() {
 
     int getaddrinfo_err = getaddrinfo("127.0.0.1", "8080", &hints,
                                       &result); // Resolve server address
-    test("Getting Address Info", getaddrinfo_err == 0);
+    test(getaddrinfo_err == 0, "Getting Address Info");
     if (getaddrinfo_err != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(getaddrinfo_err));
         exit(EXIT_FAILURE);
@@ -31,11 +30,11 @@ int launch_client() {
 
     client_client_fd = socket(result->ai_family, result->ai_socktype,
                               result->ai_protocol); // Create socket
-    test("Socket creation", client_client_fd != -1);
+    test(client_client_fd != -1, "Socket creation");
 
     int connect_output = connect(client_client_fd, result->ai_addr,
                                  result->ai_addrlen); // Connect to server
-    test("Connection", connect_output == 0);
+    test(connect_output == 0, "Connection");
     freeaddrinfo(result); // Free memory allocated by getaddrinfo
     return 0;
 }
@@ -48,12 +47,12 @@ int client() {
         sprintf(message, "%d : from Client", i);
         int nbytes_send = send(client_client_fd, message, strlen(message),
                                0); // Send message to server
-        test("Send Message", nbytes_send != -1);
+        test(nbytes_send != -1, "Send Message");
 
         char buffer[1024];
         int recv_output = recv(client_client_fd, buffer, sizeof(buffer),
                                0); // Receive response from server
-        test("Receive Message", recv_output != -1);
+        test(recv_output != -1, "Receive Message");
         printf("Message from server: %s\n", buffer);
 
         sleep(2);
@@ -62,4 +61,3 @@ int client() {
     close(client_client_fd); // Close connection
     return 0;
 }
-

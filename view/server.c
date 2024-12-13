@@ -20,14 +20,14 @@ int launch_server() {
     reset();
 
     struct addrinfo hints, *result, *rp;
-    memset(&hints, 0, sizeof(hints));
+    // memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
     hints.ai_socktype = SOCK_STREAM; // TCP
     hints.ai_flags = AI_PASSIVE;     // For binding to all interfaces
 
     int getaddrinfo_err =
         getaddrinfo(NULL, "8080", &hints, &result); // Resolve server address
-    test("Getting Address Info", getaddrinfo_err == 0);
+    test(getaddrinfo_err == 0, "Getting Address Info");
     if (getaddrinfo_err != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(getaddrinfo_err));
         exit(EXIT_FAILURE);
@@ -37,7 +37,7 @@ int launch_server() {
         printf("--\n");
         server_fd = socket(rp->ai_family, rp->ai_socktype,
                            rp->ai_protocol); // Create socket
-        test("Socket Creation", server_fd != -1);
+        test(server_fd != -1, "Socket Creation");
         if (server_fd == -1) {
             continue;
         }
@@ -55,7 +55,7 @@ int launch_server() {
         // Handle error if socket() fails
         int bin_err = bind(server_fd, rp->ai_addr,
                            rp->ai_addrlen); // Bind socket to address
-        test("Bind", bin_err == 0);
+        test(bin_err == 0, "Bind");
         if (bin_err == 0) {
             break;
         } else {
@@ -65,10 +65,10 @@ int launch_server() {
     }
 
     int listen_err = listen(server_fd, 5); // Listen for incoming connections
-    test("Listen Message", listen_err == 0);
+    test(listen_err == 0, "Listen Message");
     freeaddrinfo(result); // Free memory allocated by getaddrinfo
     client_fd = accept(server_fd, NULL, NULL); // Accept a connection
-    test("Accept Connection", client_fd != -1);
+    test(client_fd != -1, "Accept Connection");
     return 0;
 }
 
@@ -78,14 +78,14 @@ int server() {
         char buffer[1024];
         int recv_output = recv(client_fd, buffer, sizeof(buffer),
                                0); // Receive message from client
-        test("Receive Message", recv_output != -1);
+        test(recv_output != -1, "Receive Message");
         printf("Message from client: %s\n", buffer);
 
         char response[100];
         sprintf(response, "%d : from Server", i);
         int nbytes_send = send(client_fd, response, strlen(response),
                                0); // Send response to client
-        test("Send Message", nbytes_send != -1);
+        test(nbytes_send != -1, "Send Message");
     }
 
     close(client_fd); // Close client connection

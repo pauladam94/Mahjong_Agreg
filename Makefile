@@ -9,7 +9,7 @@ CPPFLAGS += -MP -MD
 
 CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
 LDFLAGS += -lm
-DEBUGFLAGS = -g3 -fsanitize=address
+DEBUGFLAGS = -O0 -g3 -fsanitize=address
 # RELEASEFLAGS = -flto -O3 -DNDEBUG
 RELEASEFLAGS = -O3 -DNDEBUG -fshort-enums
 

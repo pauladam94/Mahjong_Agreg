@@ -58,6 +58,7 @@ void vec_maybe_shrink(void **vec, uint64_t size, uint64_t new_size);
             (V) = NULL;                                                        \
         }                                                                      \
     } while (0)
+
 #define vec_free_all(V, F)                                                     \
     do {                                                                       \
         if (V) {                                                               \
