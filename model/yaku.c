@@ -1,5 +1,3 @@
-#ifndef YAKU_C
-#define YAKU_C
 #include "yaku.h"
 #include "pattern.h"
 
@@ -499,5 +497,3 @@ bool ryuuiisou(Pattern *pat) {
 
 // neuf portes
 bool churen_poutou(Pattern *pat) { return false; }
-
-#endif
