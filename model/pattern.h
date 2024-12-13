@@ -31,10 +31,11 @@ bool pattern_is_complete(const Pattern *pat);
 bool pattern_has_pair(Pattern *pat);
 bool pattern_has_four_group(Pattern *pat);
 
+vec(vec(Tile *)) pattern_without_pair(Pattern *pat);
 vec(vec(Tile *))pattern_get_group(Pattern *pat);
+vec(GroupType) pattern_get_group_type(Pattern *pat);
+vec(GroupType) pattern_get_group_type_without_pair(Pattern *pat);
 
 bool pattern_is_open(Pattern *pat);
-
-vec(GroupType) pattern_get_group_type(Pattern *pat);
 
 #endif // PATTERN_H

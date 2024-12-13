@@ -255,3 +255,17 @@ vec(vec(Tile *)) pattern_without_pair(Pattern *pat) {
 vec(vec(Tile *)) pattern_get_group(Pattern *pat) { return pat->group; }
 
 vec(GroupType) pattern_get_group_type(Pattern *pat) { return pat->group_type; }
+
+vec(GroupType *) pattern_get_group_type_without_pair(Pattern *pat) {
+    vec(GroupType *) gt_no_pair = NULL;
+    for (u64 i = 0; i < vec_len(pat->group); i++) {
+        switch (pat->group_type[i]) {
+        case Pair:
+            break;
+        default:
+            vec_push(gt_no_pair, &pat->group_type[i]);
+            break;
+        }
+    }
+    return gt_no_pair;
+}
