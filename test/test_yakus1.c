@@ -16,5 +16,5 @@ int main() {
     test(lipeikou(pat) == 1, "789789m111222p33ss is lipeikou");
 
     hand_free(h);
-    patterns_free(&patterns);
+    // patterns_free(&patterns);
 }

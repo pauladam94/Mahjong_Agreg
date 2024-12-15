@@ -2,7 +2,7 @@ build/*
 build
 compile_commands.json
 .cache/
-mahjong_agreg
+mental_mahjong
 
 raylib
 

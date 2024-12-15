@@ -32,6 +32,13 @@ typedef enum Yaku {
     CHUREN_POUTOU,
 } Yaku;
 
+void free_groups(vec(vec(Tile *)) * groups) {
+    for (u64 i = 0; i < vec_len(*groups); i++) {
+        vec_free((*groups)[i]);
+    }
+    vec_free(*groups);
+}
+
 vec(yaku) max_yaku(const Hand *hand) {
     // no complete, no yaku
     if (!hand_is_complete(hand))
@@ -169,18 +176,22 @@ int lipeikou(Pattern *pat) {
     if (pattern_is_open(pat))
         return 0;
 
+    int res = 0;
+
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
     vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
     for (u64 i = 0; i < 4; i++) {
         for (u64 j = i + 1; j < 4; j++) {
             if (types[i] == SEQUENCE && tile_equals(threes[i][0], threes[j][0]))
-                return 1;
+                res = 1;
         }
     }
+    vec_free(types);
+    free_groups(&threes);
     // This functions leaks because pattern_get_group_type_without_pair has
     // allocated memory. Have to free types and threes.
-    return 0;
+    return res;
 }
 
 // deux doubles suites pures

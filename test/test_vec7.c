@@ -32,5 +32,6 @@ int main() {
     test(true, "v = 1000 insert all pairs of v");
     test(vec_len(pair) == 500, "only 500 elements in pair");
     vec_free(v);
+    vec_free(pair);
     test(v == NULL, "v is NULL after free");
 }

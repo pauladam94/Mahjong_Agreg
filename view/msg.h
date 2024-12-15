@@ -2,10 +2,15 @@
 #define MESSAGE_H
 #include "../model/player.h"
 #include "../model/tile.h"
+#include "../utils/better_int.h"
+#include "../utils/vec.h"
 
 typedef enum MsgType { SetPlayerNumber } MsgType;
 typedef struct MsgData {
-    Tile *tile;
+    union {
+        Tile *tile;
+        vec(char) raw_data;
+    };
 } MsgData;
 
 typedef struct Msg {
@@ -15,8 +20,10 @@ typedef struct Msg {
     MsgData data;
 } Msg;
 
-void msg_send(Player to);
-void msg_recv(Player to);
+void msg_send(Msg msg);
+Msg msg_recv();
+
+Msg msg_from_buffer(char *buff, u64 len);
 
 void msg_pp(FILE *file, Msg msg);
 
