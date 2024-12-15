@@ -76,14 +76,18 @@ vec(Tile *) hand_discard(Hand *hand) { return hand->discard; }
 
 void hand_discard_tile(Hand *hand, Tile *tile) {
     u64 pos = tiles_remove_equals(&hand->hand, tile);
+    pos_free(hand->hand_pos[pos]);
     vec_remove(hand->hand_pos, pos);
+
     for (u64 i = 0; i < vec_len(hand->hand_pos); i++) {
+        pos_free(hand->hand_pos[i]);
         hand->hand_pos[i] = pos_from_vec(
             align_pos_hand(hand->align, hand->pos.x, hand->pos.y, i));
     }
     Vector2 prev = pos_get(hand->hand_pos[pos]);
     hand_add_discard(hand, tile);
     Vector2 next = pos_get(hand->discard_pos[vec_len(hand->discard_pos) - 1]);
+    pos_free(hand->discard_pos[vec_len(hand->discard) - 1]);
     hand->discard_pos[vec_len(hand->discard) - 1] = pos_transi(prev, next);
 }
 

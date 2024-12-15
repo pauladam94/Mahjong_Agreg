@@ -17,7 +17,7 @@
 void game(int argc, char **argv) {
     setup_window();
 
-    start_menu();
+    // start_menu();
 
     char buff[100];
     vec(Tile *) tiles = tiles_all();
