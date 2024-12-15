@@ -14,7 +14,7 @@ void start_menu(void) {
             // Multithread this server for sure.
             test(launch_server() == 0, "Lauch Server");
             // Run Also the client here
-            server();
+            run_server();
         }
 
         if (GuiButton((Rectangle){100, 300, 100, 100}, "Client")) {

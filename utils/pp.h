@@ -9,7 +9,7 @@
 // - the element to printer with this pretty printer of type `void *`
 //
 // This model have the purpose to replicate the one from Ocaml `Format.printf`
-void fppf(FILE *file, const char *s, ...);
-void ppf(const char*s, ...);
+void fppf(FILE *file, const char *format, ...);
+void ppf(const char *format, ...);
 
 #endif

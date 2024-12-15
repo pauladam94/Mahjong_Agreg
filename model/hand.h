@@ -2,10 +2,10 @@
 #define HAND_H
 #include "../utils/vec.h"
 #include "../view/context.h"
-#include "player.h"
-#include <stdbool.h>
-#include "tile.h"
 #include "pattern.h"
+#include "player.h"
+#include "tile.h"
+#include <stdbool.h>
 
 // A Hand is all tiles that the player is "using" or is assigned to
 // - the tiles in this hand.
@@ -14,7 +14,7 @@
 typedef struct Hand Hand;
 
 Hand *hand_empty(Player player);
-void hand_pick_from(Hand *hand, vec(Tile *) from);
+void hand_pick_from(Hand *hand, vec(Tile *) * from);
 Hand *hand_from_string(const char *s);
 // [4 sequences or three same tile] and [1 pair]
 bool hand_is_complete(const Hand *hand);
@@ -36,7 +36,7 @@ void hand_draw(Hand *hand);
 vec(Tile *) hand_closed_tiles(const Hand *hand);
 vec(Tile *) hand_discarded_tiles(const Hand *hand);
 // Update the hand according to the context, returns true if turn has to change
-bool hand_update(Hand *hand, vec(Tile *) tiles, Context ctx);
+bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx);
 void hand_update_pos_transi(Hand *hand);
 vec(Pattern *) hand_patterns(const Hand *hand);
 

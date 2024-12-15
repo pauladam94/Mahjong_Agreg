@@ -13,8 +13,9 @@ int main() {
     vec(Tile *) tiles = tiles_from_string("222z234p123m");
     Pattern *pat = pattern_from_tiles(tiles);
 
-    patterns_add_first_group_pattern(patterns, pat);
+    patterns = patterns_first_group_pattern(pat);
     patterns_pp(stdout, patterns);
+    printf("\n");
 
-    patterns_free(patterns);
+    patterns_free(&patterns);
 }

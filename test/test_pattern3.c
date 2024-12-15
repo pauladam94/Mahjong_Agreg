@@ -9,8 +9,7 @@ int main() {
     vec(Tile *) tiles = tiles_from_string("1111123123123m234p");
     Pattern *pat = pattern_from_tiles(tiles);
 
-    Tile *fst = NULL;
-    Tile *snd = NULL;
-    pattern_next_pair(pat, &fst, &snd);
+    vec(Tile *) pair = pattern_next_pair(pat);
+    vec_free(pair);
     pattern_free(pat);
 }

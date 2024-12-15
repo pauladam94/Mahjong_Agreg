@@ -10,5 +10,6 @@ void purple();
 void orange();
 void reset();
 
-void test(bool b, char *name);
+void test(bool b, char* name, ...);
+
 #endif // ERROR_H

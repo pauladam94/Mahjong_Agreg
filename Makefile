@@ -1,4 +1,4 @@
-CC = clang
+CC = gcc
 BUILD_DIR ?= ./build
 NAME = mental_mahjong
 
@@ -9,7 +9,7 @@ CPPFLAGS += -MP -MD
 
 CFLAGS = -Wall -Wextra -I$(RAYLIB_DIR)
 LDFLAGS += -lm
-DEBUGFLAGS = -O0 -g3 -fsanitize=address
+DEBUGFLAGS = -g3 -fsanitize=address
 # RELEASEFLAGS = -flto -O3 -DNDEBUG
 RELEASEFLAGS = -O3 -DNDEBUG -fshort-enums
 

@@ -1,4 +1,5 @@
 #include "raylib.h"
+#include "pos.h"
 #include <stdlib.h>
 
 const float SPEED = 0.01;

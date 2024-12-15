@@ -1,3 +1,4 @@
+#include "patterns.h"
 #include "../utils/better_int.h"
 #include "pattern.h"
 #include <stdio.h>
@@ -13,51 +14,45 @@ void patterns_pp(FILE *file, vec(Pattern *) const patterns) {
     }
 }
 
-void patterns_add_first_group_pattern(vec(Pattern *) patterns, Pattern *pat) {
+vec(Pattern *) patterns_first_group_pattern(Pattern *pat) {
+    vec(Pattern *) res = NULL;
+    vec(Tile *) group;
     // FIRST SEQUENCE
-    Tile *fst = NULL;
-    Tile *snd = NULL;
-    Tile *thrd = NULL;
-    pattern_next_sequence(pat, &fst, &snd, &thrd);
-    if (fst != NULL && snd != NULL && thrd != NULL &&
-        !pattern_has_four_group(pat)) {
+    group = pattern_next_sequence(pat);
+    if (group != NULL && !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, fst, snd, thrd, SEQUENCE);
-        pattern_remove_tile(new_pattern, fst);
-        pattern_remove_tile(new_pattern, snd);
-        pattern_remove_tile(new_pattern, thrd);
-        vec_push(patterns, new_pattern);
+        pattern_add_group(new_pattern, group, SEQUENCE);
+        for (u64 i = 0; i < vec_len(group); i++) {
+            pattern_remove_tile(new_pattern, group[i]);
+        }
+        vec_push(res, new_pattern);
+    } else {
+        vec_free(group);
     }
     // FIRST THREE OF A KIND
-    fst = NULL;
-    snd = NULL;
-    thrd = NULL;
-    pattern_next_three_same(pat, &fst, &snd, &thrd);
-    if (fst != NULL && snd != NULL && thrd != NULL &&
-        !pattern_has_four_group(pat)) {
+    group = pattern_next_three_same(pat);
+    if (group != NULL && !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, fst, snd, thrd, THREE_OF_KIND);
-        pattern_remove_tile(new_pattern, fst);
-        pattern_remove_tile(new_pattern, snd);
-        pattern_remove_tile(new_pattern, thrd);
-        vec_push(patterns, new_pattern);
+        pattern_add_group(new_pattern, group, THREE_OF_KIND);
+        for (u64 i = 0; i < vec_len(group); i++) {
+            pattern_remove_tile(new_pattern, group[i]);
+        }
+        vec_push(res, new_pattern);
+    } else {
+        vec_free(group);
     }
     // FIRST PAIR
-    fst = NULL;
-    snd = NULL;
-    pattern_next_pair(pat, &fst, &snd);
-    if (fst != NULL && snd != NULL && !pattern_has_pair(pat)) {
+    group = pattern_next_pair(pat);
+    if (group != NULL && !pattern_has_pair(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_pair(new_pattern, fst, snd);
-        pattern_remove_tile(new_pattern, fst);
-        pattern_remove_tile(new_pattern, snd);
-        vec_push(patterns, new_pattern);
+        pattern_add_group(new_pattern, group, PAIR);
+        for (u64 i = 0; i < vec_len(group); i++) {
+            pattern_remove_tile(new_pattern, group[i]);
+        }
+        vec_push(res, new_pattern);
+    } else {
+        vec_free(group);
     }
-
-    //
-    // pattern_pp(stdout, pat);
-    // patterns_pp(stdout, patterns);
-    //
 
     pattern_free(pat);
     /*
@@ -69,12 +64,13 @@ void patterns_add_first_group_pattern(vec(Pattern *) patterns, Pattern *pat) {
         pattern_free(pat);
     }
     */
+    return res;
 }
 
-void patterns_free(vec(Pattern *) patterns) {
-    for (u64 i = 0; i < vec_len(patterns); i++) {
-        pattern_free(patterns[i]);
-        patterns[i] = NULL;
+void patterns_free(vec(Pattern *) * patterns) {
+    for (u64 i = 0; i < vec_len(*patterns); i++) {
+        pattern_free((*patterns)[i]);
+        (*patterns)[i] = NULL;
     }
-    vec_free(patterns);
+    vec_free(*patterns);
 }

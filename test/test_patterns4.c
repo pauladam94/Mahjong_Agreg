@@ -17,5 +17,5 @@ int main() {
     patterns_pp(stdout, patterns);
 
     pattern_free(pat);
-    patterns_free(patterns);
+    patterns_free(&patterns);
 }

@@ -25,7 +25,7 @@ Pattern *pattern_from_tiles(vec(Tile *) tiles) {
 }
 
 void pattern_remove_tile(Pattern *pat, Tile *t) {
-    tiles_remove_equals(pat->tiles, t);
+    tiles_remove_equals(&pat->tiles, t);
 }
 
 bool pattern_is_open(Pattern *pat) {
@@ -63,12 +63,7 @@ bool pattern_is_complete(const Pattern *pat) {
     return (n_pair == 1 && n_group == 4);
 }
 
-void pattern_add_group(Pattern *pat, Tile *t0, Tile *t1, Tile *t2,
-                       GroupType type) {
-    vec(Tile *) group = NULL;
-    vec_push(group, t0);
-    vec_push(group, t1);
-    vec_push(group, t2);
+void pattern_add_group(Pattern *pat, vec(Tile *) group, GroupType type) {
     vec_push(pat->group, group);
     vec_push(pat->group_type, type);
 }
@@ -118,18 +113,6 @@ bool pattern_has_four_group(Pattern *pat) {
     return n_group == 4;
 }
 
-void pattern_add_pair(Pattern *pat, Tile *t0, Tile *t1) {
-    if (!pattern_has_pair(pat)) {
-        vec(Tile *) pair = NULL;
-        vec_push(pair, t0);
-        vec_push(pair, t1);
-        vec_push(pat->group, pair);
-        vec_push(pat->group_type, PAIR);
-    } else {
-        fprintf(stderr, "Add pair when Pattern has a pair\n");
-    }
-}
-
 Tile *pattern_get_tile(const Pattern *pat, u64 pos) {
     if (pos >= vec_len(pat->tiles)) {
         return NULL;
@@ -162,76 +145,86 @@ Pattern *pattern_copy(const Pattern *pat) {
         }
         vec_push(res->group_type, pat->group_type[i]);
     }
-    res->tiles = tiles_copy((const vec(Tile *))pat->tiles);
+    res->tiles = tiles_copy(pat->tiles);
     return res;
 }
 
-void pattern_next_pair(const Pattern *pat, Tile **fst, Tile **snd) {
+vec(Tile *) pattern_next_pair(const Pattern *pat) {
     int i = 0;
-    Tile *tile = NULL;
+    vec(Tile *) pair = NULL;
+
     while (true) {
-        tile = pattern_get_tile(pat, i);
-        if (tile == NULL) {
-            return;
+        vec_push(pair, pattern_get_tile(pat, i));
+        if (pair[vec_len(pair) - 1] == NULL) {
+            vec_pop(pair);
+            break;
         }
-        if (*fst == NULL) {
-            *fst = tile;
-        } else if (*snd == NULL) {
-            if (tile_equals(*fst, tile)) {
-                *snd = tile;
-                break;
-            }
+        if (vec_len(pair) >= 2 &&
+            !tile_equals(pair[vec_len(pair) - 2], pair[vec_len(pair) - 1])) {
+            vec_pop(pair);
+        }
+        if (vec_len(pair) == 2) {
+            break;
         }
         i++;
     }
+    if (vec_len(pair) != 2) {
+        vec_free(pair);
+    }
+    return pair;
 }
-void pattern_next_three_same(const Pattern *pat, Tile **fst, Tile **snd,
-                             Tile **thrd) {
+
+vec(Tile *) pattern_next_three_same(const Pattern *pat) {
     int i = 0;
-    Tile *tile = NULL;
+    vec(Tile *) three = NULL;
     while (true) {
-        tile = pattern_get_tile(pat, i);
-        if (tile == NULL) {
-            return;
+        vec_push(three, pattern_get_tile(pat, i));
+        // End of pattern
+        if (three[vec_len(three) - 1] == NULL) {
+            vec_pop(three);
+            break;
         }
-        if (*fst == NULL) {
-            *fst = tile;
-        } else if (*snd == NULL) {
-            if (tile_equals(*fst, tile)) {
-                *snd = tile;
-            }
-        } else if (*thrd == NULL) {
-            if (tile_equals(*snd, tile)) {
-                *thrd = tile;
-                break;
-            }
+        if (vec_len(three) >= 2 && !tile_equals(three[vec_len(three) - 2],
+                                                three[vec_len(three) - 1])) {
+            vec_pop(three);
+        }
+        // Complete the three
+        if (vec_len(three) == 3) {
+            break;
         }
         i++;
     }
+    if (vec_len(three) != 3) {
+        vec_free(three);
+    }
+    return three;
 }
-void pattern_next_sequence(const Pattern *pat, Tile **fst, Tile **snd,
-                           Tile **thrd) {
+
+vec(Tile *) pattern_next_sequence(const Pattern *pat) {
     int i = 0;
-    Tile *tile = NULL;
+    vec(Tile *) sequence = NULL;
     while (true) {
-        tile = pattern_get_tile(pat, i);
-        if (tile == NULL) {
-            return;
+        vec_push(sequence, pattern_get_tile(pat, i));
+        // End of pattern
+        if (sequence[vec_len(sequence) - 1] == NULL) {
+            vec_pop(sequence);
+            break;
         }
-        if (*fst == NULL) {
-            *fst = tile;
-        } else if (*snd == NULL) {
-            if (tile_adjacent(*fst, tile)) {
-                *snd = tile;
-            }
-        } else if (*thrd == NULL) {
-            if (tile_adjacent(*snd, tile)) {
-                *thrd = tile;
-                break;
-            }
+        if (vec_len(sequence) > 1 &&
+            !tile_adjacent(sequence[vec_len(sequence) - 2],
+                           sequence[vec_len(sequence) - 1])) {
+            vec_pop(sequence);
+        }
+        // Complete the sequence
+        if (vec_len(sequence) == 3) {
+            break;
         }
         i++;
     }
+    if (vec_len(sequence) != 3) {
+        vec_free(sequence);
+    }
+    return sequence;
 }
 
 vec(vec(Tile *)) pattern_without_pair(Pattern *pat) {

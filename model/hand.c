@@ -1,3 +1,4 @@
+#include "hand.h"
 #include "../model/align.h"
 #include "../utils/better_int.h"
 #include "../utils/vec.h"
@@ -74,7 +75,7 @@ void hand_add_discard(Hand *hand, Tile *tile) {
 vec(Tile *) hand_discard(Hand *hand) { return hand->discard; }
 
 void hand_discard_tile(Hand *hand, Tile *tile) {
-    u64 pos = tiles_remove_equals(hand->hand, tile);
+    u64 pos = tiles_remove_equals(&hand->hand, tile);
     vec_remove(hand->hand_pos, pos);
     for (u64 i = 0; i < vec_len(hand->hand_pos); i++) {
         hand->hand_pos[i] = pos_from_vec(
@@ -99,7 +100,7 @@ void hand_add_tile(Hand *hand, Tile *tile) {
 bool is_opened(const Hand *hand) { return hand->opened; }
 bool is_closed(const Hand *hand) { return !hand->opened; }
 
-void hand_pick_from(Hand *hand, vec(Tile *) from) {
+void hand_pick_from(Hand *hand, vec(Tile *) * from) {
     Tile *t = tiles_pick_from(from);
     hand_add_tile(hand, t);
 }
@@ -110,21 +111,28 @@ vec(Pattern *) hand_patterns(const Hand *hand) {
     tiles_sort(hand->hand);
     vec(Pattern *) res = NULL;
     vec(Pattern *) todo = NULL;
-    vec(Tile *) tiles = tiles_copy((const vec(Tile *))hand->hand);
+    vec(Tile *) tiles = tiles_copy(hand->hand);
 
     // TODO: Add in the first pattern the different chi and su
     Pattern *pat = pattern_from_tiles(tiles);
     vec_push(todo, pat);
 
     while (vec_len(todo) != 0) {
-        Pattern *pattern = todo[vec_len(todo) - 1];
+        // printf("---\n");
+        // printf("vec_len(todo) = %lu\n", vec_len(todo));
+        pat = todo[vec_len(todo) - 1];
         vec_pop(todo);
+        // printf("after pop = %lu\n", vec_len(todo));
 
-        if (pattern_is_complete(pattern)) {
-            vec_push(res, pattern);
+        if (pattern_is_complete(pat)) {
+            vec_push(res, pat);
             continue;
         }
-        patterns_add_first_group_pattern(todo, pattern);
+        vec(Pattern *) next_pattern = patterns_first_group_pattern(pat);
+        for (u64 i = 0; i < vec_len(next_pattern); i++) {
+            vec_push(todo, next_pattern[i]);
+        }
+        vec_free(next_pattern);
 
         // printf("\nRes:\n");
         // patterns_pp(stdout, res);
@@ -133,7 +141,7 @@ vec(Pattern *) hand_patterns(const Hand *hand) {
         // patterns_pp(stdout, todo);
         // printf("\n");
     }
-    patterns_free(todo);
+    patterns_free(&todo);
     return res;
 }
 
@@ -141,7 +149,7 @@ bool hand_is_complete(const Hand *hand) {
     vec(Pattern *) patterns = hand_patterns(hand);
 
     int n_patterns = vec_len(patterns);
-    patterns_free(patterns);
+    patterns_free(&patterns);
     return n_patterns >= 1;
 }
 
@@ -185,7 +193,7 @@ void hand_free(Hand *hand) {
     free(hand);
 }
 
-bool hand_update(Hand *hand, vec(Tile *) tiles, Context ctx) {
+bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx) {
     bool next_turn = false;
     // Hand
     hand->hand_pressed = -1;
@@ -216,7 +224,7 @@ bool hand_update(Hand *hand, vec(Tile *) tiles, Context ctx) {
     if (hand->hand_pressed != -1) {
         Tile *tile_pressed = hand->hand[hand->hand_pressed];
 
-        Tile *random_tile = tiles_random_from(tiles);
+        Tile *random_tile = tiles_random_from(*tiles);
         hand_add_tile(hand, random_tile);
         tiles_remove_equals(tiles, random_tile);
 

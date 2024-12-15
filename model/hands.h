@@ -11,10 +11,10 @@
 typedef struct Hands Hands;
 
 Hands *hands_empty(void);
-void hands_pick_from(Hands *hands, vec(Tile *)from);
+void hands_pick_from(Hands *hands, vec(Tile *)* from);
 Hand *hands_get(Hands *hands, Player player);
 void hands_free(Hands *hands);
 void hands_draw(Hands *hands);
-void hands_update(Hands *hands, vec(Tile *)tiles, Context ctx);
+void hands_update(Hands *hands, vec(Tile *) *tiles, Context ctx);
 
 #endif // HANDS_H

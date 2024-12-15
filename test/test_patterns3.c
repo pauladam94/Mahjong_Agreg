@@ -11,7 +11,6 @@ int main() {
     vec(Tile *) tiles = tiles_from_string("222z234p123m");
     Pattern *pat = pattern_from_tiles(tiles);
     pattern_pp(stdout, pat);
-
     printf("\n");
 
     pattern_free(pat);

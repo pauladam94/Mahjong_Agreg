@@ -1,4 +1,8 @@
+#include "../utils/better_int.h"
 #include "../utils/error.h"
+#include "../utils/vec.h"
+#include "msg.h"
+#include "poll.h"
 #include <errno.h>
 #include <netdb.h>
 #include <stdbool.h>
@@ -11,15 +15,22 @@
 
 #define BUF_SIZE 500
 
-static int server_fd;
-static int client_fd;
+const int SERVER = 0;
+vec(struct pollfd) fds = NULL;
 
 int launch_server() {
+    struct pollfd empty_poll_fd = {0};
+    struct addrinfo hints, *result, *rp;
+
+    vec_push(fds, empty_poll_fd); // Only the server in fds at the beginning
+
+    // Initialize the pollfd structure
+    fds[SERVER].events = POLLIN; // Monitor for incoming connections
+
     blue();
     printf("[Server]\n");
     reset();
 
-    struct addrinfo hints, *result, *rp;
     // memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_UNSPEC;     // IPv4 or IPv6
     hints.ai_socktype = SOCK_STREAM; // TCP
@@ -35,25 +46,25 @@ int launch_server() {
 
     for (rp = result; rp != NULL; rp = rp->ai_next) {
         printf("--\n");
-        server_fd = socket(rp->ai_family, rp->ai_socktype,
-                           rp->ai_protocol); // Create socket
-        test(server_fd != -1, "Socket Creation");
-        if (server_fd == -1) {
+        fds[SERVER].fd = socket(rp->ai_family, rp->ai_socktype,
+                                rp->ai_protocol); // Create socket
+        test(fds[SERVER].fd != -1, "Socket Creation");
+        if (fds[SERVER].fd == -1) {
             continue;
         }
 
         int enable = 1;
-        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &enable,
+        if (setsockopt(fds[SERVER].fd, SOL_SOCKET, SO_REUSEADDR, &enable,
                        sizeof(enable))) {
             perror("setsockopt(SO_REUSEADDR) failed");
         }
-        if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEPORT, &enable,
+        if (setsockopt(fds[SERVER].fd, SOL_SOCKET, SO_REUSEPORT, &enable,
                        sizeof(enable))) {
             perror("setsockopt(SO_REUSEADDR) failed");
         }
 
         // Handle error if socket() fails
-        int bin_err = bind(server_fd, rp->ai_addr,
+        int bin_err = bind(fds[SERVER].fd, rp->ai_addr,
                            rp->ai_addrlen); // Bind socket to address
         test(bin_err == 0, "Bind");
         if (bin_err == 0) {
@@ -61,34 +72,75 @@ int launch_server() {
         } else {
             printf("Bind Error : %s\n", strerror(errno));
         }
-        close(server_fd);
+        close(fds[SERVER].fd);
     }
 
-    int listen_err = listen(server_fd, 5); // Listen for incoming connections
-    test(listen_err == 0, "Listen Message");
+    int listen_err =
+        listen(fds[SERVER].fd, 5); // Listen for incoming connections
+    test(listen_err == 0, "Listen Incoming Connection");
     freeaddrinfo(result); // Free memory allocated by getaddrinfo
-    client_fd = accept(server_fd, NULL, NULL); // Accept a connection
-    test(client_fd != -1, "Accept Connection");
     return 0;
 }
 
-int server() {
-    int i = 0;
-    while (i++ < 5) {
-        char buffer[1024];
-        int recv_output = recv(client_fd, buffer, sizeof(buffer),
-                               0); // Receive message from client
-        test(recv_output != -1, "Receive Message");
-        printf("Message from client: %s\n", buffer);
+// TREAT INCOMING CONNECTION
+int run_server() {
+    u64 cpt_poll = 0;
+    struct pollfd empty_poll_fd = {0};
+    while (true) {
+        cpt_poll++;
+        int activity =
+            poll(fds, vec_len(fds), -1); // Wait indefinitely for activity
+        test(activity != -1, "Poll %d", cpt_poll);
+        if (activity == -1) {
+            perror("Poll error");
+            continue;
+        }
 
-        char response[100];
-        sprintf(response, "%d : from Server", i);
-        int nbytes_send = send(client_fd, response, strlen(response),
-                               0); // Send response to client
-        test(nbytes_send != -1, "Send Message");
+        // Check for new connection
+        if (fds[SERVER].revents & POLLIN) {
+            int fd = accept(fds[SERVER].fd, NULL, NULL);
+
+            empty_poll_fd.fd = fd;
+            empty_poll_fd.events = POLLIN; // Monitor for incoming data
+            vec_push(fds, empty_poll_fd);  // Accept a connection
+
+            test(fds[vec_len(fds) - 1].fd != -1, "Accept Connection N°%d",
+                 vec_len(fds) - 1);
+            if (fds[vec_len(fds) - 1].fd == -1) {
+                vec_pop(fds);
+            }
+        }
+
+        // Check for new messages
+        for (u64 i = 1; i < vec_len(fds); i++) {
+            if (fds[i].revents & POLLIN) {
+                // Receive Message
+                Msg msg = {0};
+                int recv_output = recv(fds[i].fd, &msg, sizeof(msg), 0);
+                test(recv_output != -1, "Rcv Msg of %lu", i);
+                if (recv_output <= 0) {
+                    if (recv_output == 0) {
+                        printf("Client disconnected: fd %d\n", fds[i].fd);
+                    } else {
+                        perror("recv");
+                    }
+                    close(fds[i].fd);
+                }
+                printf("Msg of %lu: %s\n", i, "hhey"); // print msg
+
+                // Respond to Message
+                char response[100] = {0};
+                sprintf(response, "%li from Server", i);
+                int nbytes_send = send(fds[i].fd, response, strlen(response),
+                                       0); // Send response to client
+                test(nbytes_send != -1, "Send Message");
+            }
+        }
     }
 
-    close(client_fd); // Close client connection
-    close(server_fd); // Close server socket
+    /// Close all connection
+    for (u64 i = 0; i < vec_len(fds); i++) {
+        test(close(fds[i].fd) == 0, "Close Connection N°%d", i);
+    }
     return 0;
 }

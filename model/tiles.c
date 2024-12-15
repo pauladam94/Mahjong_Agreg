@@ -60,7 +60,7 @@ Tile *tiles_random_from(vec(Tile *) const from) {
     return from[rand() % (vec_len(from))];
 }
 
-vec(Tile *) tiles_copy(const vec(Tile *) tiles) {
+vec(Tile *) tiles_copy(vec(Tile *) const tiles) {
     vec(Tile *) res = NULL;
     for (u64 i = 0; i < vec_len(tiles); i++) {
         vec_push(res, (Tile *)tiles[i]);
@@ -68,18 +68,18 @@ vec(Tile *) tiles_copy(const vec(Tile *) tiles) {
     return res;
 }
 
-int tiles_remove_equals(vec(Tile *) tiles, Tile *tile) {
-    for (u64 i = 0; i < vec_len(tiles); i++) {
-        if (tile_equals(tile, tiles[i])) {
-            vec_remove(tiles, i);
+int tiles_remove_equals(vec(Tile *) * tiles, Tile *tile) {
+    for (u64 i = 0; i < vec_len(*tiles); i++) {
+        if (tile_equals(tile, (*tiles)[i])) {
+            vec_remove(*tiles, i);
             return i;
         }
     }
     return -1;
 }
 
-Tile *tiles_pick_from(vec(Tile *) from) {
-    Tile *t = tiles_random_from(from);
+Tile *tiles_pick_from(vec(Tile *) * from) {
+    Tile *t = tiles_random_from(*from);
     tiles_remove_equals(from, t);
     return t;
 }
