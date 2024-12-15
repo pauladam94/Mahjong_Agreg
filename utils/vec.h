@@ -100,4 +100,7 @@ typedef struct vec_header {
         }                                                                      \
     } while (0)
 
+#define vec_zeros(N) \
+                \
+
 #endif // VEC_H

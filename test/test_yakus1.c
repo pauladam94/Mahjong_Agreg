@@ -1,5 +1,4 @@
 #include "../model/hand.h"
-#include "../model/patterns.h"
 #include "../model/yaku.h"
 #include "../utils/error.h"
 

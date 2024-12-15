@@ -1,4 +1,6 @@
 #include "../utils/error.h"
+#include "../utils/pp.h"
+#include "msg.h"
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,20 +42,22 @@ int launch_client() {
 }
 
 int client() {
-
+    Msg msg = {0};
     int i = 0;
     while (i++ < 5) {
-        char message[30];
-        sprintf(message, "%d : from Client", i);
-        int nbytes_send = send(client_client_fd, message, strlen(message),
-                               0); // Send message to server
+        msg.from = 1;
+        msg.to = 2;
+        msg.type = 1;
+        int nbytes_send = msg_send(client_client_fd, &msg);
         test(nbytes_send != -1, "Send Message");
+        if (nbytes_send == -1) {
+            perror("Send");
+        }
 
-        char buffer[1024];
-        int recv_output = recv(client_client_fd, buffer, sizeof(buffer),
-                               0); // Receive response from server
+        int recv_output = msg_recv(client_client_fd, &msg);
         test(recv_output != -1, "Receive Message");
-        printf("Message from server: %s\n", buffer);
+
+        fppf(stdout, "Msg from server: %a\n", &msg_pp, &msg);
 
         sleep(2);
     }

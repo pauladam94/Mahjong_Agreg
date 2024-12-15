@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void game(int argc, char **argv) {
+void game() {
     setup_window();
 
     // start_menu();
@@ -60,7 +60,7 @@ void game(int argc, char **argv) {
     tiles_free_textures();
 }
 
-int main(int argc, char *argv[]) {
-    game(argc, argv);
+int main() {
+    game();
     return 0;
 }

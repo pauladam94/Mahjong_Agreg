@@ -1,5 +1,6 @@
 #include "../utils/better_int.h"
 #include "../utils/error.h"
+#include "../utils/pp.h"
 #include "../utils/vec.h"
 #include "msg.h"
 #include "poll.h"
@@ -110,14 +111,14 @@ int run_server() {
                 vec_pop(fds);
             }
         }
+        Msg msg;
 
         // Check for new messages
         for (u64 i = 1; i < vec_len(fds); i++) {
             if (fds[i].revents & POLLIN) {
 
                 // Receive Message
-                Msg msg = {0};
-                int recv_output = recv(fds[i].fd, &msg, sizeof(msg), 0);
+                int recv_output = msg_recv(fds[i].fd, &msg);
                 test(recv_output != -1, "Rcv Msg of %lu", i);
                 if (recv_output <= 0) {
                     if (recv_output == 0) {
@@ -126,15 +127,23 @@ int run_server() {
                         perror("recv");
                     }
                     close(fds[i].fd);
+                    vec_remove(fds, i);
+                    continue;
                 }
-                printf("Msg of %lu: %s\n", i, "hhey"); // print msg
+                fppf(stdout, "Msg of %lu :%a\n", i, &msg_pp, &msg);
 
                 // Respond to Message
-                char response[100] = {0};
-                sprintf(response, "%li from Server", i);
-                int nbytes_send = send(fds[i].fd, response, strlen(response),
-                                       0); // Send response to client
+                if (msg.to >= vec_len(fds)) {
+                    fprintf(stderr, "Message to %d but only % connections\n",
+                            msg.to, vec_len(fds));
+                    continue;
+                }
+                // TODO: Check that msg.from is correct
+                int nbytes_send = msg_send(fds[msg.to].fd, &msg);
                 test(nbytes_send != -1, "Send Message");
+                if (nbytes_send == -1) {
+                    perror("Send");
+                }
             }
         }
     }

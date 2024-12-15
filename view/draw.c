@@ -71,7 +71,7 @@ void load_all_tiles() {
 }
 
 void tiles_free_textures() {
-    for (int i = 1; i <= N_TILE + 1; i++) {
+    for (int i = 1; i <= N_TILE ; i++) {
         UnloadTexture(tiles_textures[i]);
     }
     loaded_has_been_done = false;
