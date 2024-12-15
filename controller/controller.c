@@ -23,7 +23,7 @@ void game(int argc, char **argv) {
     vec(Tile *) tiles = tiles_all();
     vec(Tile *) dead_wall = NULL;
     for (int i = 0; i < 14; i++) {
-        vec_push(dead_wall, tiles_pick_from(tiles));
+        vec_push(dead_wall, tiles_pick_from(&tiles));
     }
 
     Vector2 origin;
@@ -31,9 +31,9 @@ void game(int argc, char **argv) {
     origin.y = (float)HEIGHT / 2;
 
     Hands *hands = hands_empty();
-    hands_pick_from(hands, tiles);
+    hands_pick_from(hands, &tiles);
     // First player has one more tile to begin the game
-    hand_pick_from(hands_get(hands, Player0), tiles);
+    hand_pick_from(hands_get(hands, Player0), &tiles);
 
     while (!WindowShouldClose()) {
         BeginDrawing();
@@ -51,7 +51,7 @@ void game(int argc, char **argv) {
 
         hands_draw(hands);
         Context ctx = context_get();
-        hands_update(hands, tiles, ctx);
+        hands_update(hands, &tiles, ctx);
         EndDrawing();
     }
     hands_free(hands);

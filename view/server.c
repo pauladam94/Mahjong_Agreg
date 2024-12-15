@@ -114,6 +114,7 @@ int run_server() {
         // Check for new messages
         for (u64 i = 1; i < vec_len(fds); i++) {
             if (fds[i].revents & POLLIN) {
+
                 // Receive Message
                 Msg msg = {0};
                 int recv_output = recv(fds[i].fd, &msg, sizeof(msg), 0);

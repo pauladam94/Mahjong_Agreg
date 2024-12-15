@@ -46,8 +46,11 @@ typedef struct vec_header {
         if (V != NULL) {                                                       \
             vec_get_header(V)->len--;                                          \
         }                                                                      \
-        if (vec_get_header(V)->len == 0) V = NULL;                             \
-    } while (0) 
+        if (vec_get_header(V)->len == 0) {                                     \
+            vec_free(V);                                                       \
+            V = NULL;                                                          \
+        }                                                                      \
+    } while (0)
 
 #define vec_push(V, E)                                                         \
     do {                                                                       \
@@ -85,7 +88,6 @@ typedef struct vec_header {
             (V) = NULL;                                                        \
         }                                                                      \
     } while (0)
-
 
 #define vec_free_all(V, F)                                                     \
     do {                                                                       \

@@ -32,18 +32,6 @@ typedef enum Yaku {
     CHUREN_POUTOU,
 } Yaku;
 
-typedef enum GroupType {
-    // Closed
-    Pair,
-    Sequence,    // Is NOT a Chi
-    ThreeOfKind, // IS NOT Pon
-    FourOfKind,  // IS NOT Kahn
-    // Open
-    Pon,
-    Kahn,
-    Chi,
-} GroupType;
-
 vec(yaku) max_yaku(const Hand *hand) {
     // no complete, no yaku
     if (!hand_is_complete(hand))
@@ -113,7 +101,7 @@ vec(yaku) find_yaku(Pattern *pat) {
         vec_push(yakus, y);
     }
     if (chinroutou(pat)) {
-        yaku y = {"Chinroutou", 13};
+        yaku y = {"CHInroutou", 13};
         vec_push(yakus, y);
     }
     if (tsuuiisou(pat)) {
@@ -125,7 +113,7 @@ vec(yaku) find_yaku(Pattern *pat) {
         vec_push(yakus, y);
     }
     if (chiitoitsu(pat)) {
-        yaku y = {"Chiitoitsu", 2};
+        yaku y = {"CHIitoitsu", 2};
         vec_push(yakus, y);
     }
     if (toitoi(pat)) {
@@ -157,7 +145,7 @@ vec(yaku) find_yaku(Pattern *pat) {
         vec_push(yakus, y);
     }
     if (chinitsu(pat)) {
-        yaku y = {"Chinitsu", 6 - pattern_is_open(pat)};
+        yaku y = {"CHInitsu", 6 - pattern_is_open(pat)};
         vec_push(yakus, y);
     }
     if (ryuuiisou(pat)) {
@@ -176,21 +164,22 @@ vec(yaku) find_yaku(Pattern *pat) {
 
 // double suite pure
 int lipeikou(Pattern *pat) {
+    // This function is not correct because it returns 1 when it finds 2 tiles
+    // equals and it checks for nothing else.
     if (pattern_is_open(pat))
         return 0;
 
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
-    vec(GroupType *) types = pattern_get_group_type_without_pair(pat);
+    vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
     for (u64 i = 0; i < 4; i++) {
         for (u64 j = i + 1; j < 4; j++) {
-            if (
-                types[i] == Sequence &&
-                tile_equals(threes[i][0], threes[j][0])
-            )
-            return 1;
+            if (types[i] == SEQUENCE && tile_equals(threes[i][0], threes[j][0]))
+                return 1;
         }
     }
+    // This functions leaks because pattern_get_group_type_without_pair has
+    // allocated memory. Have to free types and threes.
     return 0;
 }
 
@@ -201,44 +190,39 @@ int ryanpeikou(Pattern *pat) {
 
     int count = 0;
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
-    vec(GroupType *) types = pattern_get_group_type_without_pair(pat);
+    vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
     for (u64 i = 0; i < 4; i++) {
         for (u64 j = i + 1; j < 4; j++) {
-            if (
-                types[i] == Sequence &&
-                tile_equals(threes[i][0], threes[j][0])
-            )
-            count ++;
+            if (types[i] == SEQUENCE && tile_equals(threes[i][0], threes[j][0]))
+                count++;
         }
     }
-    return 3*(int)(count == 2);
+    return 3 * (int)(count == 2);
 }
 
 // aucun fu
-int pinfu(Pattern *pat) {
-    return 0;
-}
+int pinfu(Pattern *pat) { return 0; }
 
 // triple suite
 int shanshoku_doujun(Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
-    vec(GroupType *) types = pattern_get_group_type_without_pair(pat);
+    vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
     for (u64 k = 0; k < 4; k++) {
-        int v1 = tile_number(threes[k%4][0]);
-        int v2 = tile_number(threes[(k+1)%4][0]);
-        int v3 = tile_number(threes[(k+2)%4][0]);
-        if (
-            types[k%4] == Sequence || types[k%4] == Chi &&
-            types[(k+1)%4] == Sequence || types[(k+1)%4] == Chi &&
-            types[(k+2)%4] == Sequence || types[(k+2)%4] == Chi &&
-            !tile_same_family(threes[k%4][0], threes[(k+1)%4][0]) &&
-            !tile_same_family(threes[k%4][0], threes[(k+2)%4][0]) &&
-            !tile_same_family(threes[(k+1)%4][0], threes[(k+2)%4][0]) &&
-            v1 == v2 && v2 == v3
-        )
-        return 2 - (int)pattern_is_open(pat);
+        int v1 = tile_number(threes[k % 4][0]);
+        int v2 = tile_number(threes[(k + 1) % 4][0]);
+        int v3 = tile_number(threes[(k + 2) % 4][0]);
+        if (types[k % 4] == SEQUENCE ||
+            types[k % 4] == CHI && types[(k + 1) % 4] == SEQUENCE ||
+            types[(k + 1) % 4] == CHI && types[(k + 2) % 4] == SEQUENCE ||
+            types[(k + 2) % 4] == CHI &&
+                !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
+                !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
+                !tile_same_family(threes[(k + 1) % 4][0],
+                                  threes[(k + 2) % 4][0]) &&
+                v1 == v2 && v2 == v3)
+            return 2 - (int)pattern_is_open(pat);
     }
     return 0;
 }
@@ -246,22 +230,20 @@ int shanshoku_doujun(Pattern *pat) {
 // grande suite pure
 int ittsuu(Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
-    vec(GroupType *) types = pattern_get_group_type_without_pair(pat);
+    vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
     for (u64 k = 0; k < 4; k++) {
-        int v1 = tile_number(threes[k%4][0]);
-        int v2 = tile_number(threes[(k+1)%4][0]);
-        int v3 = tile_number(threes[(k+2)%4][0]);
-        if (
-            types[k%4] == Sequence || types[k%4] == Chi &&
-            types[(k+1)%4] == Sequence || types[(k+1)%4] == Chi &&
-            types[(k+2)%4] == Sequence || types[(k+2)%4] == Chi &&
-            tile_same_family(threes[k%4][0], threes[(k+1)%4][0]) &&
-            tile_same_family(threes[k%4][0], threes[(k+2)%4][0]) &&
-            v1%3 == 1 && v2%3 == 1 && v3%3 == 1 &&
-            v1*v2*v3 == 28
-        )
-        return 2 - (int)pattern_is_open(pat);
+        int v1 = tile_number(threes[k % 4][0]);
+        int v2 = tile_number(threes[(k + 1) % 4][0]);
+        int v3 = tile_number(threes[(k + 2) % 4][0]);
+        if (types[k % 4] == SEQUENCE ||
+            types[k % 4] == CHI && types[(k + 1) % 4] == SEQUENCE ||
+            types[(k + 1) % 4] == CHI && types[(k + 2) % 4] == SEQUENCE ||
+            types[(k + 2) % 4] == CHI &&
+                tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
+                tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
+                v1 % 3 == 1 && v2 % 3 == 1 && v3 % 3 == 1 && v1 * v2 * v3 == 28)
+            return 2 - (int)pattern_is_open(pat);
     }
     return 0;
 }
@@ -269,40 +251,35 @@ int ittsuu(Pattern *pat) {
 // tout ordinaire
 int tanyao(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (
-                tile_is_terminal(groups[i][j]) ||
-                tile_is_honor(groups[i][j])
-                )
-            return 0;
+            if (tile_is_terminal(groups[i][j]) || tile_is_honor(groups[i][j]))
+                return 0;
         }
     }
     return 1;
 }
 
 // brelan de valeur
-int yakuhai(Pattern *pat) {
-    return 0;
-}
+int yakuhai(Pattern *pat) { return 0; }
 
 // trois petits dragons
 int shousangen(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    vec(GroupType *) types = pattern_get_group_type(pat);
+    vec(GroupType) types = pattern_get_group_type(pat);
 
     int count = 0;
     int count_pair = 0;
     for (u64 i = 0; i < vec_len(groups); i++) {
         if (tile_is_dragon(groups[i][0])) {
-            count ++;
-            if (types[i] == Pair) {
-                count_pair ++;
+            count++;
+            if (types[i] == PAIR) {
+                count_pair++;
             }
         }
     }
-    return 2*(int)(count == 3 && count_pair == 1);
+    return 2 * (int)(count == 3 && count_pair == 1);
 }
 
 // trois grands dragons
@@ -312,28 +289,28 @@ int daisangen(Pattern *pat) {
     int count = 0;
     for (u64 i = 0; i < 4; i++) {
         if (tile_is_dragon(threes[i][0]))
-            count ++;
+            count++;
     }
-    
-    return 13*(int)(count == 3);
+
+    return 13 * (int)(count == 3);
 }
 
 // quatre petits vents
 int shousuushi(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    vec(GroupType *) types = pattern_get_group_type(pat);
+    vec(GroupType) types = pattern_get_group_type(pat);
 
     int count = 0;
     int count_pair = 0;
     for (u64 i = 0; i < vec_len(groups); i++) {
         if (tile_is_wind(groups[i][0])) {
-            count ++;
-            if (types[i] == Pair) {
-                count_pair ++;
+            count++;
+            if (types[i] == PAIR) {
+                count_pair++;
             }
         }
     }
-    return 13*(int)(count == 4 && count_pair == 1);
+    return 13 * (int)(count == 4 && count_pair == 1);
 }
 
 // quatre grands vents
@@ -343,23 +320,21 @@ int daisuushi(Pattern *pat) {
     int count = 0;
     for (u64 i = 0; i < 4; i++) {
         if (tile_is_wind(threes[i][0]))
-            count ++;
+            count++;
     }
-    
-    return 13*(int)(count == 4);
+
+    return 13 * (int)(count == 4);
 }
 
 // terminale et honneurs de partout
 int chanta(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
-        if (
-            !tile_is_terminal(groups[i][0]) &&
-            !tile_is_terminal(groups[i][vec_len(groups[i])-1]) &&
-            !tile_is_honor(groups[i][0])
-        )
-        return 0;
+        if (!tile_is_terminal(groups[i][0]) &&
+            !tile_is_terminal(groups[i][vec_len(groups[i]) - 1]) &&
+            !tile_is_honor(groups[i][0]))
+            return 0;
     }
     return 2 - (int)pattern_is_open(pat);
 }
@@ -367,13 +342,11 @@ int chanta(Pattern *pat) {
 // terminale partout
 int junchan(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
-        if (
-            !tile_is_terminal(groups[i][0]) &&
-            !tile_is_terminal(groups[i][vec_len(groups[i])-1])
-        )
-        return 0;
+        if (!tile_is_terminal(groups[i][0]) &&
+            !tile_is_terminal(groups[i][vec_len(groups[i]) - 1]))
+            return 0;
     }
     return 3 - (int)pattern_is_open(pat);
 }
@@ -381,14 +354,11 @@ int junchan(Pattern *pat) {
 // tout terminale et honneur
 int honroutou(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (
-                !tile_is_terminal(groups[i][j]) ||
-                !tile_is_honor(groups[i][j])
-                )
-            return 0;
+            if (!tile_is_terminal(groups[i][j]) || !tile_is_honor(groups[i][j]))
+                return 0;
         }
     }
     return 2;
@@ -397,7 +367,7 @@ int honroutou(Pattern *pat) {
 // tout terminale
 int chinroutou(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
             if (!tile_is_terminal(groups[i][j]))
@@ -410,7 +380,7 @@ int chinroutou(Pattern *pat) {
 // tout honneur
 int tsuuiisou(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
             if (!tile_is_honor(groups[i][j]))
@@ -421,26 +391,22 @@ int tsuuiisou(Pattern *pat) {
 }
 
 // 13 orphelins
-int kokuushi_musou(Pattern *pat) {
-    return 0;
-}
+int kokuushi_musou(Pattern *pat) { return 0; }
 
 // 7 paires
-int chiitoitsu(Pattern *pat) {
-    return 0;
-}
+int chiitoitsu(Pattern *pat) { return 0; }
 
 // tout brelan
 int toitoi(Pattern *pat) {
     vec(GroupType) types = pattern_get_group_type(pat);
 
     for (u64 i = 0; i < vec_len(types); i++) {
-        switch(types[i]) {
-            case Sequence:
-            case Chi:
-                return 0;
-            default:
-                break;
+        switch (types[i]) {
+        case SEQUENCE:
+        case CHI:
+            return 0;
+        default:
+            break;
         }
     }
     return 2;
@@ -452,16 +418,16 @@ int sanankou(Pattern *pat) {
 
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
-        switch(types[i]) {
-            case ThreeOfKind:
-            case FourOfKind:
-                count ++;
-                break;
-            default:
-                break;
+        switch (types[i]) {
+        case THREE_OF_KIND:
+        case FOUR_OF_KIND:
+            count++;
+            break;
+        default:
+            break;
         }
     }
-    return 2*(int)(count == 3);
+    return 2 * (int)(count == 3);
 }
 
 // quatre brelans cachés
@@ -470,37 +436,42 @@ int suuankou(Pattern *pat) {
 
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
-        switch(types[i]) {
-            case ThreeOfKind:
-            case FourOfKind:
-                count ++;
-                break;
-            default:
-                break;
+        switch (types[i]) {
+        case THREE_OF_KIND:
+        case FOUR_OF_KIND:
+            count++;
+            break;
+        default:
+            break;
         }
     }
-    return 13*(int)(count == 4);
+    return 13 * (int)(count == 4);
 }
 
 // triple brelan
 int sanshoku_doukou(Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
-    vec(GroupType *) types = pattern_get_group_type_without_pair(pat);
+    vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
     for (u64 k = 0; k < 4; k++) {
-        int v1 = tile_number(threes[k%4][0]);
-        int v2 = tile_number(threes[(k+1)%4][0]);
-        int v3 = tile_number(threes[(k+2)%4][0]);
-        if (
-            types[k%4] == ThreeOfKind || types[k%4] == Pon || types[k%4] == Kahn || types[k%4] == FourOfKind &&
-            types[(k+1)%4] == ThreeOfKind || types[(k+1)%4] == Pon || types[(k+1)%4] == Kahn || types[(k+1)%4] == FourOfKind &&
-            types[(k+2)%4] == ThreeOfKind || types[(k+2)%4] == Pon || types[(k+2)%4] == Kahn || types[(k+2)%4] == FourOfKind &&
-            !tile_same_family(threes[k%4][0], threes[(k+1)%4][0]) &&
-            !tile_same_family(threes[k%4][0], threes[(k+2)%4][0]) &&
-            !tile_same_family(threes[(k+1)%4][0], threes[(k+2)%4][0]) &&
-            v1 == v2 && v2 == v3
-        )
-        return 2 - (int)pattern_is_open(pat);
+        int v1 = tile_number(threes[k % 4][0]);
+        int v2 = tile_number(threes[(k + 1) % 4][0]);
+        int v3 = tile_number(threes[(k + 2) % 4][0]);
+        if (types[k % 4] == THREE_OF_KIND || types[k % 4] == PON ||
+            types[k % 4] == KAHN ||
+            types[k % 4] == FOUR_OF_KIND &&
+                types[(k + 1) % 4] == THREE_OF_KIND ||
+            types[(k + 1) % 4] == PON || types[(k + 1) % 4] == KAHN ||
+            types[(k + 1) % 4] == FOUR_OF_KIND &&
+                types[(k + 2) % 4] == THREE_OF_KIND ||
+            types[(k + 2) % 4] == PON || types[(k + 2) % 4] == KAHN ||
+            types[(k + 2) % 4] == FOUR_OF_KIND &&
+                !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
+                !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
+                !tile_same_family(threes[(k + 1) % 4][0],
+                                  threes[(k + 2) % 4][0]) &&
+                v1 == v2 && v2 == v3)
+            return 2 - (int)pattern_is_open(pat);
     }
     return 0;
 }
@@ -511,16 +482,16 @@ int sankatsu(Pattern *pat) {
 
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
-        switch(types[i]) {
-            case Kahn:
-            case FourOfKind:
-                count ++;
-                break;
-            default:
-                break;
+        switch (types[i]) {
+        case KAHN:
+        case FOUR_OF_KIND:
+            count++;
+            break;
+        default:
+            break;
         }
     }
-    return 2*(int)(count == 3);
+    return 2 * (int)(count == 3);
 }
 
 // quatre carrés
@@ -529,22 +500,22 @@ int suukantsu(Pattern *pat) {
 
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
-        switch(types[i]) {
-            case Kahn:
-            case FourOfKind:
-                count ++;
-                break;
-            default:
-                break;
+        switch (types[i]) {
+        case KAHN:
+        case FOUR_OF_KIND:
+            count++;
+            break;
+        default:
+            break;
         }
     }
-    return 13*(int)(count == 4);
+    return 13 * (int)(count == 4);
 }
 
 // semi-pure
 int honitsu(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     Tile *ref = NULL;
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
@@ -563,7 +534,7 @@ int honitsu(Pattern *pat) {
 // main pure
 int chinitsu(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     if (tile_is_honor(groups[0][0]))
         return 0;
 
@@ -579,30 +550,28 @@ int chinitsu(Pattern *pat) {
     return 6 - (int)pattern_is_open(pat);
 }
 
-bool green(Tile *t) {
-        switch(tile_number(t)) {
-            case 2:
-            case 3:
-            case 4:
-            case 6:
-            case 8:
-                return true;
-            default:
-                return false;
-        }
+bool green_hand(Tile *t) {
+    switch (tile_number(t)) {
+    case 2:
+    case 3:
+    case 4:
+    case 6:
+    case 8:
+        return true;
+    default:
+        return false;
     }
+}
 
 // main verte
 int ryuuiisou(Pattern *pat) {
+    printf(" TODO Green Hand\n");
     vec(vec(Tile *)) groups = pattern_get_group(pat);
-    
+
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (
-                !tile_number(groups[i][j]) == 33 &&
-                !(tile_is_su(groups[i][j]) &&
-                green(groups[i][j]))
-            )
+            if (!tile_number(groups[i][j]) == 33 && // Why 33 ??
+                !(tile_is_su(groups[i][j]) && green_hand(groups[i][j])))
                 return 0;
         }
     }

@@ -44,6 +44,6 @@ vec(vec(Tile *))pattern_get_group(Pattern *pat);
 vec(GroupType) pattern_get_group_type(Pattern *pat);
 vec(GroupType) pattern_get_group_type_without_pair(Pattern *pat);
 
-bool pattern_is_open(Pattern *pat);
+bool pattern_is_open(const Pattern *const pat);
 
 #endif // PATTERN_H

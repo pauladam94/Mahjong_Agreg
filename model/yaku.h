@@ -14,7 +14,7 @@ vec(yaku) find_yaku(Pattern *pat);    // TODO
 
 int fu(const Hand *hand); // TODO (attente)
 
-//return the number of Han
+// return the number of Han
 int lipeikou(Pattern *pat);
 int ryanpeikou(Pattern *pat);
 int pinfu(Pattern *pat); // TODO (attente)

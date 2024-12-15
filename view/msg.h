@@ -15,7 +15,9 @@ typedef struct Msg {
     MsgData data;
 } Msg;
 
-// void send(Player to);
-// void recv(Player to);
+void msg_send(Player to);
+void msg_recv(Player to);
+
+void msg_pp(FILE *file, Msg msg);
 
 #endif // MESSAGE_H

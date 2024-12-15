@@ -111,18 +111,17 @@ vec(Pattern *) hand_patterns(const Hand *hand) {
     tiles_sort(hand->hand);
     vec(Pattern *) res = NULL;
     vec(Pattern *) todo = NULL;
-    vec(Tile *) tiles = tiles_copy(hand->hand);
 
     // TODO: Add in the first pattern the different chi and su
-    Pattern *pat = pattern_from_tiles(tiles);
+    Pattern *pat = pattern_from_tiles(tiles_copy(hand->hand));
     vec_push(todo, pat);
 
     while (vec_len(todo) != 0) {
-        // printf("---\n");
-        // printf("vec_len(todo) = %lu\n", vec_len(todo));
+        // fppf(stdout, "\nRes: %a\nTodo:\n%a\n", &patterns_pp, res,
+        // &patterns_pp, todo);
+
         pat = todo[vec_len(todo) - 1];
         vec_pop(todo);
-        // printf("after pop = %lu\n", vec_len(todo));
 
         if (pattern_is_complete(pat)) {
             vec_push(res, pat);
@@ -133,13 +132,7 @@ vec(Pattern *) hand_patterns(const Hand *hand) {
             vec_push(todo, next_pattern[i]);
         }
         vec_free(next_pattern);
-
-        // printf("\nRes:\n");
-        // patterns_pp(stdout, res);
-        // printf("\n");
-        // printf("Todo:\n");
-        // patterns_pp(stdout, todo);
-        // printf("\n");
+        // patterns_free(&next_pattern);
     }
     patterns_free(&todo);
     return res;
