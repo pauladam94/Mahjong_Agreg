@@ -227,15 +227,15 @@ int shanshoku_doujun(Pattern *pat) {
         int v1 = tile_number(threes[k % 4][0]);
         int v2 = tile_number(threes[(k + 1) % 4][0]);
         int v3 = tile_number(threes[(k + 2) % 4][0]);
-        if (types[k % 4] == SEQUENCE ||
-            (types[k % 4] == CHI && types[(k + 1) % 4] == SEQUENCE) ||
-            (types[(k + 1) % 4] == CHI && types[(k + 2) % 4] == SEQUENCE) ||
-            (types[(k + 2) % 4] == CHI &&
-                !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
-                !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
-                !tile_same_family(threes[(k + 1) % 4][0],
-                                  threes[(k + 2) % 4][0]) &&
-                v1 == v2 && v2 == v3))
+        if (
+        (types[k % 4] == SEQUENCE || types[k % 4] == CHI) &&
+        (types[(k + 1) % 4] == SEQUENCE || types[(k + 1) % 4] == CHI) &&
+        (types[(k + 2) % 4] == SEQUENCE || types[(k + 2) % 4] == CHI) &&
+        !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
+        !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
+        !tile_same_family(threes[(k + 1) % 4][0],threes[(k + 2) % 4][0]) &&
+        v1 == v2 && v2 == v3
+        )
             return 2 - (int)pattern_is_open(pat);
     }
     return 0;
@@ -250,13 +250,13 @@ int ittsuu(Pattern *pat) {
         int v1 = tile_number(threes[k % 4][0]);
         int v2 = tile_number(threes[(k + 1) % 4][0]);
         int v3 = tile_number(threes[(k + 2) % 4][0]);
-        if (types[k % 4] == SEQUENCE ||
-            (types[k % 4] == CHI && types[(k + 1) % 4] == SEQUENCE )||
-            (types[(k + 1) % 4] == CHI && types[(k + 2) % 4] == SEQUENCE) ||
-            (types[(k + 2) % 4] == CHI &&
-                tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
-                tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
-                v1 % 3 == 1 && v2 % 3 == 1 && v3 % 3 == 1 && v1 * v2 * v3 == 28))
+        if (
+        (types[k % 4] == SEQUENCE || types[k % 4] == CHI) &&
+        (types[(k + 1) % 4] == SEQUENCE || types[(k + 1) % 4] == CHI) &&
+        (types[(k + 2) % 4] == SEQUENCE || types[(k + 2) % 4] == CHI) &&
+        tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
+        tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
+        v1 % 3 == 1 && v2 % 3 == 1 && v3 % 3 == 1 && v1 * v2 * v3 == 28)
             return 2 - (int)pattern_is_open(pat);
     }
     return 0;
@@ -480,20 +480,14 @@ int sanshoku_doukou(Pattern *pat) {
         int v1 = tile_number(threes[k % 4][0]);
         int v2 = tile_number(threes[(k + 1) % 4][0]);
         int v3 = tile_number(threes[(k + 2) % 4][0]);
-        if (types[k % 4] == THREE_OF_KIND || types[k % 4] == PON ||
-            types[k % 4] == KAHN ||
-            (types[k % 4] == FOUR_OF_KIND &&
-                types[(k + 1) % 4] == THREE_OF_KIND) ||
-            types[(k + 1) % 4] == PON || types[(k + 1) % 4] == KAHN ||
-            (types[(k + 1) % 4] == FOUR_OF_KIND &&
-                types[(k + 2) % 4] == THREE_OF_KIND) ||
-            types[(k + 2) % 4] == PON || types[(k + 2) % 4] == KAHN ||
-            (types[(k + 2) % 4] == FOUR_OF_KIND &&
-                !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
-                !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
-                !tile_same_family(threes[(k + 1) % 4][0],
-                                  threes[(k + 2) % 4][0]) &&
-                v1 == v2 && v2 == v3))
+        if (
+        (types[k % 4] == THREE_OF_KIND || types[k % 4] == PON || types[k % 4] == KAHN || types[k % 4] == FOUR_OF_KIND) &&
+        (types[(k + 1) % 4] == THREE_OF_KIND || types[(k + 1) % 4] == PON || types[(k + 1) % 4] == KAHN || types[(k + 1) % 4] == FOUR_OF_KIND) &&
+        (types[(k + 2) % 4] == THREE_OF_KIND || types[(k + 2) % 4] == PON || types[(k + 2) % 4] == KAHN || types[(k + 2) % 4] == FOUR_OF_KIND) &&
+        !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
+        !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
+        !tile_same_family(threes[(k + 1) % 4][0],threes[(k + 2) % 4][0]) &&
+        v1 == v2 && v2 == v3)
             return 2 - (int)pattern_is_open(pat);
     }
     return 0;
@@ -588,12 +582,11 @@ bool green_hand(Tile *t) {
 
 // main verte
 int ryuuiisou(Pattern *pat) {
-    printf(" TODO Green Hand\n");
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (!(tile_number(groups[i][j]) == 33) && // Why 33 ??
+            if (!(tile_number(groups[i][j]) == 33) && // green dragon
                 !(tile_is_su(groups[i][j]) && green_hand(groups[i][j])))
                 return 0;
         }
