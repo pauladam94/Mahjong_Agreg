@@ -374,7 +374,7 @@ int honroutou(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (!tile_is_terminal(groups[i][j]) || !tile_is_honor(groups[i][j]))
+            if (!tile_is_terminal(groups[i][j]) && !tile_is_honor(groups[i][j]))
                 return 0;
         }
     }
