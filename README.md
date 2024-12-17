@@ -9,9 +9,11 @@ This project is a Mahjong Game in C Raylib (still a work in progress). The objec
 - [x] remove the loaded of textures from `logic/tile.c` this should be in
 visuals only
 - [~] Write the logic of the game
+    - [~] Yaku implementation
     - [ ] All the rules with tests
     - [ ] Complete game
     - [ ] Expert Program (AI) that computes probability
+    - [ ] Trained AI from example games ...
 
 ## View (`view/`)
 - [ ] Create an abstraction layer between the GUI and the code that does
@@ -22,14 +24,15 @@ something with it, to be able to test the GUI.
 
 ## Cryptographic(`crypto/`)
 - [ ] Polynomial implementation (fast if possible)
-- [ ] basic elgamal (or RSA) cryptographics primitive
+- [ ] basic elgamal cryptographics primitive
 - [ ] implement an idea of protocol to prepare the cards at the beggining
 
 ## Server-Client for Multiplayer(`client`)
-- [ ] write basic client for multiplayers
+- [ ] (De)Serialisation of message from the network.
+- [~] write basic client for multiplayers
 - [ ] use cryptographic primitive to have no server (only peer to peer)
 - [ ] Test connection when the program is compiled with wasm
-- [ ] Implement basic server that connect people together.
+- [x] Implement basic server that connect people together.
 
 ## Controller of the game (manage view and model) (`controller/`)
 - [x] basic game loop

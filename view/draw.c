@@ -13,19 +13,14 @@ static bool loaded_has_been_done = false;
 static Tile *tile_hover = NULL;
 static Tile *tile_pressed = NULL;
 
-
 void reset_hover_pressed() {
     tile_hover = NULL;
     tile_pressed = NULL;
-
-}
-void tile_hover_set(Tile *tile) {
-    tile_hover = tile;
 }
 
-void tile_pressed_set(Tile *tile) {
-    tile_pressed = tile;
-}
+void tile_hover_set(Tile *tile) { tile_hover = tile; }
+
+void tile_pressed_set(Tile *tile) { tile_pressed = tile; }
 
 void load_all_tiles() {
     tiles_textures = calloc(sizeof(*tiles_textures), N_TILE + 1);
@@ -41,6 +36,7 @@ void load_all_tiles() {
     tiles_textures[10] = LoadTexture("data/R1.png");
     tiles_textures[11] = LoadTexture("data/R2.png");
     tiles_textures[12] = LoadTexture("data/R3.png");
+
     tiles_textures[13] = LoadTexture("data/R4.png");
     tiles_textures[14] = LoadTexture("data/R5.png");
     tiles_textures[15] = LoadTexture("data/R6.png");
@@ -71,7 +67,7 @@ void load_all_tiles() {
 }
 
 void tiles_free_textures() {
-    for (int i = 1; i <= N_TILE ; i++) {
+    for (int i = 1; i <= N_TILE; i++) {
         UnloadTexture(tiles_textures[i]);
     }
     loaded_has_been_done = false;
@@ -79,24 +75,26 @@ void tiles_free_textures() {
     tiles_textures = NULL;
 }
 
-void highlight_tile_draw(Vector2 pos, Color color, Align align) {
-    Rectangle rec = align_rect(align, pos);
-    rec.x += THICKNESS;
-    rec.y += THICKNESS;
-    rec.width += -THICKNESS * 2;
-    rec.height += -THICKNESS * 2;
-    DrawRectangleRoundedLinesEx(rec, ROUNDNESS, 1, THICKNESS, color);
+void highlight_tile_draw(Vector2 pos, Color color, Align align,
+                         Settings settings) {
+    Rectangle rec = align_rect(align, pos, settings);
+    rec.x += settings.thickness;
+    rec.y += settings.thickness;
+    rec.width += -settings.thickness * 2;
+    rec.height += -settings.thickness * 2;
+    DrawRectangleRoundedLinesEx(rec, settings.roundness, 1, settings.thickness,
+                                color);
 }
 
-void tile_draw(const Tile *tile, Vector2 pos, Align align) {
+void tile_draw(const Tile *tile, Vector2 pos, Align align, Settings settings) {
     if (!loaded_has_been_done) {
         load_all_tiles();
     }
     Texture2D texture = tiles_textures[(uint64_t)tile];
-    float scale = (float)TILE_WIDTH / (float)texture.width;
+    float scale = (float)settings.tile_width / (float)texture.width;
     float rotation = align_rotation(align);
     DrawTextureEx(texture, pos, rotation, scale, WHITE);
     if (tile_equals(tile, tile_hover)) {
-        highlight_tile_draw(pos, ORANGE, align);
+        highlight_tile_draw(pos, ORANGE, align, settings);
     }
 }

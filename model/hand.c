@@ -10,6 +10,7 @@
 #include "pos.h"
 #include "raylib.h"
 #include "tiles.h"
+#include "wind.h"
 #include <stdlib.h>
 
 typedef struct Hand {
@@ -26,6 +27,7 @@ typedef struct Hand {
     vec(vec(Tile *)) pon;
     vec(vec(Tile *)) kan;
 
+    Wind wind;
     bool opened;
     Align align;
     Vector2 pos;
@@ -35,46 +37,48 @@ typedef struct Hand {
 int hand_get_hand_hover(Hand *hand) { return hand->hand_hover; }
 int hand_get_discard_hover(Hand *hand) { return hand->discard_hover; }
 
-void hand_draw(Hand *hand) {
+void hand_draw(Hand *hand, Settings settings) {
     // hand_update_pos(hand);
     for (u64 i = 0; i < vec_len(hand->hand); i++) {
-        tile_draw(hand->hand[i], pos_get(hand->hand_pos[i]), hand->align);
+        tile_draw(hand->hand[i], pos_get(hand->hand_pos[i]), hand->align,
+                  settings);
     }
     for (u64 i = 0; i < vec_len(hand->discard); i++) {
-        tile_draw(hand->discard[i], pos_get(hand->discard_pos[i]), hand->align);
+        tile_draw(hand->discard[i], pos_get(hand->discard_pos[i]), hand->align,
+                  settings);
     }
     if (hand->hand_hover != -1) {
         highlight_tile_draw(pos_get(hand->hand_pos[hand->hand_hover]), ORANGE,
-                            hand->align);
+                            hand->align, settings);
     }
     if (hand->discard_hover != -1) {
         highlight_tile_draw(pos_get(hand->discard_pos[hand->discard_hover]),
-                            ORANGE, hand->align);
+                            ORANGE, hand->align, settings);
     }
 }
 
-Hand *hand_empty(Player player) {
+Hand *hand_empty(Player player, Settings settings) {
     Hand *hand = calloc(sizeof(*hand), 1);
     hand->hand = NULL;
     hand->discard = NULL;
     hand->align = player_align(player);
-    hand->pos = player_pos(player);
+    hand->pos = player_pos(player, settings);
     hand->hand_pressed = -1;
     hand->hand_hover = -1;
     hand->discard_hover = -1;
     return hand;
 }
 
-void hand_add_discard(Hand *hand, Tile *tile) {
+void hand_add_discard(Hand *hand, Tile *tile, Settings settings) {
     vec_push(hand->discard, tile);
     vec_push(hand->discard_pos, pos_from_vec(align_pos_discard(
                                     hand->align, hand->pos.x, hand->pos.y,
-                                    vec_len(hand->discard) - 1)));
+                                    vec_len(hand->discard) - 1, settings)));
 }
 
 vec(Tile *) hand_discard(Hand *hand) { return hand->discard; }
 
-void hand_discard_tile(Hand *hand, Tile *tile) {
+void hand_discard_tile(Hand *hand, Tile *tile, Settings settings) {
     u64 pos = tiles_remove_equals(&hand->hand, tile);
     pos_free(hand->hand_pos[pos]);
     vec_remove(hand->hand_pos, pos);
@@ -82,10 +86,10 @@ void hand_discard_tile(Hand *hand, Tile *tile) {
     for (u64 i = 0; i < vec_len(hand->hand_pos); i++) {
         pos_free(hand->hand_pos[i]);
         hand->hand_pos[i] = pos_from_vec(
-            align_pos_hand(hand->align, hand->pos.x, hand->pos.y, i));
+            align_pos_hand(hand->align, hand->pos.x, hand->pos.y, i, settings));
     }
     Vector2 prev = pos_get(hand->hand_pos[pos]);
-    hand_add_discard(hand, tile);
+    hand_add_discard(hand, tile, settings);
     Vector2 next = pos_get(hand->discard_pos[vec_len(hand->discard_pos) - 1]);
     pos_free(hand->discard_pos[vec_len(hand->discard) - 1]);
     hand->discard_pos[vec_len(hand->discard) - 1] = pos_transi(prev, next);
@@ -94,19 +98,19 @@ void hand_discard_tile(Hand *hand, Tile *tile) {
 vec(Tile *) hand_closed_tiles(const Hand *hand) { return hand->hand; }
 vec(Tile *) hand_discarded_tiles(const Hand *hand) { return hand->discard; }
 
-void hand_add_tile(Hand *hand, Tile *tile) {
+void hand_add_tile(Hand *hand, Tile *tile, Settings settings) {
     vec_push(hand->hand, tile);
     vec_push(hand->hand_pos,
              pos_from_vec(align_pos_hand(hand->align, hand->pos.x, hand->pos.y,
-                                         vec_len(hand->hand) - 1)));
+                                         vec_len(hand->hand) - 1, settings)));
 }
 
 bool is_opened(const Hand *hand) { return hand->opened; }
 bool is_closed(const Hand *hand) { return !hand->opened; }
 
-void hand_pick_from(Hand *hand, vec(Tile *) * from) {
+void hand_pick_from(Hand *hand, vec(Tile *) * from, Settings settings) {
     Tile *t = tiles_pick_from(from);
-    hand_add_tile(hand, t);
+    hand_add_tile(hand, t, settings);
 }
 
 void hand_pp(FILE *file, const Hand *hand) { tiles_pp(file, hand->hand); }
@@ -136,7 +140,6 @@ vec(Pattern *) hand_patterns(const Hand *hand) {
             vec_push(todo, next_pattern[i]);
         }
         vec_free(next_pattern);
-        // patterns_free(&next_pattern);
     }
     patterns_free(&todo);
     return res;
@@ -158,8 +161,8 @@ bool hand_is_valid(const Hand *hand) {
     return true;
 }
 
-Hand *hand_from_string(const char *s) {
-    Hand *hand = hand_empty(Player0);
+Hand *hand_from_string(const char *s, Settings settings) {
+    Hand *hand = hand_empty(Player0, settings);
     vec_free(hand->hand);
     hand->hand = tiles_from_string(s);
     return hand;
@@ -190,7 +193,8 @@ void hand_free(Hand *hand) {
     free(hand);
 }
 
-bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx) {
+bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx,
+                 Settings settings) {
     bool next_turn = false;
     // Hand
     hand->hand_pressed = -1;
@@ -198,7 +202,8 @@ bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx) {
     hand->discard_hover = -1;
 
     for (uint64_t i = 0; i < vec_len(hand->hand); i++) {
-        Rectangle rec = align_rect(hand->align, pos_get(hand->hand_pos[i]));
+        Rectangle rec =
+            align_rect(hand->align, pos_get(hand->hand_pos[i]), settings);
         if (CheckCollisionPointRec(ctx.mouse, rec)) {
             if (IsMouseButtonDown(0)) {
                 hand->hand_pressed = i;
@@ -211,7 +216,8 @@ bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx) {
     }
     // Discard
     for (uint64_t i = 0; i < vec_len(hand->discard); i++) {
-        Rectangle rec = align_rect(hand->align, pos_get(hand->discard_pos[i]));
+        Rectangle rec =
+            align_rect(hand->align, pos_get(hand->discard_pos[i]), settings);
         if (CheckCollisionPointRec(ctx.mouse, rec)) {
             hand->discard_hover = i;
             break;
@@ -222,10 +228,10 @@ bool hand_update(Hand *hand, vec(Tile *) * tiles, Context ctx) {
         Tile *tile_pressed = hand->hand[hand->hand_pressed];
 
         Tile *random_tile = tiles_random_from(*tiles);
-        hand_add_tile(hand, random_tile);
+        hand_add_tile(hand, random_tile, settings);
         tiles_remove_equals(tiles, random_tile);
 
-        hand_discard_tile(hand, tile_pressed);
+        hand_discard_tile(hand, tile_pressed, settings);
 
         hand_sort(hand);
         hand->hand_pressed = -1; // Back to -1

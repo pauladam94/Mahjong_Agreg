@@ -21,7 +21,7 @@ vec(Pattern *) patterns_first_group_pattern(Pattern *pat) {
     group = pattern_next_sequence(pat);
     if (group != NULL && !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, group, SEQUENCE);
+        pattern_add_group(new_pattern, group, SEQUENCE_CLOSE);
         for (u64 i = 0; i < vec_len(group); i++) {
             pattern_remove_tile(new_pattern, group[i]);
         }
@@ -33,7 +33,7 @@ vec(Pattern *) patterns_first_group_pattern(Pattern *pat) {
     group = pattern_next_three_same(pat);
     if (group != NULL && !pattern_has_four_group(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, group, THREE_OF_KIND);
+        pattern_add_group(new_pattern, group, THREE_CLOSE);
         for (u64 i = 0; i < vec_len(group); i++) {
             pattern_remove_tile(new_pattern, group[i]);
         }
@@ -45,7 +45,7 @@ vec(Pattern *) patterns_first_group_pattern(Pattern *pat) {
     group = pattern_next_pair(pat);
     if (group != NULL && !pattern_has_pair(pat)) {
         Pattern *new_pattern = pattern_copy(pat);
-        pattern_add_group(new_pattern, group, PAIR);
+        pattern_add_group(new_pattern, group, PAIR_CLOSE);
         for (u64 i = 0; i < vec_len(group); i++) {
             pattern_remove_tile(new_pattern, group[i]);
         }

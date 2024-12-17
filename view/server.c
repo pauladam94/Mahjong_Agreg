@@ -1,3 +1,5 @@
+#include "server.h"
+#include "../model/game.h"
 #include "../utils/better_int.h"
 #include "../utils/error.h"
 #include "../utils/pp.h"
@@ -46,7 +48,6 @@ int launch_server() {
     }
 
     for (rp = result; rp != NULL; rp = rp->ai_next) {
-        printf("--\n");
         fds[SERVER].fd = socket(rp->ai_family, rp->ai_socktype,
                                 rp->ai_protocol); // Create socket
         test(fds[SERVER].fd != -1, "Socket Creation");
@@ -84,7 +85,8 @@ int launch_server() {
 }
 
 // TREAT INCOMING CONNECTION
-int run_server() {
+void *run_server(void *arg) {
+    Msg msg;
     u64 cpt_poll = 0;
     struct pollfd empty_poll_fd = {0};
     while (true) {
@@ -104,19 +106,26 @@ int run_server() {
             empty_poll_fd.fd = fd;
             empty_poll_fd.events = POLLIN; // Monitor for incoming data
             vec_push(fds, empty_poll_fd);  // Accept a connection
+            u64 id_new_client = vec_len(fds) - 1;
 
             test(fds[vec_len(fds) - 1].fd != -1, "Accept Connection N°%d",
-                 vec_len(fds) - 1);
+                 id_new_client);
             if (fds[vec_len(fds) - 1].fd == -1) {
                 vec_pop(fds);
+            } else {
+                msg.type = SET_PLAYER_NUMBER;
+                msg.set_player_number.player = (Player)id_new_client;
+                int nbytes_send = msg_send(fds[id_new_client].fd, &msg);
+                test(nbytes_send != -1, "Initial Message to %d", id_new_client);
+                if (nbytes_send == -1) {
+                    perror("Send");
+                }
             }
         }
-        Msg msg;
 
         // Check for new messages
         for (u64 i = 1; i < vec_len(fds); i++) {
             if (fds[i].revents & POLLIN) {
-
                 // Receive Message
                 int recv_output = msg_recv(fds[i].fd, &msg);
                 test(recv_output != -1, "Rcv Msg of %lu", i);
@@ -134,7 +143,7 @@ int run_server() {
 
                 // Respond to Message
                 if (msg.to >= vec_len(fds)) {
-                    fprintf(stderr, "Message to %d but only % connections\n",
+                    fprintf(stderr, "Message to %d but only %lu connections\n",
                             msg.to, vec_len(fds));
                     continue;
                 }
@@ -152,5 +161,5 @@ int run_server() {
     for (u64 i = 0; i < vec_len(fds); i++) {
         test(close(fds[i].fd) == 0, "Close Connection N°%d", i);
     }
-    return 0;
+    return NULL;
 }

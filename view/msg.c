@@ -63,7 +63,21 @@ int msg_send(int fd, Msg *msg) {
     return nbytes_send;
 }
 
+void msg_type_pp(FILE *file, MsgType msg_type) {
+    switch (msg_type) {
+    case SET_PLAYER_NUMBER:
+        fprintf(file, "SET_PLAYER_NUMBER");
+        break;
+    case CHAT:
+        fprintf(file, "CHAT");
+        break;
+    case EVENT:
+        fprintf(file, "Event");
+        break;
+    }
+}
+
 void msg_pp(FILE *file, Msg *msg) {
-    fprintf(file, "{from : %d; to %d; type: %d}", msg->from, msg->to,
-            msg->type);
+    fppf(file, "{from : %d; to %d; type: %a}", msg->from, msg->to,
+         msg_type_pp, msg->type);
 }

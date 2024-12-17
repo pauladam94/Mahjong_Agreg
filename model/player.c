@@ -4,24 +4,24 @@
 
 void player_next(Player *p) { *p = (*p + 1) % 4; }
 
-Vector2 player_pos(Player i) {
+Vector2 player_pos(Player i, Settings settings) {
     Vector2 pos;
     switch (i) {
     case Player0:
-        pos.x = (float)WIDTH / 2 - 7 * TILE_WIDTH;
-        pos.y = HEIGHT - TILE_HEIGHT;
+        pos.x = (float)settings.width / 2 - 7 * settings.tile_width;
+        pos.y = settings.height - settings.tile_height;
         break;
     case Player1:
-        pos.x = WIDTH - TILE_HEIGHT;
-        pos.y = (float)HEIGHT / 2 + 7 * TILE_WIDTH;
+        pos.x = settings.width - settings.tile_height;
+        pos.y = (float)settings.height / 2 + 7 * settings.tile_width;
         break;
     case Player2:
-        pos.x = (float)WIDTH / 2 - 7 * TILE_WIDTH;
-        pos.y = TILE_HEIGHT;
+        pos.x = (float)settings.width / 2 - 7 * settings.tile_width;
+        pos.y = settings.tile_height;
         break;
     case Player3:
-        pos.x = TILE_HEIGHT;
-        pos.y = (float)HEIGHT / 2 - 7 * TILE_WIDTH;
+        pos.x = settings.tile_height;
+        pos.y = (float)settings.height / 2 - 7 * settings.tile_width;
         break;
     }
     return pos;

@@ -9,15 +9,13 @@
 typedef struct Pattern Pattern;
 
 typedef enum GroupType {
-    // Closed
-    PAIR,
-    SEQUENCE,      // Is NOT a Chi
-    THREE_OF_KIND, // IS NOT Pon
-    FOUR_OF_KIND,  // IS NOT Kahn
-    // Open
-    PON,
-    KAHN,
-    CHI,
+    PAIR_CLOSE,     // Pair
+    SEQUENCE_CLOSE, // not from Chi
+    SEQUENCE_OPEN,  // from a chi
+    THREE_CLOSE,    // not from a Pon
+    THREE_OPEN,     // from a Pon
+    FOUR_CLOSE,     // from a kahn closed
+    FOUR_OPEN,      // from a kahn open
 } GroupType;
 
 Pattern *pattern_empty();
@@ -40,7 +38,7 @@ bool pattern_has_pair(Pattern *pat);
 bool pattern_has_four_group(Pattern *pat);
 
 vec(vec(Tile *)) pattern_without_pair(Pattern *pat);
-vec(vec(Tile *))pattern_get_group(Pattern *pat);
+vec(vec(Tile *)) pattern_get_group(Pattern *pat);
 vec(GroupType) pattern_get_group_type(Pattern *pat);
 vec(GroupType) pattern_get_group_type_without_pair(Pattern *pat);
 

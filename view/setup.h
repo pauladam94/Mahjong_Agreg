@@ -1,6 +1,8 @@
 #ifndef SETUP_H
 #define SETUP_H
 
-void setup_window(void);
+#include "settings.h"
+
+void setup_window(Settings settings);
 
 #endif
