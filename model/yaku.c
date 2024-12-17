@@ -171,8 +171,6 @@ vec(yaku) find_yaku(Pattern *pat) {
 
 // double suite pure
 int lipeikou(Pattern *pat) {
-    // This function is not correct because it returns 1 when it finds 2 tiles
-    // equals and it checks for nothing else.
     if (pattern_is_open(pat))
         return 0;
 
@@ -183,14 +181,13 @@ int lipeikou(Pattern *pat) {
 
     for (u64 i = 0; i < 4; i++) {
         for (u64 j = i + 1; j < 4; j++) {
-            if (types[i] == SEQUENCE && tile_equals(threes[i][0], threes[j][0]))
+            if (types[i] == SEQUENCE && types[j] == SEQUENCE && tile_equals(threes[i][0], threes[j][0]))
                 res = 1;
         }
     }
+
     vec_free(types);
     free_groups(&threes);
-    // This functions leaks because pattern_get_group_type_without_pair has
-    // allocated memory. Have to free types and threes.
     return res;
 }
 
@@ -209,6 +206,9 @@ int ryanpeikou(Pattern *pat) {
                 count++;
         }
     }
+
+    vec_free(types);
+    free_groups(&threes);
     return 3 * (int)(count == 2);
 }
 
@@ -235,9 +235,13 @@ int shanshoku_doujun(Pattern *pat) {
         !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
         !tile_same_family(threes[(k + 1) % 4][0],threes[(k + 2) % 4][0]) &&
         v1 == v2 && v2 == v3
-        )
+        ) {
             return 2 - (int)pattern_is_open(pat);
+        }
     }
+
+    vec_free(types);
+    free_groups(&threes);
     return 0;
 }
 
@@ -256,9 +260,15 @@ int ittsuu(Pattern *pat) {
         (types[(k + 2) % 4] == SEQUENCE || types[(k + 2) % 4] == CHI) &&
         tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
         tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
-        v1 % 3 == 1 && v2 % 3 == 1 && v3 % 3 == 1 && v1 * v2 * v3 == 28)
+        v1 % 3 == 1 && v2 % 3 == 1 && v3 % 3 == 1 && v1 * v2 * v3 == 28) {
+            vec_free(types);
+            free_groups(&threes);
             return 2 - (int)pattern_is_open(pat);
+        }
     }
+
+    vec_free(types);
+    free_groups(&threes);
     return 0;
 }
 
@@ -268,10 +278,14 @@ int tanyao(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (tile_is_terminal(groups[i][j]) || tile_is_honor(groups[i][j]))
+            if (tile_is_terminal(groups[i][j]) || tile_is_honor(groups[i][j])) {
+                free_groups(&groups);
                 return 0;
+            }
         }
     }
+
+    free_groups(&groups);
     return 1;
 }
 
@@ -296,6 +310,9 @@ int shousangen(Pattern *pat) {
             }
         }
     }
+
+    vec_free(types);
+    free_groups(&groups);
     return 2 * (int)(count == 3 && count_pair == 1);
 }
 
@@ -309,6 +326,7 @@ int daisangen(Pattern *pat) {
             count++;
     }
 
+    free_groups(&threes);
     return 13 * (int)(count == 3);
 }
 
@@ -327,6 +345,9 @@ int shousuushi(Pattern *pat) {
             }
         }
     }
+
+    vec_free(types);
+    free_groups(&groups);
     return 13 * (int)(count == 4 && count_pair == 1);
 }
 
@@ -340,6 +361,7 @@ int daisuushi(Pattern *pat) {
             count++;
     }
 
+    free_groups(&threes);
     return 13 * (int)(count == 4);
 }
 
@@ -353,6 +375,8 @@ int chanta(Pattern *pat) {
             !tile_is_honor(groups[i][0]))
             return 0;
     }
+
+    free_groups(&groups);
     return 2 - (int)pattern_is_open(pat);
 }
 
@@ -362,9 +386,13 @@ int junchan(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         if (!tile_is_terminal(groups[i][0]) &&
-            !tile_is_terminal(groups[i][vec_len(groups[i]) - 1]))
+            !tile_is_terminal(groups[i][vec_len(groups[i]) - 1])) {
+            free_groups(&groups);
             return 0;
+        }
     }
+
+    free_groups(&groups);
     return 3 - (int)pattern_is_open(pat);
 }
 
@@ -374,10 +402,14 @@ int honroutou(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (!tile_is_terminal(groups[i][j]) && !tile_is_honor(groups[i][j]))
+            if (!tile_is_terminal(groups[i][j]) && !tile_is_honor(groups[i][j])) {
+                free_groups(&groups);
                 return 0;
+            }
         }
     }
+
+    free_groups(&groups);
     return 2;
 }
 
@@ -387,10 +419,14 @@ int chinroutou(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (!tile_is_terminal(groups[i][j]))
+            if (!tile_is_terminal(groups[i][j])) {
+                free_groups(&groups);
                 return 0;
+            }
         }
     }
+
+    free_groups(&groups);
     return 13;
 }
 
@@ -400,10 +436,14 @@ int tsuuiisou(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (!tile_is_honor(groups[i][j]))
+            if (!tile_is_honor(groups[i][j])) {
+                free_groups(&groups);
                 return 0;
+            }
         }
     }
+
+    free_groups(&groups);
     return 13;
 }
 
@@ -427,11 +467,14 @@ int toitoi(Pattern *pat) {
         switch (types[i]) {
         case SEQUENCE:
         case CHI:
+            vec_free(types);
             return 0;
         default:
             break;
         }
     }
+
+    vec_free(types);
     return 2;
 }
 
@@ -450,6 +493,8 @@ int sanankou(Pattern *pat) {
             break;
         }
     }
+
+    vec_free(types);
     return 2 * (int)(count == 3);
 }
 
@@ -468,6 +513,8 @@ int suuankou(Pattern *pat) {
             break;
         }
     }
+
+    vec_free(types);
     return 13 * (int)(count == 4);
 }
 
@@ -487,9 +534,15 @@ int sanshoku_doukou(Pattern *pat) {
         !tile_same_family(threes[k % 4][0], threes[(k + 1) % 4][0]) &&
         !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
         !tile_same_family(threes[(k + 1) % 4][0],threes[(k + 2) % 4][0]) &&
-        v1 == v2 && v2 == v3)
+        v1 == v2 && v2 == v3) {
+            vec_free(types);
+            free_groups(&threes);
             return 2 - (int)pattern_is_open(pat);
+        }
     }
+
+    vec_free(types);
+    free_groups(&threes);
     return 0;
 }
 
@@ -508,6 +561,8 @@ int sankatsu(Pattern *pat) {
             break;
         }
     }
+
+    vec_free(types);
     return 2 * (int)(count == 3);
 }
 
@@ -526,6 +581,8 @@ int suukantsu(Pattern *pat) {
             break;
         }
     }
+
+    vec_free(types);
     return 13 * (int)(count == 4);
 }
 
@@ -540,11 +597,14 @@ int honitsu(Pattern *pat) {
                 if (ref == NULL) {
                     ref = groups[i][j];
                 } else if (!tile_same_family(ref, groups[i][j])) {
+                    free_groups(&groups);
                     return 0;
                 }
             }
         }
     }
+
+    free_groups(&groups);
     return 3 - (int)pattern_is_open(pat);
 }
 
@@ -552,18 +612,26 @@ int honitsu(Pattern *pat) {
 int chinitsu(Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
-    if (tile_is_honor(groups[0][0]))
+    if (tile_is_honor(groups[0][0])) {
+        free_groups(&groups);
         return 0;
+    }
 
     Tile *ref = groups[0][0];
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (tile_is_honor(groups[i][j]))
+            if (tile_is_honor(groups[i][j])) {
+                free_groups(&groups);
                 return 0;
-            if (!tile_same_family(ref, groups[i][j]))
+            }
+            if (!tile_same_family(ref, groups[i][j])) {
+                free_groups(&groups);
                 return 0;
+            }
         }
     }
+
+    free_groups(&groups);
     return 6 - (int)pattern_is_open(pat);
 }
 
@@ -587,10 +655,14 @@ int ryuuiisou(Pattern *pat) {
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
             if (!(tile_number(groups[i][j]) == 33) && // green dragon
-                !(tile_is_su(groups[i][j]) && green_hand(groups[i][j])))
+                !(tile_is_su(groups[i][j]) && green_hand(groups[i][j]))) {
+                free_groups(&groups);
                 return 0;
+            }
         }
     }
+
+    free_groups(&groups);
     return 13;
 }
 
