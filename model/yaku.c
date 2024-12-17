@@ -48,7 +48,7 @@ vec(yaku) max_yaku(const Hand *hand) {
 }
 
 // return all the yaku for a given pattern
-vec(yaku) find_yaku(Pattern *pat) {
+vec(yaku) find_yaku(const  Pattern *pat) {
     vec(yaku) yakus = NULL;
 
     if (lipeikou(pat)) {
@@ -170,7 +170,7 @@ vec(yaku) find_yaku(Pattern *pat) {
 // function testing the yakus
 
 // double suite pure
-int lipeikou(Pattern *pat) {
+int lipeikou(const  Pattern *pat) {
     if (pattern_is_open(pat))
         return 0;
 
@@ -192,7 +192,7 @@ int lipeikou(Pattern *pat) {
 }
 
 // deux doubles suites pures
-int ryanpeikou(Pattern *pat) {
+int ryanpeikou(const  Pattern *pat) {
     if (pattern_is_open(pat))
         return 0;
 
@@ -213,13 +213,13 @@ int ryanpeikou(Pattern *pat) {
 }
 
 // aucun fu
-int pinfu(Pattern *pat) {
+int pinfu(const  Pattern *pat) {
     (void)pat;
     return 0;
 }
 
 // triple suite
-int shanshoku_doujun(Pattern *pat) {
+int shanshoku_doujun(const  Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
     vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
@@ -246,7 +246,7 @@ int shanshoku_doujun(Pattern *pat) {
 }
 
 // grande suite pure
-int ittsuu(Pattern *pat) {
+int ittsuu(const  Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
     vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
@@ -273,7 +273,7 @@ int ittsuu(Pattern *pat) {
 }
 
 // tout ordinaire
-int tanyao(Pattern *pat) {
+int tanyao(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -290,13 +290,13 @@ int tanyao(Pattern *pat) {
 }
 
 // brelan de valeur
-int yakuhai(Pattern *pat) {
+int yakuhai(const  Pattern *pat) {
     (void)pat;
     return 0;
 }
 
 // trois petits dragons
-int shousangen(Pattern *pat) {
+int shousangen(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
     vec(GroupType) types = pattern_get_group_type(pat);
 
@@ -317,7 +317,7 @@ int shousangen(Pattern *pat) {
 }
 
 // trois grands dragons
-int daisangen(Pattern *pat) {
+int daisangen(const  Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
 
     int count = 0;
@@ -331,7 +331,7 @@ int daisangen(Pattern *pat) {
 }
 
 // quatre petits vents
-int shousuushi(Pattern *pat) {
+int shousuushi(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
     vec(GroupType) types = pattern_get_group_type(pat);
 
@@ -352,7 +352,7 @@ int shousuushi(Pattern *pat) {
 }
 
 // quatre grands vents
-int daisuushi(Pattern *pat) {
+int daisuushi(const  Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
 
     int count = 0;
@@ -366,7 +366,7 @@ int daisuushi(Pattern *pat) {
 }
 
 // terminale et honneurs de partout
-int chanta(Pattern *pat) {
+int chanta(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -382,7 +382,7 @@ int chanta(Pattern *pat) {
 }
 
 // terminale partout
-int junchan(Pattern *pat) {
+int junchan(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -399,7 +399,7 @@ int junchan(Pattern *pat) {
 }
 
 // tout terminale et honneur
-int honroutou(Pattern *pat) {
+int honroutou(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -416,7 +416,7 @@ int honroutou(Pattern *pat) {
 }
 
 // tout terminale
-int chinroutou(Pattern *pat) {
+int chinroutou(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -433,7 +433,7 @@ int chinroutou(Pattern *pat) {
 }
 
 // tout honneur
-int tsuuiisou(Pattern *pat) {
+int tsuuiisou(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -450,19 +450,19 @@ int tsuuiisou(Pattern *pat) {
 }
 
 // 13 orphelins
-int kokuushi_musou(Pattern *pat) {
+int kokuushi_musou(const  Pattern *pat) {
     (void)pat;
     return 0;
 }
 
 // 7 paires
-int chiitoitsu(Pattern *pat) {
+int chiitoitsu(const  Pattern *pat) {
     (void)pat;
     return 0;
 }
 
 // tout brelan
-int toitoi(Pattern *pat) {
+int toitoi(const  Pattern *pat) {
     vec(GroupType) types = pattern_get_group_type(pat);
 
     for (u64 i = 0; i < vec_len(types); i++) {
@@ -481,7 +481,7 @@ int toitoi(Pattern *pat) {
 }
 
 // trois brelans cachés
-int sanankou(Pattern *pat) {
+int sanankou(const  Pattern *pat) {
     vec(GroupType) types = pattern_get_group_type(pat);
 
     int count = 0;
@@ -501,7 +501,7 @@ int sanankou(Pattern *pat) {
 }
 
 // quatre brelans cachés
-int suuankou(Pattern *pat) {
+int suuankou(const  Pattern *pat) {
     vec(GroupType) types = pattern_get_group_type(pat);
 
     int count = 0;
@@ -521,7 +521,7 @@ int suuankou(Pattern *pat) {
 }
 
 // triple brelan
-int sanshoku_doukou(Pattern *pat) {
+int sanshoku_doukou(const  Pattern *pat) {
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
     vec(GroupType) types = pattern_get_group_type_without_pair(pat);
 
@@ -550,7 +550,7 @@ int sanshoku_doukou(Pattern *pat) {
 }
 
 // trois carrés
-int sankatsu(Pattern *pat) {
+int sankatsu(const  Pattern *pat) {
     vec(GroupType) types = pattern_get_group_type(pat);
 
     int count = 0;
@@ -570,7 +570,7 @@ int sankatsu(Pattern *pat) {
 }
 
 // quatre carrés
-int suukantsu(Pattern *pat) {
+int suukantsu(const  Pattern *pat) {
     vec(GroupType) types = pattern_get_group_type(pat);
 
     int count = 0;
@@ -590,7 +590,7 @@ int suukantsu(Pattern *pat) {
 }
 
 // semi-pure
-int honitsu(Pattern *pat) {
+int honitsu(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     Tile *ref = NULL;
@@ -613,7 +613,7 @@ int honitsu(Pattern *pat) {
 }
 
 // main pure
-int chinitsu(Pattern *pat) {
+int chinitsu(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     if (tile_is_honor(groups[0][0])) {
@@ -654,7 +654,7 @@ bool green_hand(Tile *t) {
 }
 
 // main verte
-int ryuuiisou(Pattern *pat) {
+int ryuuiisou(const  Pattern *pat) {
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     for (u64 i = 0; i < vec_len(groups); i++) {
@@ -672,7 +672,7 @@ int ryuuiisou(Pattern *pat) {
 }
 
 // neuf portes
-int churen_poutou(Pattern *pat) {
+int churen_poutou(const  Pattern *pat) {
     if (!chinitsu(pat))
         return 0;
     return 0;

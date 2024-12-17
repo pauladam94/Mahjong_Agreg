@@ -10,38 +10,38 @@ struct yaku {
 typedef struct yaku yaku;
 
 vec(yaku) max_yaku(const Hand *hand); // TODO
-vec(yaku) find_yaku(Pattern *pat);    // TODO
+vec(yaku) find_yaku(const Pattern *pat);    // TODO
 
 int fu(const Hand *hand); // TODO (attente)
 
 // return the number of Han
-int lipeikou(Pattern *pat);
-int ryanpeikou(Pattern *pat);
-int pinfu(Pattern *pat); // TODO (attente)
-int shanshoku_doujun(Pattern *pat);
-int ittsuu(Pattern *pat);
-int tanyao(Pattern *pat);
-int yakuhai(Pattern *pat); // TODO (vent du joueur)
-int shousangen(Pattern *pat);
-int daisangen(Pattern *pat);
-int shousuushi(Pattern *pat);
-int daisuushi(Pattern *pat);
-int chanta(Pattern *pat);
-int junchan(Pattern *pat);
-int honroutou(Pattern *pat);
-int chinroutou(Pattern *pat);
-int tsuuiisou(Pattern *pat);
-int kokuushi_musou(Pattern *pat); // TODO (13 orphelins)
-int chiitoitsu(Pattern *pat);     // TODO (7 paires)
-int toitoi(Pattern *pat);
-int sanankou(Pattern *pat);
-int suuankou(Pattern *pat);
-int sanshoku_doukou(Pattern *pat);
-int sankatsu(Pattern *pat);
-int suukantsu(Pattern *pat);
-int honitsu(Pattern *pat);
-int chinitsu(Pattern *pat);
-int ryuuiisou(Pattern *pat);
-int churen_poutou(Pattern *pat); // TODO (flemme)
+int lipeikou(const Pattern *pat);
+int ryanpeikou(const Pattern *pat);
+int pinfu(const Pattern *pat); // TODO (attente)
+int shanshoku_doujun(const Pattern *pat);
+int ittsuu(const Pattern *pat);
+int tanyao(const Pattern *pat);
+int yakuhai(const Pattern *pat); // TODO (vent du joueur)
+int shousangen(const Pattern *pat);
+int daisangen(const Pattern *pat);
+int shousuushi(const Pattern *pat);
+int daisuushi(const Pattern *pat);
+int chanta(const Pattern *pat);
+int junchan(const Pattern *pat);
+int honroutou(const Pattern *pat);
+int chinroutou(const Pattern *pat);
+int tsuuiisou(const Pattern *pat);
+int kokuushi_musou(const Pattern *pat); // TODO (13 orphelins)
+int chiitoitsu(const Pattern *pat);     // TODO (7 paires)
+int toitoi(const Pattern *pat);
+int sanankou(const Pattern *pat);
+int suuankou(const Pattern *pat);
+int sanshoku_doukou(const Pattern *pat);
+int sankatsu(const Pattern *pat);
+int suukantsu(const Pattern *pat);
+int honitsu(const Pattern *pat);
+int chinitsu(const Pattern *pat);
+int ryuuiisou(const Pattern *pat);
+int churen_poutou(const Pattern *pat); // TODO (flemme)
 
 #endif
