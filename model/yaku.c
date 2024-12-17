@@ -376,8 +376,9 @@ int chanta(Pattern *pat) {
             return 0;
     }
 
+    int open = (int)pattern_is_open(pat);
     free_groups(&groups);
-    return 2 - (int)pattern_is_open(pat);
+    return 2 - open;
 }
 
 // terminale partout
@@ -392,8 +393,9 @@ int junchan(Pattern *pat) {
         }
     }
 
+    int open = (int)pattern_is_open(pat);
     free_groups(&groups);
-    return 3 - (int)pattern_is_open(pat);
+    return 3 - open;
 }
 
 // tout terminale et honneur
@@ -535,9 +537,10 @@ int sanshoku_doukou(Pattern *pat) {
         !tile_same_family(threes[k % 4][0], threes[(k + 2) % 4][0]) &&
         !tile_same_family(threes[(k + 1) % 4][0],threes[(k + 2) % 4][0]) &&
         v1 == v2 && v2 == v3) {
+            int open = (int)pattern_is_open(pat);
             vec_free(types);
             free_groups(&threes);
-            return 2 - (int)pattern_is_open(pat);
+            return 2 - open;
         }
     }
 
@@ -604,8 +607,9 @@ int honitsu(Pattern *pat) {
         }
     }
 
+    int open = (int)pattern_is_open(pat);
     free_groups(&groups);
-    return 3 - (int)pattern_is_open(pat);
+    return 3 - open;
 }
 
 // main pure
@@ -631,8 +635,9 @@ int chinitsu(Pattern *pat) {
         }
     }
 
+    int open = (int)pattern_is_open(pat);
     free_groups(&groups);
-    return 6 - (int)pattern_is_open(pat);
+    return 6 - open;
 }
 
 bool green_hand(Tile *t) {
@@ -654,7 +659,7 @@ int ryuuiisou(Pattern *pat) {
 
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = 0; j < vec_len(groups[i]); j++) {
-            if (!(tile_number(groups[i][j]) == 33) && // green dragon
+            if (!((int)(groups[i][j]) == 33) &&
                 !(tile_is_su(groups[i][j]) && green_hand(groups[i][j]))) {
                 free_groups(&groups);
                 return 0;
