@@ -110,6 +110,9 @@ int tile_number(const Tile *t) {
     case Z7:
     case None:
         return -1;
+    default:
+        fprintf(stderr, "Error : it is not a tile.\n");
+        exit(1);
     }
 }
 
@@ -171,6 +174,11 @@ Tile *tile_from_string(const char *name) {
     case 'z':
         res = Z1 + ((int)name[0] - '0') - 1;
         break;
+    default:
+        fprintf(stderr,
+                "Error : %s not describe a tile. Do 1m or 4s or 2z instead.\n",
+                name);
+        exit(1);
     }
     return (Tile *)res;
 }
@@ -337,6 +345,9 @@ Tile *next_dora(const Tile *tile) {
     case Z7:
         res = (_Tile)(uint64_t)tile - 2;
         break;
+    default:
+        fprintf(stderr, "Error : it not describes a tile.\n");
+        exit(1);
     }
     return (Tile *)res;
 }

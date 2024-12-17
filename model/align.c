@@ -1,6 +1,8 @@
 #include "align.h"
 #include "../view/settings.h"
 #include "raylib.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 float align_rotation(Align align) {
     switch (align) {
@@ -12,6 +14,9 @@ float align_rotation(Align align) {
         return 180.;
     case LEFT:
         return 90.;
+    default:
+        fprintf(stderr, "Error: align_rotation\n");
+        exit(1);
     }
 }
 

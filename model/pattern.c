@@ -85,7 +85,7 @@ void pattern_pp(FILE *file, const Pattern *pat) {
         tiles_pp(file, pat->tiles);
 }
 
-bool pattern_has_pair(Pattern *pat) {
+bool pattern_has_pair(const Pattern *pat) {
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
         case PAIR:
@@ -96,7 +96,7 @@ bool pattern_has_pair(Pattern *pat) {
     }
     return false;
 }
-bool pattern_has_four_group(Pattern *pat) {
+bool pattern_has_four_group(const Pattern *pat) {
     int n_group = 0;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
@@ -227,7 +227,7 @@ vec(Tile *) pattern_next_sequence(const Pattern *pat) {
     return sequence;
 }
 
-vec(vec(Tile *)) pattern_without_pair(Pattern *pat) {
+vec(vec(Tile *)) pattern_without_pair(const Pattern *pat) {
     vec(vec(Tile *)) pat_no_pair = NULL;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
@@ -241,11 +241,11 @@ vec(vec(Tile *)) pattern_without_pair(Pattern *pat) {
     return pat_no_pair;
 }
 
-vec(vec(Tile *)) pattern_get_group(Pattern *pat) { return pat->group; }
+vec(vec(Tile *)) pattern_get_group(const Pattern *pat) { return pat->group; }
 
-vec(GroupType) pattern_get_group_type(Pattern *pat) { return pat->group_type; }
+vec(GroupType) pattern_get_group_type(const Pattern *pat) { return pat->group_type; }
 
-vec(GroupType) pattern_get_group_type_without_pair(Pattern *pat) {
+vec(GroupType) pattern_get_group_type_without_pair(const Pattern *pat) {
     vec(GroupType) gt_no_pair = NULL;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {

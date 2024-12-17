@@ -134,7 +134,7 @@ int run_server() {
 
                 // Respond to Message
                 if (msg.to >= vec_len(fds)) {
-                    fprintf(stderr, "Message to %d but only % connections\n",
+                    fprintf(stderr, "Message to %d but only %ld connections\n",
                             msg.to, vec_len(fds));
                     continue;
                 }

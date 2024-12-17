@@ -3398,6 +3398,7 @@ int GuiColorBarAlpha(Rectangle bounds, const char *text, float *alpha) {
 #define RAYGUI_COLORBARALPHA_CHECKED_SIZE 10
 #endif
 
+    (void)text;
     int result = 0;
     GuiState state = guiState;
     Rectangle selector = {
@@ -3514,6 +3515,7 @@ int GuiColorBarAlpha(Rectangle bounds, const char *text, float *alpha) {
 //      Color GuiColorBarValue() [BLACK->color], HSV/HSL
 //      float GuiColorBarLuminance() [BLACK->WHITE]
 int GuiColorBarHue(Rectangle bounds, const char *text, float *hue) {
+    (void)text;
     int result = 0;
     GuiState state = guiState;
     Rectangle selector = {
@@ -3644,6 +3646,7 @@ int GuiColorBarHue(Rectangle bounds, const char *text, float *hue) {
 // NOTE: this picker converts RGB to HSV, which can cause the Hue control to
 // jump. If you have this problem, consider using the HSV variant instead
 int GuiColorPicker(Rectangle bounds, const char *text, Color *color) {
+    (void)text;
     int result = 0;
 
     Color temp = {200, 0, 0, 255};
@@ -3689,6 +3692,7 @@ int GuiColorPicker(Rectangle bounds, const char *text, Color *color) {
 //      float *alpha) float GuiColorBarHue(Rectangle bounds, float value)
 // NOTE: bounds define GuiColorPanelHSV() size
 int GuiColorPickerHSV(Rectangle bounds, const char *text, Vector3 *colorHsv) {
+    (void)text;
     int result = 0;
 
     Vector3 tempHsv = {0};
@@ -3714,6 +3718,7 @@ int GuiColorPickerHSV(Rectangle bounds, const char *text, Vector3 *colorHsv) {
 
 // Color Panel control - HSV variant
 int GuiColorPanelHSV(Rectangle bounds, const char *text, Vector3 *colorHsv) {
+    (void)text;
     int result = 0;
     GuiState state = guiState;
     Vector2 pickerSelector = {0};
@@ -4021,6 +4026,7 @@ int GuiGrid(Rectangle bounds, const char *text, float spacing, int subdivs,
 #define RAYGUI_GRID_ALPHA 0.15f
 #endif
 
+    (void)text;
     int result = 0;
     GuiState state = guiState;
 
@@ -4480,6 +4486,7 @@ static void GuiLoadStyleFromMemory(const unsigned char *fileData,
                                    int dataSize) {
     unsigned char *fileDataPtr = (unsigned char *)fileData;
 
+    (void)dataSize;
     char signature[5] = {0};
     short version = 0;
     short reserved = 0;

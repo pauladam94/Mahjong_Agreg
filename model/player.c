@@ -1,6 +1,8 @@
 #include "player.h"
 #include "../model/align.h"
 #include "../view/settings.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 void player_next(Player *p) { *p = (*p + 1) % 4; }
 
@@ -37,5 +39,8 @@ Align player_align(const Player i) {
         return UP;
     case Player3:
         return LEFT;
+    default:
+        fprintf(stderr, "Error: player_align\n");
+        exit(1);
     }
 }

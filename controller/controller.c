@@ -27,6 +27,7 @@ void game() {
     }
 
     Vector2 origin;
+    (void)origin;
     origin.x = (float)WIDTH / 2;
     origin.y = (float)HEIGHT / 2;
 
