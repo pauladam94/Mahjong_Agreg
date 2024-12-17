@@ -24,7 +24,7 @@ Pattern *pattern_empty();
 // Complete deeply a Pattern
 Pattern *pattern_copy(const Pattern *pat);
 Pattern *pattern_from_tiles(vec(Tile *) tiles);
-// Gets the pointers to `tile` in `tiles`at the position `pos` (no copy)
+// Gets the pointers to `tile` in `tiles`at the position `pos` in Tiles not processed
 Tile *pattern_get_tile(const Pattern *pat, u64 pos);
 void pattern_add_group(Pattern *pat, vec(Tile *) group, GroupType type);
 // Remove the first tiles in the pattern `tiles` that equals `t`
