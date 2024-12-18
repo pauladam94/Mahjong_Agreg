@@ -3,11 +3,10 @@
 #include "../utils/vec.h"
 #include "hand.h"
 
-struct yaku {
+typedef struct yaku {
     char *name;
     int han;
-};
-typedef struct yaku yaku;
+} yaku;
 
 vec(yaku) max_yaku(const Hand *hand); // TODO
 vec(yaku) find_yaku(const Pattern *pat);    // TODO

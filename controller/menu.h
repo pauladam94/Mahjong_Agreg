@@ -1,6 +1,8 @@
 #ifndef MENU_H
 #define MENU_H
 
-void start_menu(void);
+#include "../model/game.h"
+
+void *start_menu(Game *game);
 
 #endif

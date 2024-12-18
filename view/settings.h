@@ -1,11 +1,18 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-extern const int WIDTH;
-extern const int HEIGHT;
-extern const int TILE_HEIGHT;
-extern const int TILE_WIDTH;
-extern const float THICKNESS;
-extern const float ROUNDNESS;
+typedef struct Settings {
+    int width;
+    int height;
+    int tile_height;
+    int tile_width;
+    float thickness;
+    float roundness;
+} Settings;
+
+Settings settings_init(int width, int height);
+void settings_zoom(Settings *setings);
+void settings_unzoom(Settings *settings);
+void settings_apply(Settings settings);
 
 #endif // SETTINGS_H

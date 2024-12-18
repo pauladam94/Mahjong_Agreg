@@ -9,7 +9,7 @@ int main() {
     reset();
 
     Hand *h = hand_from_string("11m");
-    fppf(stdout, "hand = %a\n", &hand_pp, h);
+    fppf(stdout, "hand = %a\n", hand_pp, h);
 
     Tile *t0 = tile_from_string("1m");
     Tile *t1 = tile_from_string("1z");

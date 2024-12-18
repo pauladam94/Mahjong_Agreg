@@ -31,9 +31,9 @@ void pattern_remove_tile(Pattern *pat, Tile *t) {
 bool pattern_is_open(const Pattern *const pat) {
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
-        case PON:
-        case KAHN:
-        case CHI:
+        case SEQUENCE_OPEN:
+        case FOUR_OPEN:
+        case THREE_OPEN:
             return true;
         default:
             break;
@@ -47,15 +47,15 @@ bool pattern_is_complete(const Pattern *pat) {
     int n_pair = 0;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
-        case PAIR:
+        case PAIR_CLOSE:
             n_pair++;
             break;
-        case SEQUENCE:
-        case THREE_OF_KIND:
-        case FOUR_OF_KIND:
-        case PON:
-        case KAHN:
-        case CHI:
+        case THREE_CLOSE:
+        case THREE_OPEN:
+        case FOUR_CLOSE:
+        case SEQUENCE_OPEN:
+        case SEQUENCE_CLOSE:
+        case FOUR_OPEN:
             n_group++;
             break;
         }
@@ -88,7 +88,7 @@ void pattern_pp(FILE *file, const Pattern *pat) {
 bool pattern_has_pair(const Pattern *pat) {
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
-        case PAIR:
+        case PAIR_CLOSE:
             return true;
         default:
             break;
@@ -100,10 +100,10 @@ bool pattern_has_four_group(const Pattern *pat) {
     int n_group = 0;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
-        case SEQUENCE:
-        case THREE_OF_KIND:
-        case PON:
-        case CHI:
+        case SEQUENCE_CLOSE:
+        case SEQUENCE_OPEN:
+        case THREE_CLOSE:
+        case THREE_OPEN:
             n_group++;
         default:
             break;
@@ -231,7 +231,7 @@ vec(vec(Tile *)) pattern_without_pair(const Pattern *pat) {
     vec(vec(Tile *)) pat_no_pair = NULL;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
-        case PAIR:
+        case PAIR_CLOSE:
             break;
         default:
             vec_push(pat_no_pair, pat->group[i]);
@@ -249,7 +249,7 @@ vec(GroupType) pattern_get_group_type_without_pair(const Pattern *pat) {
     vec(GroupType) gt_no_pair = NULL;
     for (u64 i = 0; i < vec_len(pat->group); i++) {
         switch (pat->group_type[i]) {
-        case PAIR:
+        case PAIR_CLOSE:
             break;
         default:
             vec_push(gt_no_pair, pat->group_type[i]);

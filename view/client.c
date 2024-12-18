@@ -1,3 +1,5 @@
+#include "client.h"
+#include "../model/game.h"
 #include "../utils/error.h"
 #include "../utils/pp.h"
 #include "msg.h"
@@ -41,8 +43,21 @@ int launch_client() {
     return 0;
 }
 
-int client() {
-    Msg msg = {0};
+void *client(void *arg) {
+    Game *game = (Game *)arg;
+    Msg msg;
+
+    int recv_output = msg_recv(client_client_fd, &msg);
+    test(recv_output != -1, "Receive Initial Message");
+    fppf(stdout, "Msg from server: %a\n", &msg_pp, &msg);
+
+    if (msg.type == SET_PLAYER_NUMBER) {
+        game->player = msg.set_player_number.player;
+        printf("Player Number set to : %d\n", (int)game->player);
+    }
+
+    sleep(20);
+
     int i = 0;
     while (i++ < 5) {
         msg.from = 1;
@@ -59,9 +74,9 @@ int client() {
 
         fppf(stdout, "Msg from server: %a\n", &msg_pp, &msg);
 
-        sleep(2);
+        sleep(1);
     }
 
     close(client_client_fd); // Close connection
-    return 0;
+    return NULL;
 }

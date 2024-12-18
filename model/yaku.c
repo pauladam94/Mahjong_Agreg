@@ -37,7 +37,8 @@ vec(yaku) max_yaku(const Hand *hand) {
     if (!hand_is_complete(hand))
         return NULL;
 
-    return NULL;
+    vec(Pattern *) patterns = hand_patterns(hand);
+    return NULL; // TODO: do this function
 }
 
 // return all the yaku for a given pattern
@@ -196,7 +197,8 @@ int ryanpeikou(const Pattern *pat) {
 
     for (u64 i = 0; i < 4; i++) {
         for (u64 j = i + 1; j < 4; j++) {
-            if (types[i] == SEQUENCE && tile_equals(threes[i][0], threes[j][0]))
+            if (types[i] == SEQUENCE_CLOSE &&
+                tile_equals(threes[i][0], threes[j][0]))
                 count++;
         }
     }
@@ -477,8 +479,8 @@ int sanankou(const Pattern *pat) {
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
         switch (types[i]) {
-        case THREE_OF_KIND:
-        case FOUR_OF_KIND:
+        case THREE_CLOSE:
+        case FOUR_CLOSE:
             count++;
             break;
         default:
@@ -498,8 +500,8 @@ int suuankou(const Pattern *pat) {
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
         switch (types[i]) {
-        case THREE_OF_KIND:
-        case FOUR_OF_KIND:
+        case THREE_CLOSE:
+        case FOUR_CLOSE:
             count++;
             break;
         default:
@@ -546,8 +548,8 @@ int sankatsu(const Pattern *pat) {
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
         switch (types[i]) {
-        case KAHN:
-        case FOUR_OF_KIND:
+        case FOUR_OPEN:
+        case FOUR_CLOSE:
             count++;
             break;
         default:
@@ -567,8 +569,8 @@ int suukantsu(const Pattern *pat) {
     int count = 0;
     for (u64 i = 0; i < vec_len(types); i++) {
         switch (types[i]) {
-        case KAHN:
-        case FOUR_OF_KIND:
+        case FOUR_OPEN:
+        case FOUR_CLOSE:
             count++;
             break;
         default:
