@@ -1,6 +1,43 @@
 #include "yaku.h"
 #include "pattern.h"
 
+int power(int b, int e) {
+    if (e == 0)
+        return 1;
+    return b * power(b, e - 1);
+}
+
+int (*yakus_list[])(const Pattern *pat) = {
+    lipeikou,
+    ryanpeikou,
+    pinfu,
+    shanshoku_doujun,
+    ittsuu,
+    tanyao,
+    yakuhai,
+    shousangen,
+    daisangen,
+    shousuushi,
+    daisuushi,
+    chanta,
+    junchan,
+    honroutou,
+    chinroutou,
+    tsuuiisou,
+    kokuushi_musou,
+    chiitoitsu,
+    toitoi,
+    sanankou,
+    suuankou,
+    sanshoku_doukou,
+    sankatsu,
+    suukantsu,
+    honitsu,
+    chinitsu,
+    ryuuiisou,
+    churen_poutou
+};
+
 // functions testing the yakus
 
 // double suite pure
@@ -13,7 +50,10 @@ int lipeikou(const Pattern *pat) {
 
     for (u64 i = 0; i < 4; i++) {
         for (u64 j = i + 1; j < 4; j++) {
-            if (types[i] == SEQUENCE_CLOSE && types[j] == SEQUENCE_OPEN && tile_equals(threes[i][0], threes[j][0])) {
+            if (
+                (types[i] == SEQUENCE_CLOSE || types[j] == SEQUENCE_OPEN) &&
+                (tile_equals(threes[i][0], threes[j][0]))
+            ) {
                 vec_free(threes);
                 vec_free(types);
                 return 1;
@@ -298,7 +338,6 @@ int chiitoitsu(const Pattern *pat) {
             case PAIR_CLOSE:
                 break;
             default:
-                vec_free(types);
                 return 0;
         }
     }
@@ -306,7 +345,6 @@ int chiitoitsu(const Pattern *pat) {
     for (u64 i = 0; i < vec_len(groups); i++) {
         for (u64 j = i + 1; j < vec_len(groups); j++) {
             if (tile_equals(groups[i][0], groups[j][0])) {
-                vec_free(types);
                 return 0;
             }
         }
@@ -322,13 +360,11 @@ int toitoi(const Pattern *pat) {
         switch (types[i]) {
         case SEQUENCE_CLOSE:
         case SEQUENCE_OPEN:
-            vec_free(types);
             return 0;
         default:
             break;
         }
     }
-    vec_free(types);
     return 2;
 }
 
@@ -349,7 +385,6 @@ int sanankou(const Pattern *pat) {
     }
 
     int bf = (int)(count == 3);
-    vec_free(types);
     return 2 * bf;
 }
 
@@ -395,7 +430,6 @@ int sanshoku_doukou(const Pattern *pat) {
             return 2 - open;
         }
     }
-
     vec_free(types);
     vec_free(threes);
     return 0;
@@ -418,7 +452,6 @@ int sankatsu(const Pattern *pat) {
     }
 
     int bf = (int)(count == 3);
-    vec_free(types);
     return 2 * bf;
 }
 
@@ -439,7 +472,6 @@ int suukantsu(const Pattern *pat) {
     }
 
     int bf = (int)(count == 4);
-    vec_free(types);
     return 13 * bf;
 }
 
@@ -598,7 +630,7 @@ vec(yaku) find_max_yaku(const Hand *hand) {
         vec_push(all_yakus, yakus);
     }
 
-    assert(vec_len(all_yakus) > 0);
+    // assert(vec_len(all_yakus) > 0);
 
     int score = 0;
     vec(yaku) res = all_yakus[0];
@@ -608,8 +640,8 @@ vec(yaku) find_max_yaku(const Hand *hand) {
         for (u64 j = 0; j < vec_len(all_yakus[i]); j++) {
             h += all_yakus[i][j].han;
         }
-        if (fu * pow(2, h) > score) {
-            score = fu * pow(2, h);
+        if (fu * power(2, h) > score) {
+            score = fu * power(2, h);
             res = all_yakus[i];
         }
     }

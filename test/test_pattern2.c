@@ -13,7 +13,7 @@ int main() {
     vec(Tile *) pair = NULL;
     vec_push(pair, tile_from_string("1z"));
     vec_push(pair, tile_from_string("1z"));
-    pattern_add_group(pat, pair, PAIR);
+    pattern_add_group(pat, pair, PAIR_CLOSE);
     pattern_pp(stdout, pat);
     printf("\n");
 

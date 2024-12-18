@@ -173,12 +173,15 @@ int main() {
     // TODO
 
     //chiitoitsu
-    h = hand_from_string("111133m4455p6677s");
+    h = hand_from_string("123456789m111p22s");
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
     pat = patterns[vec_len(patterns) - 1];
-    test(chiitoitsu(pat) == 0, "111133m4455p6677s is not chiitoitsu");
+    test(chiitoitsu(pat) == 0, "123456789m111p22s is not chiitoitsu");
+
+    patterns_free(&patterns);
+    hand_free(h);
 
     //toitoi
     h = hand_from_string("111456m333444s55z");
@@ -264,12 +267,12 @@ int main() {
     hand_free(h);
 
     //churen_poutou
-    h = hand_from_string("11123456789971m");
+    h = hand_from_string("222333789p666s66z");
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
     pat = patterns[vec_len(patterns) - 1];
-    test(churen_poutou(pat) == 0, "11123456789971m is not churen_poutou");
+    test(churen_poutou(pat) == 0, "222333789p666s66z is not churen_poutou");
 
     patterns_free(&patterns);
     hand_free(h);

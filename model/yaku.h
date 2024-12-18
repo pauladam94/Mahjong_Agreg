@@ -74,35 +74,6 @@ int chinitsu(const Pattern *pat);
 int ryuuiisou(const Pattern *pat);
 int churen_poutou(const Pattern *pat);
 
-int (*yakus_list[])(const Pattern *pat) = {
-    lipeikou,
-    ryanpeikou,
-    pinfu,
-    shanshoku_doujun,
-    ittsuu,
-    tanyao,
-    yakuhai,
-    shousangen,
-    daisangen,
-    shousuushi,
-    daisuushi,
-    chanta,
-    junchan,
-    honroutou,
-    chinroutou,
-    tsuuiisou,
-    kokuushi_musou,
-    chiitoitsu,
-    toitoi,
-    sanankou,
-    suuankou,
-    sanshoku_doukou,
-    sankatsu,
-    suukantsu,
-    honitsu,
-    chinitsu,
-    ryuuiisou,
-    churen_poutou
-}
+extern int (*yakus_list[])(const Pattern *pat);
 
 #endif
