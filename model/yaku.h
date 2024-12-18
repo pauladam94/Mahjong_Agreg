@@ -3,13 +3,44 @@
 #include "../utils/vec.h"
 #include "hand.h"
 
+typedef enum Yaku_name {
+    LIPEIKOU,
+    RYANPEIKOU,
+    PINFU,
+    SHANSHOKU_DOUJUN,
+    ITTSUU,
+    TANYAO,
+    YAKUHAI,
+    SHOUSANGEN,
+    DAISANGEN,
+    SHOUSUUSHI,
+    DAISUUSHI,
+    CHANTA,
+    JUNCHAN,
+    HONROUTOU,
+    CHINROUTOU,
+    TSUUIISOU,
+    KOKUUSHI_MUSOU,
+    CHIITOITSU,
+    TOITOI,
+    SANANKOU,
+    SUUANKOU,
+    SANSHOKU_DOUKOU,
+    SANKATSU,
+    SUUKANTSU,
+    HONITSU,
+    CHINITSU,
+    RYUUIISOU,
+    CHUREN_POUTOU,
+} Yaku_name;
+
 typedef struct yaku {
-    char *name;
+    Yaku_name name;
     int han;
 } yaku;
 
 vec(yaku) max_yaku(const Hand *hand); // TODO
-vec(yaku) find_yaku(const Pattern *pat);    // TODO
+vec(yaku) find_yaku(const Pattern *pat);
 
 int fu(const Hand *hand); // TODO (attente)
 
@@ -41,6 +72,37 @@ int suukantsu(const Pattern *pat);
 int honitsu(const Pattern *pat);
 int chinitsu(const Pattern *pat);
 int ryuuiisou(const Pattern *pat);
-int churen_poutou(const Pattern *pat); // TODO (flemme)
+int churen_poutou(const Pattern *pat);
+
+int (*yakus_list[])(const Pattern *pat) = {
+    lipeikou,
+    ryanpeikou,
+    pinfu,
+    shanshoku_doujun,
+    ittsuu,
+    tanyao,
+    yakuhai,
+    shousangen,
+    daisangen,
+    shousuushi,
+    daisuushi,
+    chanta,
+    junchan,
+    honroutou,
+    chinroutou,
+    tsuuiisou,
+    kokuushi_musou,
+    chiitoitsu,
+    toitoi,
+    sanankou,
+    suuankou,
+    sanshoku_doukou,
+    sankatsu,
+    suukantsu,
+    honitsu,
+    chinitsu,
+    ryuuiisou,
+    churen_poutou
+}
 
 #endif

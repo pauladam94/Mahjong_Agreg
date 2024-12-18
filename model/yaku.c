@@ -1,167 +1,7 @@
 #include "yaku.h"
 #include "pattern.h"
 
-typedef enum Yaku {
-    LIPEIKOU,
-    RYANPEIKOU,
-    PINFU,
-    SHANSHOKU_DOUJUN,
-    ITTSUU,
-    TANYAO,
-    YAKUHAI,
-    SHOUSANGEN,
-    DAISANGEN,
-    SHOUSUUSHI,
-    DAISUUSHI,
-    CHANTA,
-    JUNCHAN,
-    HONROUTOU,
-    CHINROUTOU,
-    TSUUIISOU,
-    KOKUUSHI_MUSOU,
-    CHIITOITSU,
-    TOITOI,
-    SANANKOU,
-    SUUANKOU,
-    SANSHOKU_DOUKOU,
-    SANKATSU,
-    SUUKANTSU,
-    HONITSU,
-    CHINITSU,
-    RYUUIISOU,
-    CHUREN_POUTOU,
-} Yaku;
-
-vec(yaku) max_yaku(const Hand *hand) {
-    // no complete, no yaku
-    if (!hand_is_complete(hand))
-        return NULL;
-
-    vec(Pattern *) patterns = hand_patterns(hand);
-    return NULL; // TODO: do this function
-}
-
-// return all the yaku for a given pattern
-vec(yaku) find_yaku(const Pattern *pat) {
-    vec(yaku) yakus = NULL;
-
-    if (lipeikou(pat)) {
-        yaku y = {"Lipeikou", 1};
-        vec_push(yakus, y);
-    }
-    if (ryanpeikou(pat)) {
-        yaku y = {"Ryanpeikou", 3};
-        vec_push(yakus, y);
-    }
-    if (pinfu(pat)) {
-        yaku y = {"Pinfu", 1};
-        vec_push(yakus, y);
-    }
-    if (shanshoku_doujun(pat)) {
-        yaku y = {"Shanshoku Doujun", 2 - pattern_is_open(pat)};
-        vec_push(yakus, y);
-    }
-    if (ittsuu(pat)) {
-        yaku y = {"Ittsuu", 2 - pattern_is_open(pat)};
-        vec_push(yakus, y);
-    }
-    if (tanyao(pat)) {
-        yaku y = {"Tanyao", 1};
-        vec_push(yakus, y);
-    }
-    if (yakuhai(pat)) {
-        yaku y = {"Yakuhai", 1};
-        vec_push(yakus, y);
-    }
-    if (shousangen(pat)) {
-        yaku y = {"Shousangen", 2};
-        vec_push(yakus, y);
-    }
-    if (daisangen(pat)) {
-        yaku y = {"Daisangen", 13};
-        vec_push(yakus, y);
-    }
-    if (shousuushi(pat)) {
-        yaku y = {"Shousuushi", 13};
-        vec_push(yakus, y);
-    }
-    if (daisuushi(pat)) {
-        yaku y = {"Daisuushi", 13};
-        vec_push(yakus, y);
-    }
-    if (chanta(pat)) {
-        yaku y = {"Chanta", 2 - pattern_is_open(pat)};
-        vec_push(yakus, y);
-    }
-    if (junchan(pat)) {
-        yaku y = {"Junchan", 3 - pattern_is_open(pat)};
-        vec_push(yakus, y);
-    }
-    if (honroutou(pat)) {
-        yaku y = {"Honroutou", 2};
-        vec_push(yakus, y);
-    }
-    if (chinroutou(pat)) {
-        yaku y = {"CHInroutou", 13};
-        vec_push(yakus, y);
-    }
-    if (tsuuiisou(pat)) {
-        yaku y = {"Tsuuiisou", 13};
-        vec_push(yakus, y);
-    }
-    if (kokuushi_musou(pat)) {
-        yaku y = {"Kokuushi Musou", 13};
-        vec_push(yakus, y);
-    }
-    if (chiitoitsu(pat)) {
-        yaku y = {"CHIitoitsu", 2};
-        vec_push(yakus, y);
-    }
-    if (toitoi(pat)) {
-        yaku y = {"Toitoi", 2};
-        vec_push(yakus, y);
-    }
-    if (sanankou(pat)) {
-        yaku y = {"Sanankou", 2};
-        vec_push(yakus, y);
-    }
-    if (suuankou(pat)) {
-        yaku y = {"Suuankou", 13};
-        vec_push(yakus, y);
-    }
-    if (sanshoku_doukou(pat)) {
-        yaku y = {"Sanshoku Doukou", 2};
-        vec_push(yakus, y);
-    }
-    if (sankatsu(pat)) {
-        yaku y = {"Sankatsu", 2};
-        vec_push(yakus, y);
-    }
-    if (suukantsu(pat)) {
-        yaku y = {"Suukantsu", 13};
-        vec_push(yakus, y);
-    }
-    if (honitsu(pat)) {
-        yaku y = {"Honitsu", 3 - pattern_is_open(pat)};
-        vec_push(yakus, y);
-    }
-    if (chinitsu(pat)) {
-        yaku y = {"CHInitsu", 6 - pattern_is_open(pat)};
-        vec_push(yakus, y);
-    }
-    if (ryuuiisou(pat)) {
-        yaku y = {"Ryuuiisou", 13};
-        vec_push(yakus, y);
-    }
-    if (churen_poutou(pat)) {
-        yaku y = {"Churen Poutou", 13};
-        vec_push(yakus, y);
-    }
-
-    return yakus;
-}
-
-// function testing the yakus
+// functions testing the yakus
 
 // double suite pure
 int lipeikou(const Pattern *pat) {
@@ -717,4 +557,62 @@ int churen_poutou(const Pattern *pat) {
     }
 
     return 13;
+}
+
+
+// yakus detection
+
+/**
+ * @brief For a given pattern, find all the yakus that can be applied
+ * @param pat the pattern to analyze
+ * @return a vector of yakus that can be applied
+ */
+vec(yaku) find_yaku(const Pattern *pat) {
+    vec(yaku) res = NULL;
+
+    for (u64 i = 0; i < vec_len(yakus_list); i++) {
+        int han = yakus_list[i](pat);
+        if (han > 0) {
+            yaku y = {
+                (Yaku_name)i,
+                han
+            };
+            vec_push(res, y);
+        }
+    }
+
+    return res;
+}
+
+/**
+ * @brief For a given hand, find the pattern that optimize the final score
+ * @param hand the hand to analyze
+ * @return a vector of yakus that can be applied to the best pattern
+ */
+vec(yaku) find_max_yaku(const Hand *hand) {
+    vec(vec(yaku)) all_yakus = NULL;
+
+    vec(Pattern *) patterns = hand_patterns(hand);
+    for (u64 i = 0; i < vec_len(patterns); i++) {
+        vec(yaku) yakus = find_yaku(patterns[i]);
+        vec_push(all_yakus, yakus);
+    }
+
+    assert(vec_len(all_yakus) > 0);
+
+    int score = 0;
+    vec(yaku) res = all_yakus[0];
+    for (u64 i = 0; i < vec_len(all_yakus); i++) {
+        int h = 0;
+        int fu = 1;
+        for (u64 j = 0; j < vec_len(all_yakus[i]); j++) {
+            h += all_yakus[i][j].han;
+        }
+        if (fu * pow(2, h) > score) {
+            score = fu * pow(2, h);
+            res = all_yakus[i];
+        }
+    }
+
+    return res;
 }
