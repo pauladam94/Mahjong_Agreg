@@ -111,7 +111,7 @@ int tile_number(const Tile *t) {
     case None:
         return -1;
     default:
-        fprintf(stderr, "Error: Cannot get TileNumber: %ld\n", (_Tile)(uint64_t)t);
+        fprintf(stderr, "Error: Cannot get TileNumber: %d\n", (_Tile)(uint64_t)t);
         exit(1);
     }
 }

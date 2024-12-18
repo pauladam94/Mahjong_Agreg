@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "hand.h": "c",
+        "*.m": "c",
+        "algorithm": "c"
+    }
+}
