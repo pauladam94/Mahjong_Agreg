@@ -20,9 +20,7 @@ typedef struct Msg {
         struct {
             Player player;
         } set_player_number;
-        struct {
-            Event event;
-        } event;
+        Event event;
         struct {
             vec(char) str;
         } chat;

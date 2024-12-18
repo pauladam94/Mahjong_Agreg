@@ -30,7 +30,6 @@ typedef struct Hand {
     Wind wind;
     bool opened;
     Align align;
-    Vector2 pos;
     Player player;
 } Hand;
 
@@ -57,12 +56,11 @@ void hand_draw(Hand *hand, Settings settings) {
     }
 }
 
-Hand *hand_empty(Player player, Settings settings) {
+Hand *hand_empty(Player player) {
     Hand *hand = calloc(sizeof(*hand), 1);
     hand->hand = NULL;
     hand->discard = NULL;
     hand->align = player_align(player);
-    hand->pos = player_pos(player, settings);
     hand->hand_pressed = -1;
     hand->hand_hover = -1;
     hand->discard_hover = -1;
@@ -71,8 +69,9 @@ Hand *hand_empty(Player player, Settings settings) {
 
 void hand_add_discard(Hand *hand, Tile *tile, Settings settings) {
     vec_push(hand->discard, tile);
+    Vector2 pos = player_pos(hand->player, settings);
     vec_push(hand->discard_pos, pos_from_vec(align_pos_discard(
-                                    hand->align, hand->pos.x, hand->pos.y,
+                                    hand->align, pos.x, pos.y,
                                     vec_len(hand->discard) - 1, settings)));
 }
 
@@ -85,8 +84,9 @@ void hand_discard_tile(Hand *hand, Tile *tile, Settings settings) {
 
     for (u64 i = 0; i < vec_len(hand->hand_pos); i++) {
         pos_free(hand->hand_pos[i]);
+        Vector2 pos = player_pos(hand->player, settings);
         hand->hand_pos[i] = pos_from_vec(
-            align_pos_hand(hand->align, hand->pos.x, hand->pos.y, i, settings));
+            align_pos_hand(hand->align, pos.x, pos.y, i, settings));
     }
     Vector2 prev = pos_get(hand->hand_pos[pos]);
     hand_add_discard(hand, tile, settings);
@@ -100,8 +100,9 @@ vec(Tile *) hand_discarded_tiles(const Hand *hand) { return hand->discard; }
 
 void hand_add_tile(Hand *hand, Tile *tile, Settings settings) {
     vec_push(hand->hand, tile);
+    Vector2 pos = player_pos(hand->player, settings);
     vec_push(hand->hand_pos,
-             pos_from_vec(align_pos_hand(hand->align, hand->pos.x, hand->pos.y,
+             pos_from_vec(align_pos_hand(hand->align, pos.x, pos.y,
                                          vec_len(hand->hand) - 1, settings)));
 }
 
@@ -161,8 +162,8 @@ bool hand_is_valid(const Hand *hand) {
     return true;
 }
 
-Hand *hand_from_string(const char *s, Settings settings) {
-    Hand *hand = hand_empty(Player0, settings);
+Hand *hand_from_string(const char *s) {
+    Hand *hand = hand_empty(Player0);
     vec_free(hand->hand);
     hand->hand = tiles_from_string(s);
     return hand;

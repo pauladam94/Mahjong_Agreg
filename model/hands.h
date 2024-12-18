@@ -10,7 +10,7 @@
 // This can be drawn
 typedef struct Hands Hands;
 
-Hands *hands_empty(Settings settings);
+Hands *hands_empty();
 void hands_pick_from(Hands *hands, vec(Tile *) * from, Settings settings);
 Hand *hands_get(Hands *hands, Player player);
 void hands_free(Hands *hands);

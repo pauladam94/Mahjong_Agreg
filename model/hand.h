@@ -14,9 +14,9 @@
 // - the tiles in his discards
 typedef struct Hand Hand;
 
-Hand *hand_empty(Player player, Settings settings);
+Hand *hand_empty(Player player);
 void hand_pick_from(Hand *hand, vec(Tile *) * from, Settings settings);
-Hand *hand_from_string(const char *s, Settings settings);
+Hand *hand_from_string(const char *s);
 // [4 sequences or three same tile] and [1 pair]
 bool hand_is_complete(const Hand *hand);
 // complete with a yaku (or yaku that are enough alone)
