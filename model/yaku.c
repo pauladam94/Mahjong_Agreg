@@ -466,6 +466,7 @@ int toitoi(const Pattern *pat) {
             break;
         }
     }
+    vec_free(types);
     return 2;
 }
 
@@ -484,7 +485,10 @@ int sanankou(const Pattern *pat) {
             break;
         }
     }
-    return 2 * (int)(count == 3);
+
+    int bf = (int)(count == 3);
+    vec_free(types);
+    return 2 * bf;
 }
 
 // quatre brelans cachés
