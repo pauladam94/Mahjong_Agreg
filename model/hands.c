@@ -19,10 +19,10 @@ void hands_draw(Hands *hands, Settings settings) {
     }
 }
 
-Hands *hands_empty(Settings settings) {
+Hands *hands_empty() {
     Hands *res = calloc(sizeof(*res), 1);
     for (Player player = Player0; player <= Player3; player++) {
-        res->hands[player] = hand_empty(player, settings);
+        res->hands[player] = hand_empty(player);
     }
     res->player = Player0;
     return res;

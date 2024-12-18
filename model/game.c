@@ -2,6 +2,7 @@
 #include "pthread.h"
 #include <threads.h>
 
+
 Game game_empty() {
     Game res;
     pthread_mutex_init(&res.events_mutex, NULL);

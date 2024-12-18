@@ -11,14 +11,23 @@ vec(char) msg_to_bytes(Msg msg) {
     vec(char) buff = NULL;
 
     // Space for writing size of the message
-    vec_push(buff, 0);
-    vec_push(buff, 0);
-    vec_push(buff, 0);
-    vec_push(buff, 0);
+    vec_push(buff, 0); // 0
+    vec_push(buff, 0); // 1
+    vec_push(buff, 0); // 2
+    vec_push(buff, 0); // 3
 
-    vec_push(buff, (u8)msg.from);
-    vec_push(buff, (u8)msg.to);
-    vec_push(buff, (u8)msg.type);
+    vec_push(buff, (u8)msg.from); // 4
+    vec_push(buff, (u8)msg.to);   // 5
+    vec_push(buff, (u8)msg.type); // 6
+
+    switch (msg.type) {
+    case SET_PLAYER_NUMBER:
+        vec_push(buff, (u8)msg.set_player_number.player);
+        break;
+    default:
+        printf("TODO other type");
+        break;
+    }
 
     vec(int) buff_int = (vec(int))buff;
     buff_int[0] = (u32)vec_len(buff);
@@ -34,6 +43,14 @@ Msg msg_from_bytes(vec(char) buff) {
     msg.from = (char)buff[4];
     msg.to = (char)buff[5];
     msg.type = (char)buff[6];
+    switch (msg.type) {
+    case SET_PLAYER_NUMBER:
+        msg.set_player_number.player = buff[7];
+        break;
+    default:
+        printf("TODO other type");
+        break;
+    }
     return msg;
 }
 
@@ -78,6 +95,6 @@ void msg_type_pp(FILE *file, MsgType msg_type) {
 }
 
 void msg_pp(FILE *file, Msg *msg) {
-    fppf(file, "{from : %d; to %d; type: %a}", msg->from, msg->to,
+    fppf(file, "{from : %d ; to %d ; type: %a}", msg->from, msg->to,
          msg_type_pp, msg->type);
 }

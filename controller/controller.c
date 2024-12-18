@@ -23,7 +23,7 @@ void game() {
     RenderTexture2D target = LoadRenderTexture(1920, 1080);
 
     Game game = game_empty();
-    // start_menu(&game);
+    start_menu(&game);
 
     char buff[100];
     vec(Tile *) tiles = tiles_all();

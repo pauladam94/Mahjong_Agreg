@@ -3,6 +3,7 @@
 #include "../utils/error.h"
 #include "../utils/pp.h"
 #include "msg.h"
+#include "pthread.h"
 #include <netdb.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -10,8 +11,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#define BUF_SIZE 500
 
 static int client_client_fd;
 
@@ -43,6 +42,25 @@ int launch_client() {
     return 0;
 }
 
+void *client_recv(void *arg) {
+    Game *game = (Game *)arg;
+    Msg msg;
+    while (true) {
+        int recv_output = msg_recv(client_client_fd, &msg);
+        test(recv_output != -1, "Receive Message");
+        fppf(stdout, "Msg from server: %a\n", &msg_pp, &msg);
+
+        switch (msg.type) {
+        case EVENT:
+            game_push_event(game, msg.event);
+            break;
+        default:
+            printf("TODO other type client_rcv\n");
+            break;
+        }
+    }
+}
+
 void *client(void *arg) {
     Game *game = (Game *)arg;
     Msg msg;
@@ -56,25 +74,19 @@ void *client(void *arg) {
         printf("Player Number set to : %d\n", (int)game->player);
     }
 
-    sleep(20);
+    pthread_t client_recv_thread_id;
+    test(pthread_create(&client_recv_thread_id, NULL, client_recv, game) == 0,
+         "Client Recv thread created");
 
-    int i = 0;
-    while (i++ < 5) {
-        msg.from = 1;
-        msg.to = 2;
-        msg.type = 1;
-        int nbytes_send = msg_send(client_client_fd, &msg);
-        test(nbytes_send != -1, "Send Message");
-        if (nbytes_send == -1) {
-            perror("Send");
+    // Client Send Thread
+    while (true) {
+        pthread_mutex_lock(&game->events_to_send_mutex);
+        if (pthread_cond_wait(&game->events_to_send_cond,
+                              &game->events_to_send_mutex) == NULL) {
+            
         }
 
-        int recv_output = msg_recv(client_client_fd, &msg);
-        test(recv_output != -1, "Receive Message");
-
-        fppf(stdout, "Msg from server: %a\n", &msg_pp, &msg);
-
-        sleep(1);
+        pthread_mutex_unlock(&game->events_to_send_mutex);
     }
 
     close(client_client_fd); // Close connection

@@ -36,7 +36,6 @@ void *start_menu(Game *game) {
             test(launch_client() == 0, "Lauch Client");
             test(pthread_create(&client_thread, NULL, client, game) == 0,
                  "Client thread created");
-            sleep(30);
             client_launched = true;
         }
         EndDrawing();
