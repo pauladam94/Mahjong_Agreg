@@ -444,14 +444,34 @@ int tsuuiisou(const Pattern *pat) {
 
 // 13 orphelins
 int kokuushi_musou(const Pattern *pat) {
-    (void)pat;
+    (void) pat;
     return 0;
 }
 
 // 7 paires
 int chiitoitsu(const Pattern *pat) {
-    (void)pat;
-    return 0;
+    vec(vec(Tile *)) groups = pattern_get_group(pat);
+    vec(GroupType) types = pattern_get_group_type(pat);
+
+    for (u64 i = 0; i < vec_len(types); i++) {
+        switch(types[i]) {
+            case PAIR_CLOSE:
+                break;
+            default:
+                vec_free(types);
+                return 0;
+        }
+    }
+
+    for (u64 i = 0; i < vec_len(groups); i++) {
+        for (u64 j = i + 1; j < vec_len(groups); j++) {
+            if (tile_equals(groups[i][0], groups[j][0])) {
+                vec_free(types);
+                return 0;
+            }
+        }
+    }
+    return 2;
 }
 
 // tout brelan

@@ -31,7 +31,7 @@ int honroutou(const Pattern *pat);
 int chinroutou(const Pattern *pat);
 int tsuuiisou(const Pattern *pat);
 int kokuushi_musou(const Pattern *pat); // TODO (13 orphelins)
-int chiitoitsu(const Pattern *pat);     // TODO (7 paires)
+int chiitoitsu(const Pattern *pat);
 int toitoi(const Pattern *pat);
 int sanankou(const Pattern *pat);
 int suuankou(const Pattern *pat);

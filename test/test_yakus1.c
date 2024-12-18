@@ -173,7 +173,12 @@ int main() {
     // TODO
 
     //chiitoitsu
-    // TODO
+    h = hand_from_string("113355m4455p6677s");
+    patterns = hand_patterns(h);
+    assert(vec_len(patterns) >= 1);
+
+    pat = patterns[vec_len(patterns) - 1];
+    test(chiitoitsu(pat) == 2, "113355m4455p6677s is chiitoitsu");
 
     //toitoi
     h = hand_from_string("11122233344455z");
