@@ -14,7 +14,7 @@ int main() {
     vec(Pattern *) patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    Pattern *pat = patterns[vec_len(patterns) - 1];
+    Pattern *pat = patterns[0];
     test(toitoi(pat) == 2, "111222m333444s55z is toitoi");
 
     patterns_free(&patterns);
@@ -25,7 +25,7 @@ int main() {
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    pat = patterns[vec_len(patterns) - 1];
+    pat = patterns[0];
     test(toitoi(pat) == 0, "111456m333444s55z is not toitoi");
 
     patterns_free(&patterns);

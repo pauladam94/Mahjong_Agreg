@@ -14,7 +14,7 @@ int main() {
     vec(Pattern *) patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    Pattern *pat = patterns[vec_len(patterns) - 1];
+    Pattern *pat = patterns[0];
     test(lipeikou(pat) == 1, "789789m111222p33s is lipeikou");
 
     patterns_free(&patterns);
@@ -25,7 +25,7 @@ int main() {
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    pat = patterns[vec_len(patterns) - 1];
+    pat = patterns[0];
     test(lipeikou(pat) == 0, "789123m111222p33s is not lipeikou");
 
     patterns_free(&patterns);

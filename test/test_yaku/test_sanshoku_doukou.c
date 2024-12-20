@@ -14,7 +14,7 @@ int main() {
     vec(Pattern *) patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    Pattern *pat = patterns[vec_len(patterns) - 1];
+    Pattern *pat = patterns[0];
     test(sanshoku_doukou(pat) == 2, "111m111p11123455s is sanshoku_doukou");
 
     patterns_free(&patterns);
@@ -25,7 +25,7 @@ int main() {
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    pat = patterns[vec_len(patterns) - 1];
+    pat = patterns[0];
     test(sanshoku_doukou(pat) == 0, "111m123p11123455s is not sanshoku_doukou");
 
     patterns_free(&patterns);

@@ -15,7 +15,7 @@ int main() {
     test(vec_len(patterns) >= 1, "Can detect 7 pairs");
 
     if (vec_len(patterns) >= 1) {
-        Pattern *pat = patterns[vec_len(patterns) - 1];
+        Pattern *pat = patterns[0];
         test(chiitoitsu(pat) == 2, "113355m4455p6677s is chiitoitsu");
     }
 
@@ -27,7 +27,7 @@ int main() {
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    Pattern *pat = patterns[vec_len(patterns) - 1];
+    Pattern *pat = patterns[0];
     test(chiitoitsu(pat) == 0, "123456789m111p22s is not chiitoitsu");
 
     patterns_free(&patterns);

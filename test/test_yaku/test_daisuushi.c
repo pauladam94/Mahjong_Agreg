@@ -14,7 +14,7 @@ int main() {
     vec(Pattern *) patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    Pattern *pat = patterns[vec_len(patterns) - 1];
+    Pattern *pat = patterns[0];
     test(daisuushi(pat) == 13, "11m111222333444z is daisuushi");
 
     patterns_free(&patterns);
@@ -25,7 +25,7 @@ int main() {
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    pat = patterns[vec_len(patterns) - 1];
+    pat = patterns[0];
     test(daisuushi(pat) == 0, "11m111222333s444z is not daisuushi");
 
     patterns_free(&patterns);

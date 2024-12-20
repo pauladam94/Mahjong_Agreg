@@ -14,7 +14,7 @@ int main() {
     vec(Pattern *) patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    Pattern *pat = patterns[vec_len(patterns) - 1];
+    Pattern *pat = patterns[0];
     test(daisangen(pat) == 13, "111m222p55566677z is daisangen");
 
     patterns_free(&patterns);
@@ -25,7 +25,7 @@ int main() {
     patterns = hand_patterns(h);
     assert(vec_len(patterns) >= 1);
 
-    pat = patterns[vec_len(patterns) - 1];
+    pat = patterns[0];
     test(daisangen(pat) == 0, "111m222p555666s77z is not daisangen");
 
     patterns_free(&patterns);
