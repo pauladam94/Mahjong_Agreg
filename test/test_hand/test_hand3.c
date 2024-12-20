@@ -1,5 +1,5 @@
-#include "../model/hand.h"
-#include "../utils/error.h"
+#include "../../model/hand.h"
+#include "../../utils/error.h"
 
 int main() {
     purple();

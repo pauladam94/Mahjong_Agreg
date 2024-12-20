@@ -1,8 +1,8 @@
-#include "../model/pattern.h"
-#include "../model/patterns.h"
-#include "../model/tile.h"
-#include "../model/tiles.h"
-#include "../utils/error.h"
+#include "../../model/pattern.h"
+#include "../../model/patterns.h"
+#include "../../model/tile.h"
+#include "../../model/tiles.h"
+#include "../../utils/error.h"
 
 int main() {
     purple();

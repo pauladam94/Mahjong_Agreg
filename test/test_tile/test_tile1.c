@@ -1,5 +1,5 @@
-#include "../model/tile.h"
-#include "../utils/error.h"
+#include "../../model/tile.h"
+#include "../../utils/error.h"
 
 int main() {
     purple();

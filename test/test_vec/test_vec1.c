@@ -1,6 +1,6 @@
-#include "../utils/vec.h"
-#include "../utils/error.h"
-#include "../utils/better_int.h"
+#include "../../utils/vec.h"
+#include "../../utils/error.h"
+#include "../../utils/better_int.h"
 #include <stdio.h>
 
 int main() {
