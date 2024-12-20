@@ -2,6 +2,7 @@
     "files.associations": {
         "hand.h": "c",
         "*.m": "c",
-        "algorithm": "c"
+        "algorithm": "c",
+        "test_lipeikou.C": "cpp"
     }
 }
