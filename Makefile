@@ -61,7 +61,7 @@ $(LIBRAYLIB):
 	@mkdir -p $(BUILD_DIR)
 	$(MAKE) -C $(RAYLIB_DIR)
 
-TEST_SOURCE = $(wildcard test/*.c)
+TEST_SOURCE = $(wildcard test/*.c) $(wildcard test/*/*.c)
 TEST_EXECUTABLE = $(TEST_SOURCE:test/%.c=build/%.x)
 
 all: $(NAME) test
@@ -69,7 +69,7 @@ all: $(NAME) test
 test: $(TEST_EXECUTABLE)
 	@start_time=$$(date +%s); \
 	number_test=0; \
-	for binary in $(wildcard build/*.x); do \
+	for binary in $(wildcard build/*.x) $(wildcard build/*/*.x); do \
 		./$$binary 2>&1 ; \
 		number_test=$$((number_test + 1)); \
 	done; \
@@ -78,6 +78,7 @@ test: $(TEST_EXECUTABLE)
 	echo "$$number_test test took $$elapsed_time s"
 
 build/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/./controller/controller.o, $(OBJECTS)) $(LIBRAYLIB)
 
 cleanall : clean clean_raylib
