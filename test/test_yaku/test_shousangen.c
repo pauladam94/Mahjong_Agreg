@@ -29,4 +29,5 @@ int main() {
     test(shousangen(pat) == 0, "111m123p555666s77z is not shousangen");
 
     patterns_free(&patterns);
+    hand_free(h);
 }

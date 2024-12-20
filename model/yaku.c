@@ -191,9 +191,8 @@ int shousangen(const Pattern *pat) {
         }
     }
 
-    if (count_three == 2 && count_pair == 1)
-        return 2;
-    return 0;
+    int bf = (int)(count_three == 2 && count_pair == 1);
+    return 2 * bf;
 }
 
 // trois grands dragons
