@@ -6,7 +6,7 @@
 
 int main() {
     purple();
-    printf("[TEST Lipeikou]\n");
+    printf("[TEST Churen Poutou]\n");
     reset();
 
     //is
