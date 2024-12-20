@@ -1,5 +1,6 @@
 #include "yaku.h"
 #include "pattern.h"
+#include "patterns.h"
 
 int power(int b, int e) {
     if (e == 0)
@@ -7,7 +8,7 @@ int power(int b, int e) {
     return b * power(b, e - 1);
 }
 
-int (*yakus_list[])(const Pattern *pat) = {
+int (*yakus_list[28])(const Pattern *pat) = {
     lipeikou,
     ryanpeikou,
     pinfu,
@@ -38,11 +39,42 @@ int (*yakus_list[])(const Pattern *pat) = {
     churen_poutou
 };
 
+char *yaku_name[28] = {
+    "lipeikou",
+    "ryanpeikou",
+    "pinfu",
+    "shanshoku_doujun",
+    "ittsuu",
+    "tanyao",
+    "yakuhai",
+    "shousangen",
+    "daisangen",
+    "shousuushi",
+    "daisuushi",
+    "chanta",
+    "junchan",
+    "honroutou",
+    "chinroutou",
+    "tsuuiisou",
+    "kokuushi_musou",
+    "chiitoitsu",
+    "toitoi",
+    "sanankou",
+    "suuankou",
+    "sanshoku_doukou",
+    "sankatsu",
+    "suukantsu",
+    "honitsu",
+    "chinitsu",
+    "ryuuiisou",
+    "churen_poutou"
+};
+
 // functions testing the yakus
 
 // double suite pure
 int lipeikou(const Pattern *pat) {
-    if (pattern_is_open(pat))
+    if (pattern_is_open(pat) || ryanpeikou(pat))
         return 0;
 
     vec(vec(Tile *)) threes = pattern_without_pair(pat);
@@ -476,6 +508,9 @@ int suukantsu(const Pattern *pat) {
 
 // semi-pure
 int honitsu(const Pattern *pat) {
+    if (chinitsu(pat))
+        return 0;
+
     vec(vec(Tile *)) groups = pattern_get_group(pat);
 
     Tile *ref = NULL;
@@ -598,14 +633,14 @@ int churen_poutou(const Pattern *pat) {
  * @param pat the pattern to analyze
  * @return a vector of yakus that can be applied
  */
-vec(yaku) find_yaku(const Pattern *pat) {
-    vec(yaku) res = NULL;
+vec(Yaku) find_yaku(const Pattern *pat) { 
+    vec(Yaku) res = NULL;
 
-    for (u64 i = 0; i < vec_len(yakus_list); i++) {
+    for (u64 i = 0; i < 28; i++) {
         int han = yakus_list[i](pat);
         if (han > 0) {
-            yaku y = {
-                (Yaku_name)i,
+            Yaku y = {
+                (Yaku_id)i,
                 han
             };
             vec_push(res, y);
@@ -620,19 +655,17 @@ vec(yaku) find_yaku(const Pattern *pat) {
  * @param hand the hand to analyze
  * @return a vector of yakus that can be applied to the best pattern
  */
-vec(yaku) find_max_yaku(const Hand *hand) {
-    vec(vec(yaku)) all_yakus = NULL;
+vec(Yaku) find_max_yaku(const Hand *hand) {
+    vec(vec(Yaku)) all_yakus = NULL;
 
     vec(Pattern *) patterns = hand_patterns(hand);
     for (u64 i = 0; i < vec_len(patterns); i++) {
-        vec(yaku) yakus = find_yaku(patterns[i]);
+        vec(Yaku) yakus = find_yaku(patterns[i]);
         vec_push(all_yakus, yakus);
     }
 
-    // assert(vec_len(all_yakus) > 0);
-
     int score = 0;
-    vec(yaku) res = all_yakus[0];
+    vec(Yaku) res = all_yakus[0];
     for (u64 i = 0; i < vec_len(all_yakus); i++) {
         int h = 0;
         int fu = 1;
@@ -645,5 +678,7 @@ vec(yaku) find_max_yaku(const Hand *hand) {
         }
     }
 
+    patterns_free(&patterns);
+    vec_free(all_yakus);
     return res;
 }

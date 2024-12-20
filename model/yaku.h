@@ -3,7 +3,7 @@
 #include "../utils/vec.h"
 #include "hand.h"
 
-typedef enum Yaku_name {
+typedef enum Yaku_id {
     LIPEIKOU,
     RYANPEIKOU,
     PINFU,
@@ -32,15 +32,15 @@ typedef enum Yaku_name {
     CHINITSU,
     RYUUIISOU,
     CHUREN_POUTOU,
-} Yaku_name;
+} Yaku_id;
 
-typedef struct yaku {
-    Yaku_name name;
+typedef struct Yaku {
+    Yaku_id id;
     int han;
-} yaku;
+} Yaku;
 
-vec(yaku) find_max_yaku(const Hand *hand); // TODO
-vec(yaku) find_yaku(const Pattern *pat);
+vec(Yaku) find_max_yaku(const Hand *hand); // TODO
+vec(Yaku) find_yaku(const Pattern *pat);
 
 int fu(const Hand *hand); // TODO (attente)
 
@@ -75,6 +75,7 @@ int chinitsu(const Pattern *pat);
 int ryuuiisou(const Pattern *pat);
 int churen_poutou(const Pattern *pat);
 
-extern int (*yakus_list[])(const Pattern *pat);
+extern int (*yakus_list[28])(const Pattern *pat);
+extern char *yaku_name[28];
 
 #endif

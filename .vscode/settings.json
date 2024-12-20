@@ -3,6 +3,7 @@
         "hand.h": "c",
         "*.m": "c",
         "algorithm": "c",
-        "test_lipeikou.C": "cpp"
+        "test_lipeikou.C": "cpp",
+        "yaku.h": "c"
     }
 }
