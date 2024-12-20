@@ -39,12 +39,13 @@ typedef struct yaku {
     int han;
 } yaku;
 
-vec(yaku) max_yaku(const Hand *hand); // TODO
+vec(yaku) find_max_yaku(const Hand *hand); // TODO
 vec(yaku) find_yaku(const Pattern *pat);
 
 int fu(const Hand *hand); // TODO (attente)
 
 // return the number of Han
+
 int lipeikou(const Pattern *pat);
 int ryanpeikou(const Pattern *pat);
 int pinfu(const Pattern *pat); // TODO (attente)
