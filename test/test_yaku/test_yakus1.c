@@ -14,7 +14,7 @@ int main() {
 
     vec(Yaku) yakus = find_max_yaku(h);
 
-    test(vec_len(yakus) == 3, "found 3 yakus");
+    test(vec_len(yakus) == 3, "found 3 yakus in 23423466677788m");
     for (u64 i = 0; i < vec_len(yakus); i++) {
         printf("%s for %d Han\n", yaku_name[yakus[i].id], yakus[i].han);
     }
