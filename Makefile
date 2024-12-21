@@ -49,7 +49,7 @@ MAKEFILES = $(OBJECTS:%.o=%.d)
 
 $(NAME): $(OBJECTS) $(LIBRAYLIB)
 	@echo "Compiling Mahjong $(SOURCES) $(OBJECTS) $(LIBRAYLIB)"
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	$(CC) $(OBJECTS) $(LIBRAYLIB) $(LDFLAGS) -o $@
 
 $(BUILD_DIR)/%.o: %.c
 	@mkdir -p $(BUILD_DIR)/$(dir $<)
@@ -79,7 +79,7 @@ test: $(TEST_EXECUTABLE)
 
 build/%.x: test/%.c $(OBJECTS) $(LIBRAYLIB)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ $(word 1, $^) $(filter-out $(BUILD_DIR)/./controller/controller.o, $(OBJECTS)) $(LIBRAYLIB)
+	$(CC) $(CFLAGS) -o $@ $< $(filter-out $(BUILD_DIR)/./controller/controller.o, $(OBJECTS)) $(LIBRAYLIB) $(LDFLAGS)
 
 cleanall : clean clean_raylib
 
